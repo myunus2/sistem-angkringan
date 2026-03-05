@@ -22,6 +22,12 @@ class ProductResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $navigationLabel = 'Menu';
+    
+    protected static ?string $label = 'Menu';
+    
+    protected static ?string $pluralLabel = 'Menu';
+
     public static function form(Schema $schema): Schema
     {
         return ProductForm::configure($schema);
@@ -32,11 +38,21 @@ class ProductResource extends Resource
         return ProductsTable::configure($table);
     }
 
-    public static function getRelations(): array
+    public static function configure($schema)
     {
-        return [
-            //
-        ];
+        return $schema
+            ->components([
+                TextInput::make('name')
+                    ->required(),
+                TextInput::make('price')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->required(),
+                TextInput::make('stock')
+                    ->numeric()
+                    ->default(0)
+                    ->required(),
+            ]);
     }
 
     public static function getPages(): array
