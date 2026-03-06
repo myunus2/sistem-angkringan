@@ -11,9 +11,23 @@
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             -webkit-appearance: none; margin: 0;
         }
-        /* Menghilangkan scrollbar tapi fungsi scroll tetap jalan */
+        /* Menghilangkan scrollbar */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @media (max-width: 768px) {
+            .snap-x-container {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+            .snap-item {
+                scroll-snap-align: start;
+                flex-shrink: 0;
+            }
+        }
     </style>
 </head>
 <body class="bg-[#FDFDFD] pb-32">
@@ -31,45 +45,37 @@
     </div>
 
     <div class="px-4 mt-6">
-    <form action="{{ route('index') }}" method="GET" class="relative">
-        @if(request('category'))
-            <input type="hidden" name="category" value="{{ request('category') }}">
-        @endif
-        
-        
-        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-        </div>
-        <input type="text" name="search" value="{{ request('search') }}"
-               class="block w-full pl-10 pr-3 py-3 border-none bg-gray-100 rounded-2xl leading-5 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-all" 
-               placeholder="Cari menu favoritmu...">
-    </form>
-</div>
-
-
-    <div class="flex overflow-x-auto pb-2 gap-2 my-6 px-4 no-scrollbar justify-start md:justify-center">
-        @php $currentCat = request('category', 'semua'); @endphp
-        
-        <a href="{{ route('index', ['category' => 'semua']) }}" 
-           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'semua' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
-           Semua
-        </a>
-        <a href="{{ route('index', ['category' => 'makanan']) }}" 
-           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'makanan' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
-           Makanan
-        </a>
-        <a href="{{ route('index', ['category' => 'minuman']) }}" 
-           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'minuman' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
-           Minuman
-        </a>
-        <a href="{{ route('index', ['category' => 'snack']) }}" 
-           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'snack' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
-           Snack
-        </a>
+        <form action="{{ route('index') }}" method="GET" class="relative">
+            @if(request('category'))
+                <input type="hidden" name="category" value="{{ request('category') }}">
+            @endif
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input type="text" name="search" value="{{ request('search') }}"
+                   class="block w-full pl-10 pr-3 py-3 border-none bg-gray-100 rounded-2xl leading-5 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-all" 
+                   placeholder="Cari menu favoritmu...">
+        </form>
     </div>
-        
+
+    <div class="px-4 my-6">
+        <div id="nav-kategori" class="snap-x-container flex gap-3 pb-2 no-scrollbar overflow-x-auto justify-start md:justify-center">
+            @php $currentCat = request('category', 'semua'); @endphp
+            
+            @foreach(['semua', 'makanan', 'minuman', 'snack'] as $cat)
+            <div class="snap-item">
+                <a href="{{ route('index', ['category' => $cat]) }}" 
+                   class="category-btn inline-block whitespace-nowrap px-8 py-2.5 rounded-full text-sm font-bold transition-all 
+                   {{ $currentCat == $cat ? 'bg-orange-500 text-white shadow-lg active-category' : 'bg-gray-100 text-gray-500' }}">
+                   {{ ucfirst($cat) }}
+                </a>
+            </div>
+            @endforeach
+        </div>
+    </div>
+
     <div class="w-full px-4 py-4">
         <h2 class="text-xl font-extrabold text-gray-800 mb-6 px-1 flex items-center gap-2">
             <span class="w-2 h-6 bg-orange-500 rounded-full"></span>
@@ -108,27 +114,19 @@
                     <p class="text-sm font-bold text-orange-600 mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
 
                     <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-0.5 shadow-sm">
-                        <button onclick="decreaseQty(this)" 
-                                class="w-8 h-8 flex items-center justify-center rounded-md text-orange-500 font-black hover:bg-orange-50">−</button>
-                        
+                        <button onclick="decreaseQty(this)" class="w-8 h-8 flex items-center justify-center rounded-md text-orange-500 font-black hover:bg-orange-50">−</button>
                         <input type="number" value="0" min="0" max="{{ $product->stock }}" 
                                class="w-7 text-center bg-transparent font-black text-[10px] text-gray-800 qty-input"
                                data-id="{{ $product->id }}" data-price="{{ $product->price }}" readonly>
-                        
-                        <button onclick="increaseQty(this)" 
-                                class="w-8 h-8 flex items-center justify-center bg-orange-500 rounded-md text-white font-black shadow-sm active:scale-90">+</button>
+                        <button onclick="increaseQty(this)" class="w-8 h-8 flex items-center justify-center bg-orange-500 rounded-md text-white font-black shadow-sm active:scale-90">+</button>
                     </div>
                 </div>
             </div>
             @empty
             <div class="col-span-full text-center py-20">
-                <p class="text-gray-400 font-medium">Menu kategori ini sedang kosong... </p>
-             </div>
-            <div class="col-span-full text-center py-20">
-             <p class="text-gray-400 font-medium">Menu "{{ request('search') }}" tidak ditemukan... </p>
-             <a href="{{ route('index') }}" class="text-orange-500 font-bold text-sm mt-2 block">Lihat Semua Menu</a>
-             </div>
-
+                <p class="text-gray-400 font-medium">Menu tidak ditemukan... </p>
+                <a href="{{ route('index') }}" class="text-orange-500 font-bold text-sm mt-2 block">Lihat Semua Menu</a>
+            </div>
             @endforelse
         </div>
     </div>
@@ -139,14 +137,30 @@
                 <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Total Bayar</p>
                 <p class="text-xl font-black text-gray-800" id="total-price">Rp 0</p>
             </div>
-            <button onclick="submitOrder()" 
-                    class="bg-orange-500 hover:bg-orange-600 text-white font-black px-12 py-3.5 rounded-xl shadow-md transition-all active:scale-95 text-sm">
+            <button onclick="submitOrder()" class="bg-orange-500 hover:bg-orange-600 text-white font-black px-12 py-3.5 rounded-xl shadow-md transition-all active:scale-95 text-sm">
                 PESAN 
             </button>
         </div>
     </div>
 
     <script>
+        // Fitur Auto-Scroll ke Kategori Aktif
+        document.addEventListener("DOMContentLoaded", function() {
+            const container = document.getElementById('nav-kategori');
+            const activeBtn = document.querySelector('.active-category');
+            
+            if (activeBtn) {
+                // Memberi sedikit delay agar browser siap melakukan scroll
+                setTimeout(() => {
+                    const offset = activeBtn.offsetLeft - (container.clientWidth / 2) + (activeBtn.clientWidth / 2);
+                    container.scrollTo({
+                        left: offset,
+                        behavior: "smooth"
+                    });
+                }, 100);
+            }
+        });
+
         const inputs = document.querySelectorAll('.qty-input');
         
         function increaseQty(btn) {
@@ -167,7 +181,7 @@
         
         function updateTotal() {
             let total = 0;
-            inputs.forEach(i => {
+            document.querySelectorAll('.qty-input').forEach(i => {
                 total += parseInt(i.value) * parseInt(i.dataset.price);
             });
             document.getElementById('total-price').innerText = 'Rp ' + total.toLocaleString('id-ID');
@@ -176,15 +190,14 @@
         function submitOrder() {
             let orderItems = [];
             let totalAll = 0;
-
-            inputs.forEach(i => {
+            document.querySelectorAll('.qty-input').forEach(i => {
                 if(i.value > 0) {
                     orderItems.push({ product_id: i.dataset.id, quantity: i.value });
                     totalAll += i.value * i.dataset.price;
                 }
             });
 
-            if(orderItems.length === 0) return alert('Pilih menu lezatnya dulu dong! ');
+            if(orderItems.length === 0) return alert('Pilih menu lezatnya dulu dong! 🍢');
 
             fetch('{{ route("order.store") }}', {
                 method: 'POST',
@@ -200,10 +213,10 @@
             })
             .then(res => res.json())
             .then(data => {
-                alert('Pesanan dikirim! Silakan tunggu ya. ');
+                alert('Pesanan dikirim! Silakan tunggu ya. 👨‍🍳');
                 location.reload();
             })
-            .catch(err => alert('Gagal mengirim pesanan. Coba lagi ya!'));
+            .catch(err => alert('Gagal mengirim pesanan.'));
         }
     </script>
 </body>
