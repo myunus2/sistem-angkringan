@@ -9,13 +9,16 @@ use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Tables\Filters\SelectFilter;
 
 class ProductsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
+        
             ->columns([
+                
                 // 0. Menampilkan Gambar Produk
                 ImageColumn::make('images')
                     ->label('Gambar')
@@ -44,7 +47,14 @@ class ProductsTable
                     ->sortable(),
             ])
             ->filters([
-                //
+                \Filament\Tables\Filters\SelectFilter::make('type')
+                    ->label('Filter Tipe')
+            ->options([
+            'makanan' => 'Makanan',
+            'minuman' => 'Minuman',
+            'snack' => 'Snack',
+        ])
+
             ])
             ->actions([
                 EditAction::make(),

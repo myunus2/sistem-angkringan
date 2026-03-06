@@ -11,14 +11,27 @@ use Illuminate\Support\Facades\DB;
 class OrderController extends Controller
 {
    // 1. Menampilkan menu untuk pelanggan
-public function index() // <-- Hapus ($table_number) di sini
+public function index(Request $request)
 {
-    $products = Product::where('stock', '>', 0)->get(); 
-    
-    // Kirim ke view tanpa variabel table_number karena nanti diisi pelanggan di form
+    $category = $request->query('category');
+    $search = $request->query('search'); // Ambil input pencarian
+
+    $query = Product::query()->where('stock', '>', 0);
+
+    // Filter berdasarkan Kategori
+    if ($category && $category !== 'semua') {
+        $query->where('type', $category);
+    }
+
+    // Filter berdasarkan Nama (Pencarian)
+    if ($search) {
+        $query->where('name', 'like', '%' . $search . '%');
+    }
+
+    $products = $query->get();
+
     return view('order.index', compact('products')); 
 }
-
     // 2. Memproses pesanan pelanggan
     public function store(Request $request)
     {

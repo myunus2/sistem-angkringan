@@ -11,16 +11,17 @@
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             -webkit-appearance: none; margin: 0;
         }
+        /* Menghilangkan scrollbar tapi fungsi scroll tetap jalan */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-[#FDFDFD] pb-32">
 
     <div class="relative w-full h-64 md:h-80 bg-orange-500 overflow-hidden shadow-md">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10"></div>
-        
         <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80" 
              class="w-full h-full object-cover transform scale-105" alt="Banner Angkringan">
-        
         <div class="absolute bottom-8 left-8 z-20 text-white">
             <h1 class="text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Modern</h1>
             <p class="text-sm md:text-base font-medium opacity-90 mt-1 flex items-center gap-2">
@@ -29,14 +30,54 @@
         </div>
     </div>
 
-    <div class="w-full px-4 py-8">
+    <div class="px-4 mt-6">
+    <form action="{{ route('index') }}" method="GET" class="relative">
+        @if(request('category'))
+            <input type="hidden" name="category" value="{{ request('category') }}">
+        @endif
+        
+        
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+        <input type="text" name="search" value="{{ request('search') }}"
+               class="block w-full pl-10 pr-3 py-3 border-none bg-gray-100 rounded-2xl leading-5 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm transition-all" 
+               placeholder="Cari menu favoritmu...">
+    </form>
+</div>
+
+
+    <div class="flex overflow-x-auto pb-2 gap-2 my-6 px-4 no-scrollbar justify-start md:justify-center">
+        @php $currentCat = request('category', 'semua'); @endphp
+        
+        <a href="{{ route('index', ['category' => 'semua']) }}" 
+           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'semua' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
+           Semua
+        </a>
+        <a href="{{ route('index', ['category' => 'makanan']) }}" 
+           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'makanan' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
+           Makanan
+        </a>
+        <a href="{{ route('index', ['category' => 'minuman']) }}" 
+           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'minuman' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
+           Minuman
+        </a>
+        <a href="{{ route('index', ['category' => 'snack']) }}" 
+           class="whitespace-nowrap px-6 py-2 rounded-full text-sm font-bold transition-all {{ $currentCat == 'snack' ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
+           Snack
+        </a>
+    </div>
+        
+    <div class="w-full px-4 py-4">
         <h2 class="text-xl font-extrabold text-gray-800 mb-6 px-1 flex items-center gap-2">
             <span class="w-2 h-6 bg-orange-500 rounded-full"></span>
-            Menu Terpopuler
+            Daftar Menu {{ $currentCat !== 'semua' ? ucfirst($currentCat) : '' }}
         </h2>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            @foreach($products as $product)
+            @forelse($products as $product)
             <div class="flex flex-col group">
                 <div class="relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50 mb-2">
                     @if($product->images)
@@ -46,17 +87,25 @@
                     @else
                         <div class="w-full h-full flex items-center justify-center text-gray-300 font-bold uppercase text-[9px]">No Photo</div>
                     @endif
-                    
-                    <div class="absolute top-2 left-2">
-                        <span class="bg-white/95 backdrop-blur-sm px-2 py-0.5 rounded-md text-[8px] font-black text-orange-600 shadow-sm">
-                            STOK: {{ $product->stock }}
-                        </span>
-                    </div>
                 </div>
 
                 <div class="px-0.5">
-                    <h3 class="font-bold text-gray-800 text-xs leading-tight mb-0.5 truncate">{{ $product->name }}</h3>
-                    <p class="text-[11px] font-bold text-orange-600 mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                    <div class="mb-1">
+                        @php
+                            $badgeColor = match($product->type) {
+                                'makanan' => 'bg-orange-100 text-orange-600',
+                                'minuman' => 'bg-blue-100 text-blue-600',
+                                'snack'   => 'bg-green-100 text-green-600',
+                                default   => 'bg-gray-100 text-gray-600'
+                            };
+                        @endphp
+                        <span class="text-[9px] font-extrabold uppercase tracking-widest px-2 py-0.5 rounded-md {{ $badgeColor }}">
+                            {{ $product->type ?? 'Menu' }}
+                        </span>
+                    </div>
+
+                    <h3 class="font-bold text-gray-800 text-sm leading-tight mb-0.5 truncate">{{ $product->name }}</h3>
+                    <p class="text-sm font-bold text-orange-600 mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
 
                     <div class="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-0.5 shadow-sm">
                         <button onclick="decreaseQty(this)" 
@@ -71,7 +120,16 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="col-span-full text-center py-20">
+                <p class="text-gray-400 font-medium">Menu kategori ini sedang kosong... </p>
+             </div>
+            <div class="col-span-full text-center py-20">
+             <p class="text-gray-400 font-medium">Menu "{{ request('search') }}" tidak ditemukan... </p>
+             <a href="{{ route('index') }}" class="text-orange-500 font-bold text-sm mt-2 block">Lihat Semua Menu</a>
+             </div>
+
+            @endforelse
         </div>
     </div>
 
@@ -83,7 +141,7 @@
             </div>
             <button onclick="submitOrder()" 
                     class="bg-orange-500 hover:bg-orange-600 text-white font-black px-12 py-3.5 rounded-xl shadow-md transition-all active:scale-95 text-sm">
-                PESAN SEKARANG 🚀
+                PESAN 
             </button>
         </div>
     </div>
@@ -126,10 +184,8 @@
                 }
             });
 
-            if(orderItems.length === 0) return alert('Pilih menu lezatnya dulu dong! 🥘');
+            if(orderItems.length === 0) return alert('Pilih menu lezatnya dulu dong! ');
 
-            // Catatan: Karena input-meja dihapus, Anda perlu menyesuaikan backend 
-            // agar menerima nomor meja dari session atau parameter URL lainnya.
             fetch('{{ route("order.store") }}', {
                 method: 'POST',
                 headers: { 
@@ -137,7 +193,6 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}' 
                 },
                 body: JSON.stringify({ 
-                    // table_number bisa diisi default sementara atau dikirim null
                     table_number: 'QR-Meja', 
                     total_price: totalAll, 
                     items: orderItems 
@@ -145,10 +200,10 @@
             })
             .then(res => res.json())
             .then(data => {
-                alert('Pesanan dikirim! ✨');
+                alert('Pesanan dikirim! Silakan tunggu ya. ');
                 location.reload();
             })
-            .catch(err => alert('Gagal mengirim pesanan.'));
+            .catch(err => alert('Gagal mengirim pesanan. Coba lagi ya!'));
         }
     </script>
 </body>

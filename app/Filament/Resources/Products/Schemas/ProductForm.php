@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select; // Import Select
 use Filament\Schemas\Components\Section;
 
 class ProductForm
@@ -14,6 +15,18 @@ class ProductForm
             ->schema([
                 Section::make('Informasi Produk')
                     ->schema([
+                        // 1. Menambahkan Dropdown Tipe Menu
+                        Select::make('type')
+                            ->label('Tipe Menu')
+                            ->options([
+                                'makanan' => 'Makanan',
+                                'minuman' => 'Minuman',
+                                'snack' => 'Snack',
+                            ])
+                            ->required()
+                            ->native(false) // Membuat tampilan lebih modern
+                            ->placeholder('Pilih tipe menu'),
+
                         TextInput::make('name')
                             ->label('Nama Produk')
                             ->required()
@@ -37,7 +50,8 @@ class ProductForm
                             ->disk('public')
                             ->directory('products')
                             ->visibility('public')
-                            ->nullable(),
+                            ->nullable()
+                            ->columnSpanFull(), // Agar gambar mengambil baris penuh jika diinginkan
                     ])->columns(2),
             ]);
     }
