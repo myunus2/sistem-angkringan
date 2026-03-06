@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 
@@ -23,6 +24,20 @@ class ProductForm
                             ->numeric()
                             ->prefix('Rp')
                             ->required(),
+
+                        TextInput::make('stock')
+                            ->label('Stok')
+                            ->numeric()
+                            ->default(0)
+                            ->required(),
+
+                        FileUpload::make('images')
+                            ->label('Gambar Produk')
+                            ->image()
+                            ->disk('public')
+                            ->directory('products')
+                            ->visibility('public')
+                            ->nullable(),
                     ])->columns(2),
             ]);
     }

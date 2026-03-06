@@ -26,6 +26,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
+            ->login()
             ->colors([
                 'primary' => \Filament\Support\Colors\Color::Amber, // Ganti warna tombol/aksen
                 'gray' => \Filament\Support\Colors\Color::Slate,   // Ganti warna abu-abu dasar
@@ -40,8 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+               
             ])
             ->middleware([
                 EncryptCookies::class,

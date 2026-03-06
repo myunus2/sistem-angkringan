@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Products\Tables;
 
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 
@@ -14,6 +16,14 @@ class ProductsTable
     {
         return $table
             ->columns([
+                // 0. Menampilkan Gambar Produk
+                ImageColumn::make('images')
+                    ->label('Gambar')
+                    ->disk('public')
+                    ->url(fn ($state) => $state ? asset('storage/' . $state) : null)
+                    ->width(80)
+                    ->height(80),
+
                 // 1. Menampilkan Nama Produk
                 TextColumn::make('name')
                     ->label('Nama Menu')
@@ -38,6 +48,7 @@ class ProductsTable
             ])
             ->actions([
                 EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([ // Gunakan bulkActions, bukan toolbarActions untuk Delete
                 BulkActionGroup::make([

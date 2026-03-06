@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrderController; // Pastikan baris ini ada
+use App\Http\Controllers\OrderController;
 
 // Halaman utama untuk pelanggan pilih menu
 Route::get('/', [OrderController::class, 'index'])->name('menu.index');
