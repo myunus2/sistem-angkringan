@@ -1,6 +1,6 @@
-# 📱 Dokumentasi Fitur Payment & Proof of Payment
+# Dokumentasi Fitur Payment & Proof of Payment
 
-## 📋 Ringkasan Fitur
+## ingkasan Fitur
 
 Fitur ini memungkinkan pelanggan untuk:
 1. **Memilih metode pembayaran** (Transfer Bank, E-Wallet, atau Uang Tunai)
@@ -9,7 +9,7 @@ Fitur ini memungkinkan pelanggan untuk:
 
 ---
 
-## 🗂️ File yang Ditambahkan/Dimodifikasi
+## File yang Ditambahkan/Dimodifikasi
 
 ### 1. **Migrations**
 - `database/migrations/2026_03_08_000001_create_payment_methods_table.php`
@@ -61,7 +61,7 @@ Fitur ini memungkinkan pelanggan untuk:
 
 ---
 
-## 🔄 Alur Penggunaan
+## Alur Penggunaan
 
 ### Alur Pelanggan:
 ```
@@ -91,7 +91,7 @@ Fitur ini memungkinkan pelanggan untuk:
 
 ---
 
-## 📦 Database Schema
+## Database Schema
 
 ### Tabel: `payment_methods`
 ```sql
@@ -121,7 +121,7 @@ ALTER TABLE orders ADD (
 
 ---
 
-## 🔧 Setup & Installation
+## Setup & Installation
 
 ### 1. Run Migrations
 ```bash
@@ -141,7 +141,7 @@ Storage link untuk mengakses file upload: `storage/app/public/payment_proofs`
 
 ---
 
-## 💾 Menyimpan File Upload
+## Menyimpan File Upload
 
 File bukti pembayaran akan disimpan di:
 - **Path Storage**: `storage/app/public/payment_proofs/`
@@ -156,7 +156,7 @@ proof_of_payment: payment_proofs/2026_03_08_bukti_transfer_ABC123.jpg
 
 ---
 
-## 🛠️ Working with Payment Methods
+## Working with Payment Methods
 
 ### Update Nomor Rekening (melalui API)
 
@@ -204,24 +204,24 @@ DELETE /api/payment-methods/{id}
 
 ---
 
-## 📸 File Upload Handling
+## File Upload Handling
 
 ### Frontend Features:
-- ✅ Drag & Drop untuk upload file
-- ✅ Click to browse file
-- ✅ Preview gambar sebelum submit
-- ✅ Validasi file type (gambar saja)
-- ✅ Validasi ukuran file (max 5MB)
+- Drag & Drop untuk upload file
+- Click to browse file
+-  Preview gambar sebelum submit
+- Validasi file type (gambar saja)
+- Validasi ukuran file (max 5MB)
 
 ### Backend Features:
-- ✅ Server-side validation
-- ✅ File stored ke `storage/app/public/payment_proofs/`
-- ✅ Database record dengan path file
-- ✅ Accessible via public URL
+- Server-side validation
+- File stored ke `storage/app/public/payment_proofs/`
+- Database record dengan path file
+- Accessible via public URL
 
 ---
 
-## ✅ Checklist Features
+## Checklist Features
 
 - [x] Modal form dengan 3 pilihan payment method
 - [x] Dynamic display nomor rekening berdasarkan metode
@@ -236,7 +236,7 @@ DELETE /api/payment-methods/{id}
 
 ---
 
-## 🐛 Testing
+## Testing
 
 ### Test Bank Transfer Flow:
 1. Buka halaman order
@@ -266,7 +266,7 @@ DELETE /api/payment-methods/{id}
 
 ---
 
-## 📝 Notes
+## Notes
 
 - Semua file upload disimpan di folder yang terpisah untuk keamanan
 - Path file di-generate otomatis dengan unique filename
@@ -276,7 +276,7 @@ DELETE /api/payment-methods/{id}
 
 ---
 
-## 🔐 Security
+## Security
 
 - Server-side validation untuk semua input
 - File type & size validation
