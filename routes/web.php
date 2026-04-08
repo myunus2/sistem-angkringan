@@ -7,9 +7,6 @@ use App\Http\Controllers\PaymentMethodController;
 // Halaman utama untuk pelanggan pilih menu
 Route::get('/', [OrderController::class, 'index'])->name('index');
 
-// Proses pengiriman pesanan & potong stok
-Route::post('/pesan', [OrderController::class, 'store'])->name('order.store');
-
 // API Routes untuk Payment Methods
 Route::prefix('api/payment-methods')->group(function () {
     // Get all active payment methods

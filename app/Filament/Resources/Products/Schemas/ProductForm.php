@@ -3,8 +3,9 @@
 namespace App\Filament\Resources\Products\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select; // Import Select
+use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Section;
 
 class ProductForm
@@ -38,11 +39,19 @@ class ProductForm
                             ->prefix('Rp')
                             ->required(),
 
-                        TextInput::make('stock')
-                            ->label('Stok')
-                            ->numeric()
-                            ->default(0)
-                            ->required(),
+                        Textarea::make('composition')
+                            ->label('Komposisi')
+                            ->rows(3)
+                            ->required()
+                            ->placeholder('Masukkan komposisi atau bahan utama produk')
+                            ->columnSpanFull(),
+
+                        Textarea::make('description')
+                            ->label('Deskripsi Penjelasan Produk')
+                            ->rows(4)
+                            ->required()
+                            ->placeholder('Jelaskan produk untuk menu, rasa, atau keunggulan')
+                            ->columnSpanFull(),
 
                         FileUpload::make('images')
                             ->label('Gambar Produk')
@@ -51,7 +60,7 @@ class ProductForm
                             ->directory('products')
                             ->visibility('public')
                             ->nullable()
-                            ->columnSpanFull(), // Agar gambar mengambil baris penuh jika diinginkan
+                            ->columnSpanFull(),
                     ])->columns(2),
             ]);
     }
