@@ -45,6 +45,18 @@ class ProductsTable
                     ->badge() // Membuat tampilan stok seperti label/badge
                     ->color(fn (int $state): string => $state <= 5 ? 'danger' : 'success') // Merah jika stok <= 5
                     ->sortable(),
+                    // 4. Komposisi
+                    TextColumn::make('komposisi')
+                        ->label('Komposisi')
+                        ->limit(20)
+                        ->tooltip(fn ($record) => $record->komposisi),
+
+                    // 5. Deskripsi
+                    TextColumn::make('deskripsi')
+                        ->label('Deskripsi')
+                        ->limit(30)
+                        ->tooltip(fn ($record) => $record->deskripsi),
+                        
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('type')
