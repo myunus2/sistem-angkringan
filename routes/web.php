@@ -19,3 +19,6 @@ Route::prefix('api/payment-methods')->group(function () {
 
 // DASHBOARD ADMIN
 Route::get('/admin', [AdminController::class, 'dashboard']);
+Route::get('/filament-fix', function () {
+    return redirect('/admin');
+})->name('filament.admin.pages.dashboard');

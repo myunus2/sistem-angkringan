@@ -1,20 +1,32 @@
+<?php
+
+namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 
-public function dashboard()
+class AdminController extends Controller
 {
-    $totalPesanan = DB::table('pesanan')->count();
-    $totalPendapatan = DB::table('pesanan')->sum('total');
-    $jumlahMenu = DB::table('menu')->count();
+    public function dashboard()
+    {
+        $totalPesanan = DB::table('orders')->count();
+        $totalPendapatan = DB::table('orders')->sum('total_price');
+        $jumlahMenu = 0;
 
-    $pesananTerbaru = DB::table('pesanan')
-        ->orderBy('id', 'desc')
-        ->limit(5)
-        ->get();
+        $pesananPending = DB::table('orders')
+            ->where('status', 'pending')
+            ->count();
 
-    return view('admin.dashboard', compact(
-        'totalPesanan',
-        'totalPendapatan',
-        'jumlahMenu',
-        'pesananTerbaru'
-    ));
+        $pesananTerbaru = DB::table('orders')
+            ->orderBy('id', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('admin.dashboard', compact(
+            'totalPesanan',
+            'totalPendapatan',
+            'jumlahMenu',
+            'pesananPending',
+            'pesananTerbaru'
+        ));
+    }
 }
