@@ -104,8 +104,8 @@
 
         <div class="grid product-grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             @forelse($products as $product)
-            <div class="product-card flex flex-col group bg-white rounded-3xl p-3 shadow-sm border border-gray-100" data-product-id="{{ $product->id }}" data-name="{{ e($product->name) }}" data-price="Rp {{ number_format($product->price, 0, ',', '.') }}" data-description="{{ e($product->description) }}" data-composition="{{ e($product->composition) }}" data-image="{{ $product->images ? asset('storage/' . $product->images) : 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80' }}">
-                <div class="relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50 mb-2 cursor-pointer product-image-container" title="Klik untuk lihat komposisi">
+            <div class="product-card flex flex-col group bg-white rounded-3xl p-3 shadow-sm border border-gray-100" data-product-id="{{ $product->id }}" data-name="{{ e($product->name) }}" data-price="Rp {{ number_format($product->price, 0, ',', '.') }}" data-description="{{ e($product->description) }}" data-composition="{{ e($product->composition) }}" data-image="{{ $product->images ? asset('storage/' . $product->images) : 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80' }}" data-model-3d="{{ $product->model_3d ? asset('storage/' . $product->model_3d) : '' }}">
+                <div class="relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50 mb-2 cursor-pointer product-image-container" >
                     @if($product->images)
                         <img src="{{ asset('storage/' . $product->images) }}" 
                              alt="{{ $product->name }}" 
@@ -152,7 +152,7 @@
     <div id="product-focus-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/30 focus-overlay p-4">
         <div class="relative w-full max-w-3xl overflow-hidden rounded-[2rem] bg-white shadow-2xl ring-1 ring-slate-200">
             <button id="product-focus-close" class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-500 shadow-sm transition hover:bg-slate-100">
-                <span class="text-xl font-bold">×</span>
+                <span class="text-xl font-bold">x</span>
             </button>
             <div class="grid gap-6 md:grid-cols-[1.2fr_1fr] p-6">
                 <div class="relative overflow-hidden rounded-3xl bg-slate-100">
@@ -171,7 +171,12 @@
                     </div>
                     <div class="mt-6 flex items-center justify-between gap-3">
                         <span id="focus-stock" class="text-sm text-slate-500"></span>
-                        <button id="focus-close-button" class="rounded-3xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">Tutup</button>
+                        <div class="flex gap-3">
+                            <button id="focus-ar-button" class="rounded-3xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-600 shadow-lg">
+                                Lihat dalam 3D 
+                            </button>
+                            <button id="focus-close-button" class="rounded-3xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">Tutup</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -183,6 +188,31 @@
             var grid = document.querySelector('.product-grid');
             var overlay = document.getElementById('product-focus-overlay');
             var closeButtons = document.querySelectorAll('#product-focus-close, #focus-close-button');
+            var arButton = document.getElementById('focus-ar-button');
+
+            // AR button event
+            if (arButton) {
+                arButton.addEventListener('click', function() {
+                    if (arButton.disabled) {
+                        return;
+                    }
+
+                    var productId = document.getElementById('focus-name').dataset.productId || '';
+                    var productName = document.getElementById('focus-name').textContent || '';
+                    var productPrice = document.getElementById('focus-price').textContent || '';
+                    var productDescription = document.getElementById('focus-description').textContent || '';
+                    var productComposition = document.getElementById('focus-composition').textContent || '';
+                    var productModel3d = arButton.getAttribute('data-model-3d') || '';
+                    
+                    // Redirect to AR page with parameters
+                    var arUrl = '/ar.html?name=' + encodeURIComponent(productName) + 
+                               '&price=' + encodeURIComponent(productPrice) + 
+                               '&description=' + encodeURIComponent(productDescription) + 
+                               '&composition=' + encodeURIComponent(productComposition) +
+                               '&model=' + encodeURIComponent(productModel3d);
+                    window.location.href = arUrl;
+                });
+            }
 
             document.querySelectorAll('.product-image-container').forEach(function (container) {
                 container.addEventListener('click', function () {
@@ -194,16 +224,23 @@
                     var price = card.dataset.price;
                     var description = card.dataset.description || 'Deskripsi tidak tersedia.';
                     var composition = card.dataset.composition || 'Komposisi tidak tersedia.';
+                    var model3d = card.getAttribute('data-model-3d') || '';
                     var type = card.querySelector('span')?.textContent || '';
                     var stockText = card.querySelector('.text-xs.text-gray-500')?.textContent || '';
 
                     document.getElementById('focus-image').src = image;
                     document.getElementById('focus-name').textContent = name;
+                    document.getElementById('focus-name').dataset.productId = card.dataset.productId;
                     document.getElementById('focus-price').textContent = price;
                     document.getElementById('focus-description').textContent = description;
                     document.getElementById('focus-composition').textContent = composition;
                     document.getElementById('focus-type').textContent = type;
                     document.getElementById('focus-stock').textContent = stockText;
+                    arButton.setAttribute('data-model-3d', model3d);
+                    arButton.disabled = !model3d;
+                    arButton.classList.toggle('opacity-50', !model3d);
+                    arButton.classList.toggle('cursor-not-allowed', !model3d);
+                    arButton.textContent = model3d ? 'Lihat dalam 3D (AR)' : 'Model 3D belum ada';
 
                     grid.classList.add('blur');
                     card.classList.add('focused');
@@ -229,6 +266,10 @@
                     closeFocus();
                 }
             });
+            new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR'
+            }).format(5000)
         });
     </script>
 

@@ -39,6 +39,12 @@ class ProductsTable
                     ->money('IDR')
                     ->sortable(),
 
+                TextColumn::make('model_3d')
+                    ->label('Model 3D')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'Tersedia' : 'Belum ada')
+                    ->badge()
+                    ->color(fn (?string $state): string => $state ? 'success' : 'gray'),
+
                 // 3. Menampilkan Stok
                 TextColumn::make('stock')
                     ->label('Stok Tersedia')
