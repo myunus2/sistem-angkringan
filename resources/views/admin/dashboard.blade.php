@@ -87,12 +87,12 @@
                 <tbody>
                     @foreach($pesananTerbaru as $p)
                     <tr>
-                        <td>{{ $p->nama ?? '-' }}</td>
-                        <td>Rp {{ number_format($p->total) }}</td>
+                        <td>{{ $p->customer_name ?? '-' }}</td>
+                        <td>Rp {{ number_format($p->total_price) }}</td>
                         <td>
                             @if($p->status == 'pending')
                                 <span class="badge bg-warning">Pending</span>
-                            @elseif($p->status == 'selesai')
+                            @elseif($p->status == 'done')
                                 <span class="badge bg-success">Selesai</span>
                             @else
                                 <span class="badge bg-secondary">{{ $p->status }}</span>
