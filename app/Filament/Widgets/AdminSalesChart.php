@@ -20,6 +20,7 @@ class AdminSalesChart extends ChartWidget
 
         $salesByDate = Order::query()
             ->selectRaw('DATE(created_at) as order_date, COALESCE(SUM(total_price), 0) as total_sales')
+            ->where('status', 'done')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('order_date')
             ->pluck('total_sales', 'order_date');

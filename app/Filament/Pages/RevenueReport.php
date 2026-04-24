@@ -60,14 +60,11 @@ class RevenueReport extends Page implements HasTable
                     ->label('Pendapatan')
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_method')
+                Tables\Columns\TextColumn::make('payment_status')
                     ->label('Pembayaran')
-                    ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'transfer_bank' => 'Transfer Bank',
-                        'e_wallet' => 'E-Wallet',
-                        'cash' => 'Cash',
-                        default => '-',
-                    }),
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => $state === 'paid' ? 'Dibayar' : 'Belum Dibayar')
+                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'warning'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -123,7 +120,7 @@ class RevenueReport extends Page implements HasTable
                 $index + 1,
                 $order->customer_name ?: '-',
                 number_format((float) $order->total_price, 0, ',', '.'),
-                $this->formatPaymentMethod($order->payment_method),
+                $order->payment_status === 'paid' ? 'Dibayar' : 'Belum Dibayar',
                 $this->formatStatus($order->status),
                 $order->created_at?->format('d-m-Y H:i') ?? '-',
             );
@@ -147,7 +144,7 @@ class RevenueReport extends Page implements HasTable
     {
         $query = Order::query();
 
-        return $this->applyDateFilter($query, $this->getDateFilterData())
+        return $this->applyDateFilter($query->where('status', 'done'), $this->getDateFilterData())
             ->latest('created_at');
     }
 
@@ -172,16 +169,6 @@ class RevenueReport extends Page implements HasTable
                 $data['created_until'] ?? null,
                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
             );
-    }
-
-    protected function formatPaymentMethod(?string $state): string
-    {
-        return match ($state) {
-            'transfer_bank' => 'Transfer Bank',
-            'e_wallet' => 'E-Wallet',
-            'cash' => 'Cash',
-            default => '-',
-        };
     }
 
     protected function formatStatus(string $state): string

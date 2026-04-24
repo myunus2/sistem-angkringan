@@ -17,18 +17,18 @@ class AdminStatsOverview extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $totalPesanan = Order::count();
-        $totalPendapatan = (float) Order::sum('total_price');
+        $totalPesanan = Order::where('status', 'done')->count();
+        $totalPendapatan = (float) Order::where('status', 'done')->sum('total_price');
         $jumlahMenu = Product::count();
         $pesananPending = Order::where('status', 'pending')->count();
 
         return [
             Stat::make('Total Pesanan', number_format($totalPesanan))
-                ->description('Jumlah seluruh order')
+                ->description('Pesanan yang sudah selesai')
                 ->color('primary')
                 ->url(OrdersReport::getUrl()),
             Stat::make('Pendapatan', 'Rp ' . number_format($totalPendapatan, 0, ',', '.'))
-                ->description('Akumulasi dari semua pesanan')
+                ->description('Akumulasi total harga pesanan selesai')
                 ->color('success')
                 ->url(RevenueReport::getUrl()),
             Stat::make('Jumlah Menu', number_format($jumlahMenu))

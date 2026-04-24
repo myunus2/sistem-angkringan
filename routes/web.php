@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderReceiptController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentMethodController;
 
@@ -18,3 +19,6 @@ Route::prefix('api/payment-methods')->group(function () {
 
 // DASHBOARD ADMIN
 Route::redirect('/filament-fix', '/admin')->name('filament.admin.pages.dashboard');
+Route::redirect('/admind', '/admin');
+Route::middleware('auth')->get('/admin/order-receipts/{order}', [OrderReceiptController::class, 'show'])
+    ->name('admin.orders.receipt');

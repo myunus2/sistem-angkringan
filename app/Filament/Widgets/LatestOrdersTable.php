@@ -27,6 +27,11 @@ class LatestOrdersTable extends TableWidget
                     ->label('Total')
                     ->money('IDR')
                     ->sortable(),
+                TextColumn::make('payment_status')
+                    ->label('Pembayaran')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => $state === 'paid' ? 'Dibayar' : 'Belum Dibayar')
+                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'warning'),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {

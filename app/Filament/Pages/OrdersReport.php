@@ -31,7 +31,7 @@ class OrdersReport extends Page implements HasTable
 
     public function getHeading(): string | Htmlable | null
     {
-        return 'Semua Pesanan';
+        return 'Total Pesanan Selesai';
     }
 
     protected function getHeaderActions(): array
@@ -50,7 +50,7 @@ class OrdersReport extends Page implements HasTable
         return $table
             ->query($this->getFilteredOrdersQuery())
             ->defaultSort('created_at', 'desc')
-            ->description(fn (): string => 'Total pesanan pada filter ini: ' . number_format($this->getFilteredOrdersCount()))
+            ->description(fn (): string => 'Total pesanan selesai pada filter ini: ' . number_format($this->getFilteredOrdersCount()))
             ->columns([
                 Tables\Columns\TextColumn::make('customer_name')
                     ->label('Nama')
@@ -59,14 +59,11 @@ class OrdersReport extends Page implements HasTable
                 Tables\Columns\TextColumn::make('table_number')
                     ->label('Meja')
                     ->placeholder('-'),
-                Tables\Columns\TextColumn::make('payment_method')
+                Tables\Columns\TextColumn::make('payment_status')
                     ->label('Pembayaran')
-                    ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'transfer_bank' => 'Transfer Bank',
-                        'e_wallet' => 'E-Wallet',
-                        'cash' => 'Cash',
-                        default => '-',
-                    }),
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => $state === 'paid' ? 'Dibayar' : 'Belum Dibayar')
+                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'warning'),
                 Tables\Columns\TextColumn::make('total_price')
                     ->label('Total')
                     ->money('IDR')
@@ -125,7 +122,7 @@ class OrdersReport extends Page implements HasTable
                 $index + 1,
                 $order->customer_name ?: '-',
                 $order->table_number ?: '-',
-                $this->formatPaymentMethod($order->payment_method),
+                $order->payment_status === 'paid' ? 'Dibayar' : 'Belum Dibayar',
                 number_format((float) $order->total_price, 0, ',', '.'),
                 $this->formatStatus($order->status),
                 $order->created_at?->format('d-m-Y H:i') ?? '-',
@@ -150,7 +147,7 @@ class OrdersReport extends Page implements HasTable
     {
         $query = Order::query();
 
-        return $this->applyDateFilter($query, $this->getDateFilterData())
+        return $this->applyDateFilter($query->where('status', 'done'), $this->getDateFilterData())
             ->latest('created_at');
     }
 
@@ -175,16 +172,6 @@ class OrdersReport extends Page implements HasTable
                 $data['created_until'] ?? null,
                 fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
             );
-    }
-
-    protected function formatPaymentMethod(?string $state): string
-    {
-        return match ($state) {
-            'transfer_bank' => 'Transfer Bank',
-            'e_wallet' => 'E-Wallet',
-            'cash' => 'Cash',
-            default => '-',
-        };
     }
 
     protected function formatStatus(string $state): string

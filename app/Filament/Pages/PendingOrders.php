@@ -3,6 +3,9 @@
 namespace App\Filament\Pages;
 
 use App\Models\Order;
+use Filament\Actions\Action;
+use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\EmbeddedTable;
 use Filament\Schemas\Schema;
@@ -50,14 +53,11 @@ class PendingOrders extends Page implements HasTable
                     ->label('Total')
                     ->money('IDR')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_method')
+                Tables\Columns\TextColumn::make('payment_status')
                     ->label('Pembayaran')
-                    ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'transfer_bank' => 'Transfer Bank',
-                        'e_wallet' => 'E-Wallet',
-                        'cash' => 'Cash',
-                        default => '-',
-                    }),
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => $state === 'paid' ? 'Dibayar' : 'Belum Dibayar')
+                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'warning'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
@@ -69,6 +69,27 @@ class PendingOrders extends Page implements HasTable
                     ->label('Tanggal')
                     ->dateTime('d M Y H:i')
                     ->sortable(),
+            ])
+            ->actions([
+                Action::make('confirm')
+                    ->label('Konfirmasi')
+                    ->icon('heroicon-o-check-circle')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->action(function (Order $record): void {
+                        $record->update([
+                            'status' => 'done',
+                            'completed_at' => now(),
+                        ]);
+
+                        Notification::make()
+                            ->title('Pesanan dikonfirmasi dan dipindah ke total pesanan')
+                            ->success()
+                            ->send();
+                    }),
+                DeleteAction::make()
+                    ->label('Hapus')
+                    ->requiresConfirmation(),
             ]);
     }
 
