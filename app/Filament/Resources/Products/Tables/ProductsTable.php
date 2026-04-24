@@ -44,13 +44,6 @@ class ProductsTable
                     ->formatStateUsing(fn (?string $state): string => $state ? 'Tersedia' : 'Belum ada')
                     ->badge()
                     ->color(fn (?string $state): string => $state ? 'success' : 'gray'),
-
-                // 3. Menampilkan Stok
-                TextColumn::make('stock')
-                    ->label('Stok Tersedia')
-                    ->badge() // Membuat tampilan stok seperti label/badge
-                    ->color(fn (int $state): string => $state <= 5 ? 'danger' : 'success') // Merah jika stok <= 5
-                    ->sortable(),
                     // 4. Komposisi
                     TextColumn::make('komposisi')
                         ->label('Komposisi')

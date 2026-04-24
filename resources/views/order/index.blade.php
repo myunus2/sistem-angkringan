@@ -173,8 +173,7 @@
                         <span id="focus-stock" class="text-sm text-slate-500"></span>
                         <div class="flex gap-3">
                             <button id="focus-ar-button" class="rounded-3xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-600 shadow-lg">
-                                Lihat dalam 3D 
-                            </button>
+                                Lihat dalam 3D</button>
                             <button id="focus-close-button" class="rounded-3xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">Tutup</button>
                         </div>
                     </div>
@@ -240,7 +239,7 @@
                     arButton.disabled = !model3d;
                     arButton.classList.toggle('opacity-50', !model3d);
                     arButton.classList.toggle('cursor-not-allowed', !model3d);
-                    arButton.textContent = model3d ? 'Lihat dalam 3D (AR)' : 'Model 3D belum ada';
+                    arButton.textContent = model3d ? 'Lihat dalam 3D' : 'Model 3D belum ada';
 
                     grid.classList.add('blur');
                     card.classList.add('focused');
