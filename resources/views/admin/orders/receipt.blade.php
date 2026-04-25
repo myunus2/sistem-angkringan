@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struk Pesanan #{{ $order->id }}</title>
+    <title>Struk Pesanan Pembelian #{{ $order->id }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +11,7 @@
             color: #111827;
         }
         .receipt {
-            max-width: 420px;
+            max-width: 420px;git 
             margin: 0 auto;
             border: 1px dashed #9ca3af;
             padding: 20px;
