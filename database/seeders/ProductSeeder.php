@@ -20,7 +20,7 @@ class ProductSeeder extends Seeder
         ]);
 
         Product::create([
-            'name' => 'Teh Tarik',
+            'name' => 'Teh Hijau',
             'price' => 7000,
             'stock' => 100,
         ]);
