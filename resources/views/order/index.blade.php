@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Menu Angkringan Modern</title>
+    <title>Menu Angkringan Cakra</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -57,9 +57,9 @@
         <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80" 
              class="w-full h-full object-cover transform scale-105" alt="Banner Angkringan">
         <div class="absolute bottom-8 left-8 z-20 text-white">
-            <h1 class="text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Modern</h1>
+            <h1 class="text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Cakra</h1>
             <p class="text-sm md:text-base font-medium opacity-90 mt-1 flex items-center gap-2">
-                <span>Jl. Utama No. 12</span>
+                <span>Jl. Cubadak Tanah Datar Batusangkar. 14 </span>
             </p>
         </div>
     </div>
