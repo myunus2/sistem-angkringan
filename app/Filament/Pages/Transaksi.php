@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Models\Order;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\EmbeddedTable;
@@ -20,6 +21,8 @@ class Transaksi extends Page implements HasTable
     use Tables\Concerns\InteractsWithTable;
 
     protected static ?string $title = 'Transaksi';
+
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
     public function mount(): void
     {
@@ -99,6 +102,36 @@ class Transaksi extends Page implements HasTable
                     ]),
             ])
             ->actions([
+                Action::make('change_payment')
+                    ->label('Ubah Pembayaran')
+                    ->icon('heroicon-o-credit-card')
+                    ->color('info')
+                    ->fillForm(fn (Order $record): array => [
+                        'payment_status' => $record->payment_status,
+                    ])
+                    ->schema([
+                        Select::make('payment_status')
+                            ->label('Status Pembayaran')
+                            ->options([
+                                'unpaid' => 'Belum Dibayar',
+                                'paid' => 'Dibayar',
+                            ])
+                            ->native(false)
+                            ->required(),
+                    ])
+                    ->action(function (Order $record, array $data): void {
+                        $isPaid = ($data['payment_status'] ?? 'unpaid') === 'paid';
+
+                        $record->update([
+                            'payment_status' => $data['payment_status'],
+                            'payment_method' => $isPaid ? ($record->payment_method ?: 'cash') : null,
+                        ]);
+
+                        Notification::make()
+                            ->title('Status pembayaran berhasil diubah')
+                            ->success()
+                            ->send();
+                    }),
                 Action::make('confirm')
                     ->label('Konfirmasi')
                     ->icon('heroicon-o-check-circle')
@@ -116,6 +149,12 @@ class Transaksi extends Page implements HasTable
                             ->success()
                             ->send();
                     }),
+                Action::make('print_receipt')
+                    ->label('Cetak Struk')
+                    ->icon('heroicon-o-printer')
+                    ->color('warning')
+                    ->url(fn (Order $record): string => '/admin/order-receipts/' . $record->id)
+                    ->openUrlInNewTab(),
                 DeleteAction::make()
                     ->label('Hapus')
                     ->requiresConfirmation(),
