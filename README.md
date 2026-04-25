@@ -19,7 +19,7 @@ Aplikasi ini bertujuan untuk membantu digitalisasi usaha angkringan agar lebih e
 | (M.Yunus) | (2330407027) |
 | (Anisatun Fauziah) | (2330407005) |
 | (Eva Rahmayanti Br Saragih) | (2330407010) |
-| (Fadillah Akmal) | (24304070) |
+| (Fadillah Akmal) | (2430407056 ) |
 
 ---
 
