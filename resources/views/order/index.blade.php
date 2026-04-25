@@ -59,7 +59,7 @@
         <div class="absolute bottom-8 left-8 z-20 text-white">
             <h1 class="text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Cakra</h1>
             <p class="text-sm md:text-base font-medium opacity-90 mt-1 flex items-center gap-2">
-                <span>Jl. Cubadak Tanah Datar Batusangkar. 14 </span>
+                <span>Jl. Cubadak Tanah Datar Batusangkar. 28 </span>
             </p>
         </div>
     </div>
