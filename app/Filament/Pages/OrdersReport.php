@@ -71,7 +71,7 @@ class OrdersReport extends Page implements HasTable
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pending',
+                        'pending' => 'Menunggu',
                         'ready' => 'Siap',
                         'done' => 'Selesai',
                         'cancelled' => 'Dibatalkan',
