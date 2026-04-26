@@ -1,22 +1,24 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderReceiptController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentMethodController;
 
-// Halaman utama untuk pelanggan pilih menu
+// Halaman utama
 Route::get('/', [OrderController::class, 'index'])->name('index');
 
-// API Routes untuk Payment Methods
+// API payment
 Route::prefix('api/payment-methods')->group(function () {
-    // Get all active payment methods
     Route::get('/', [PaymentMethodController::class, 'getActive']);
-    
-    // Get payment methods by type (bank or ewallet)
     Route::get('/type/{type}', [PaymentMethodController::class, 'getByType']);
-    
-    // CRUD operations
     Route::post('/', [PaymentMethodController::class, 'store']);
     Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update']);
     Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy']);
 });
+
+// DASHBOARD ADMIN
+Route::redirect('/filament-fix', '/admin')->name('filament.admin.pages.dashboard');
+Route::redirect('/admind', '/admin');
+Route::middleware('auth')->get('/admin/order-receipts/{order}', [OrderReceiptController::class, 'show'])
+    ->name('admin.orders.receipt');

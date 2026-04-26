@@ -61,6 +61,21 @@ class ProductForm
                             ->visibility('public')
                             ->nullable()
                             ->columnSpanFull(),
+
+                        FileUpload::make('model_3d')
+                            ->label('Model 3D Produk (.glb / .gltf)')
+                            ->disk('public')
+                            ->directory('product-models')
+                            ->visibility('public')
+                            ->acceptedFileTypes([
+                                'model/gltf-binary',
+                                'model/gltf+json',
+                                '.glb',
+                                '.gltf',
+                            ])
+                            ->helperText('Upload file 3D untuk fitur AR. Format yang disarankan: .glb')
+                            ->nullable()
+                            ->columnSpanFull(),
                     ])->columns(2),
             ]);
     }

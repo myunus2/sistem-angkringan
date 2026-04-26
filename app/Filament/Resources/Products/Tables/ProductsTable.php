@@ -39,12 +39,23 @@ class ProductsTable
                     ->money('IDR')
                     ->sortable(),
 
-                // 3. Menampilkan Stok
-                TextColumn::make('stock')
-                    ->label('Stok Tersedia')
-                    ->badge() // Membuat tampilan stok seperti label/badge
-                    ->color(fn (int $state): string => $state <= 5 ? 'danger' : 'success') // Merah jika stok <= 5
-                    ->sortable(),
+                TextColumn::make('model_3d')
+                    ->label('Model 3D')
+                    ->formatStateUsing(fn (?string $state): string => $state ? 'Tersedia' : 'Belum ada')
+                    ->badge()
+                    ->color(fn (?string $state): string => $state ? 'success' : 'gray'),
+                    // 4. Komposisi
+                    TextColumn::make('komposisi')
+                        ->label('Komposisi')
+                        ->limit(20)
+                        ->tooltip(fn ($record) => $record->komposisi),
+
+                    // 5. Deskripsi
+                    TextColumn::make('deskripsi')
+                        ->label('Deskripsi')
+                        ->limit(30)
+                        ->tooltip(fn ($record) => $record->deskripsi),
+                        
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('type')

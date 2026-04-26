@@ -1,59 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Pemesanan Angkringan
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Angkringan Cakra 
+Sistem Pemesanan Angkringan Berbasis Web
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 📖 Deskripsi
+Aplikasi web ini adalah sistem pemesanan untuk usaha angkringan modern. Dibangun menggunakan Laravel dan Filament, sistem ini menyediakan antarmuka pelanggan untuk melihat menu serta dashboard admin untuk mengelola produk dan memonitor pesanan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Aplikasi ini bertujuan untuk membantu digitalisasi usaha angkringan agar lebih efisien, terorganisir, dan mudah dalam pengelolaan transaksi serta pelayanan pelanggan.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## 👥 Tim Pengembang
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+| Nama | NIM |
+|------|-----|
+| (M.Yunus) | (2330407027) |
+| (Anisatun Fauziah) | (2330407005) |
+| (Eva Rahmayanti Br Saragih) | (2330407010) |
+| (Fadillah Akmal) | (2430407056 ) |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🚀 Fitur Utama
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- Menu pemesanan angkringan dengan filter kategori: makanan, minuman, snack
+- Tampilan daftar produk dengan foto, harga, stok, dan kategori
+- Sistem pemesanan sederhana untuk pelanggan
+- API `payment-methods` untuk mengelola metode pembayaran (CRUD)
+- Dashboard admin dengan Filament untuk menampilkan statistik pesanan dan pendapatan
+- Manajemen data produk, kategori, pesanan, dan transaksi
+- Struktur database lengkap (produk, kategori, pesanan, item pesanan, transaksi, meja, pengguna)
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 🗂️ Struktur Proyek
 
-## Contributing
+- `routes/web.php` - rute aplikasi utama dan API pembayaran  
+- `app/Http/Controllers/OrderController.php` - halaman menu depan untuk pelanggan  
+- `app/Http/Controllers/PaymentMethodController.php` - endpoint API metode pembayaran  
+- `app/Http/Controllers/AdminController.php` - dashboard admin dan data agregasi pesanan  
+- `app/Models/` - model Laravel untuk entitas aplikasi  
+- `app/Filament/` - konfigurasi panel Filament, resource, halaman, dan widget admin  
+- `resources/views/order/index.blade.php` - halaman depan pemesanan  
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🛠️ Teknologi yang Digunakan
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- Laravel (PHP Framework)
+- PHP
+- Filament Admin Panel
+- Blade Template Engine
+- Tailwind CSS
+- MySQL (Database)
+- Composer
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## ⚙️ Cara Instalasi Lokal
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+1. Clone repository:
+```bash
+git clone https://github.com/myunus2/sistem-angkringan.git

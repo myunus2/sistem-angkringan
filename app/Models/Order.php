@@ -11,10 +11,19 @@ class Order extends Model
         'customer_name',
         'table_number',
         'payment_method',
+        'payment_status',
         'total_price',
         'status',
+        'completed_at',
         'proof_of_payment'
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'completed_at' => 'datetime',
+        ];
+    }
 
     // Eager load relations by default
     protected $with = ['items.product'];

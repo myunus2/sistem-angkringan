@@ -42,7 +42,7 @@ class PaymentMethodSeeder extends Seeder
             'type' => 'ewallet',
             'name' => 'GoPay',
             'account_number' => '081234567890',
-            'account_holder' => 'Angkringan Modern',
+            'account_holder' => 'Angkringan cakra',
             'is_active' => true
         ]);
 
@@ -58,7 +58,7 @@ class PaymentMethodSeeder extends Seeder
             'type' => 'ewallet',
             'name' => 'Dana',
             'account_number' => '081234567890',
-            'account_holder' => 'Angkringan Modern',
+            'account_holder' => 'Angkringan Cakra',
             'is_active' => true
         ]);
     }
