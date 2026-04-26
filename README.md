@@ -63,4 +63,4 @@ Aplikasi ini bertujuan untuk membantu digitalisasi usaha angkringan agar lebih e
 
 1. Clone repository:
 ```bash
-git clone https://github.com/username/sistem-angkringan.git
+git clone https://github.com/myunus2/sistem-angkringan.git
