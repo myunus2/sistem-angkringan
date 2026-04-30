@@ -23,6 +23,10 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
+            ->renderHook(
+            'panels::head.end',
+            fn () => new \Illuminate\Support\HtmlString('<script src="https://cdn.tailwindcss.com"></script>')
+        )
             ->path('admin')
             ->login()
             ->colors([

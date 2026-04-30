@@ -16,6 +16,8 @@ use Filament\Tables\Table;
 
 class OrderResource extends Resource
 {
+    // Tambahkan di dalam class OrderResource
+protected static bool $shouldRegisterNavigation = false;
     protected static ?string $model = Order::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shopping-bag';
