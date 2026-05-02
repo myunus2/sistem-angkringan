@@ -133,4 +133,7 @@
         </div>
 
     </div>
+@push('scripts')
+    <script src="https://cdn.tailwindcss.com"></script>
+@endpush
 </x-filament-panels::page>
