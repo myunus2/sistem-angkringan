@@ -17,4 +17,13 @@ class Product extends Model
         'images',
         'model_3d',
     ];
+
+    protected $appends = [
+        'image_url',
+    ];
+
+    public function getImageUrlAttribute(): ?string
+    {
+        return $this->images ? asset('storage/' . $this->images) : null;
+    }
 }
