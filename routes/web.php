@@ -7,15 +7,35 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KasirController;
 
-// Halaman utama
+
+use App\Http\Controllers\ProductController;
+
+Route::get('/products/create', function () {
+    return view('products.create');
+});
+
+Route::post('/products', [ProductController::class, 'store']);
+/*
+|--------------------------------------------------------------------------
+| HALAMAN UTAMA
+|--------------------------------------------------------------------------
+*/
 Route::get('/', [OrderController::class, 'index'])->name('index');
 
-// Checkout (Customer)
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER CHECKOUT
+|--------------------------------------------------------------------------
+*/
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
 
-// API payment
+/*
+|--------------------------------------------------------------------------
+| API PAYMENT
+|--------------------------------------------------------------------------
+*/
 Route::prefix('api/payment-methods')->group(function () {
     Route::get('/', [PaymentMethodController::class, 'getActive']);
     Route::get('/type/{type}', [PaymentMethodController::class, 'getByType']);
@@ -24,23 +44,33 @@ Route::prefix('api/payment-methods')->group(function () {
     Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'destroy']);
 });
 
-// =======================
-// 🔥 TAMBAHAN KASIR (POS)
-// =======================
+/*
+|--------------------------------------------------------------------------
+| 🔥 KASIR (POS SYSTEM)
+|--------------------------------------------------------------------------
+*/
 Route::get('/kasir', [KasirController::class, 'index'])->name('kasir');
 Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasir.checkout');
 
-// Print struk thermal
-Route::get('/print/{id}', function($id) {
+/*
+|--------------------------------------------------------------------------
+| PRINT STRUK
+|--------------------------------------------------------------------------
+*/
+Route::get('/print/{id}', function ($id) {
     $order = \App\Models\Order::with('items.product')->findOrFail($id);
     return view('print.thermal', compact('order'));
-});
+})->name('print.struk');
 
-// =======================
-// Dashboard Admin
-// =======================
-Route::redirect('/filament-fix', '/admin')->name('filament.admin.pages.dashboard');
+/*
+|--------------------------------------------------------------------------
+| ADMIN
+|--------------------------------------------------------------------------
+*/
+Route::redirect('/filament-fix', '/admin');
 Route::redirect('/admind', '/admin');
 
-Route::middleware('auth')->get('/admin/order-receipts/{order}', [OrderReceiptController::class, 'show'])
-    ->name('admin.orders.receipt');
+Route::middleware('auth')->group(function () {
+    Route::get('/admin/order-receipts/{order}', [OrderReceiptController::class, 'show'])
+        ->name('admin.orders.receipt');
+});
