@@ -22,7 +22,7 @@ class Transaksi extends Page implements HasTable
 {
     use Tables\Concerns\InteractsWithTable;
 
-    protected static ?string $title = 'Transaksi';
+    protected static ?string $title = 'Kasir';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
@@ -33,12 +33,12 @@ class Transaksi extends Page implements HasTable
 
     public function getHeading(): string | Htmlable | null
     {
-        return 'Semua Transaksi';
+        return 'Semua Kasir';
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Transaksi';
+        return 'Kasir';
     }
 
     public static function shouldRegisterNavigation(): bool
@@ -59,7 +59,7 @@ class Transaksi extends Page implements HasTable
                     ->whereIn('status', ['pending', 'done'])
                     ->latest('created_at')
             )
-            ->description(fn (): string => 'Menampilkan semua transaksi dengan status pending dan selesai.')
+            ->description(fn (): string => 'Menampilkan semua kasir dengan status pending dan selesai.')
             ->columns([
                 Tables\Columns\TextColumn::make('customer_name')
                     ->label('Nama')
@@ -176,7 +176,7 @@ class Transaksi extends Page implements HasTable
                     ->label('Cetak Struk')
                     ->icon('heroicon-o-printer')
                     ->color('warning')
-                    ->url(fn (Order $record): string => '/admin/order-receipts/' . $record->id)
+                    ->url(fn (Order $record): string => route('admin.orders.receipt', $record))
                     ->openUrlInNewTab(),
                 DeleteAction::make()
                     ->label('Hapus')
