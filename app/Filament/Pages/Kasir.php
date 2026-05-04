@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\DB;
 
 class Kasir extends Page
 {
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calculator';
-    protected static ?string $navigationLabel = 'Kasir';
-    protected static ?string $title = 'Kasir';
+     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationLabel = 'Pesanan';
+    protected static ?string $title = 'Pesanan';
 
     protected string $view = 'filament.pages.kasir';
 
     public $search = '';
     public $cart = [];
+    public $customerName = '';
+    public $tableNumber = '';
     // 1. Tambahkan properti untuk kategori aktif
     public $activeCategory = 'Semua';
 
@@ -61,9 +63,16 @@ class Kasir extends Page
             return;
         }
 
+        if (!trim($this->customerName) || !trim($this->tableNumber)) {
+            Notification::make()->title('Nama dan nomor meja wajib diisi')->danger()->send();
+            return;
+        }
+
         DB::transaction(function () {
             $order = Order::create([
                 'user_id' => auth()->id(),
+                'customer_name' => $this->customerName,
+                'table_number' => $this->tableNumber,
                 'total_price' => $this->total,
                 'status' => 'done',
                 'payment_status' => 'paid',
@@ -81,6 +90,8 @@ class Kasir extends Page
         });
 
         $this->cart = [];
+        $this->customerName = '';
+        $this->tableNumber = '';
         Notification::make()->title('Transaksi Berhasil Disimpan!')->success()->send();
     }
 
