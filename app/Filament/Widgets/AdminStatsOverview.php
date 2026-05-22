@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Pages\OrdersReport;
 use App\Filament\Pages\PendingOrders;
 use App\Filament\Pages\RevenueReport;
+use App\Filament\Pages\Transaksi;
 use App\Filament\Resources\Products\ProductResource;
 use App\Models\Order;
 use App\Models\Product;
@@ -26,7 +26,7 @@ class AdminStatsOverview extends StatsOverviewWidget
             Stat::make('Total Pesanan', number_format($totalPesanan))
                 ->description('Pesanan yang sudah selesai')
                 ->color('primary')
-                ->url(OrdersReport::getUrl()),
+                ->url(Transaksi::getUrl()),
             Stat::make('Pendapatan', 'Rp ' . number_format($totalPendapatan, 0, ',', '.'))
                 ->description('Akumulasi total harga pesanan selesai')
                 ->color('success')
