@@ -54,16 +54,6 @@ Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasi
 
 /*
 |--------------------------------------------------------------------------
-| PRINT STRUK
-|--------------------------------------------------------------------------
-*/
-Route::get('/print/{id}', function ($id) {
-    $order = \App\Models\Order::with('items.product')->findOrFail($id);
-    return view('print.thermal', compact('order'));
-})->name('print.struk');
-
-/*
-|--------------------------------------------------------------------------
 | ADMIN
 |--------------------------------------------------------------------------
 */
