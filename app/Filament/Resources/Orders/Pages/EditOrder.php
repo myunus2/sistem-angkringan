@@ -8,6 +8,7 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Support\Enums\Width;
 
 class EditOrder extends EditRecord
 {
@@ -46,6 +47,11 @@ class EditOrder extends EditRecord
                 }),
             DeleteAction::make(),
         ];
+    }
+
+    public function getMaxContentWidth(): Width | string | null
+    {
+        return Width::Full;
     }
 
     protected function mutateFormDataBeforeSave(array $data): array

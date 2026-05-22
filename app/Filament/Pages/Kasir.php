@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Order;
 use Filament\Pages\Page;
 use Filament\Notifications\Notification;
+use Filament\Support\Enums\Width;
 use Illuminate\Support\Facades\DB;
 
 class Kasir extends Page
@@ -22,6 +23,11 @@ class Kasir extends Page
     public $tableNumber = '';
     // 1. Tambahkan properti untuk kategori aktif
     public $activeCategory = 'Semua';
+
+    public function getMaxContentWidth(): Width | string | null
+    {
+        return Width::Full;
+    }
 
     // 2. Fungsi untuk mengubah kategori saat tombol diklik
     public function setCategory($category)
@@ -75,7 +81,7 @@ class Kasir extends Page
                 'table_number' => $this->tableNumber,
                 'total_price' => $this->total,
                 'status' => 'done',
-                'payment_status' => 'paid',
+                'payment_status' => 'unpaid',
                 'payment_method' => 'cash',
                 'completed_at' => now(),
             ]);
@@ -110,9 +116,12 @@ class Kasir extends Page
         }
 
         return [
-            'products' => $query->get(),
+            'products' => $query
+                ->select(['id', 'name', 'price', 'type', 'description', 'images', 'model_3d'])
+                ->simplePaginate(36)
+                ->withQueryString(),
             // Daftar kategori yang akan muncul sebagai tombol
-            'categories' => ['Semua', 'Makanan', 'Minuman', 'Snack'],
+            'categories' => ['Semua', 'makanan', 'minuman', 'snack'],
         ];
     }
     // Fungsi untuk menambah jumlah qty

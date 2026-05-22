@@ -6,9 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Menu Angkringan Modern</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body {  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -26,6 +25,11 @@
             pointer-events: auto;
         }
         .focus-overlay { backdrop-filter: blur(6px); }
+        .hero-banner {
+            background-image: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.75)), url('{{ asset('images/air.jpg') }}');
+            background-size: cover;
+            background-position: center;
+        }
         @media (max-width: 768px) {
             .snap-x-container {
                 display: flex;
@@ -38,12 +42,10 @@
         }
     </style>
 </head>
-<body class="bg-[#FDFDFD] pb-32">
+<body class="bg-gray-200 pb-32">
 
-    <div class="relative w-full h-64 md:h-80 bg-orange-500 overflow-hidden shadow-md">
+    <div class="relative w-full h-64 md:h-80 bg-orange-500 overflow-hidden shadow-md hero-banner">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10"></div>
-        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80"
-             class="w-full h-full object-cover transform scale-105" alt="Banner Angkringan">
         <div class="absolute bottom-8 left-8 z-20 text-white">
             <h1 class="text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Modern</h1>
             <p class="text-sm md:text-base font-medium opacity-90 mt-1"><span>Jl. Utama No. 12</span></p>
@@ -95,15 +97,17 @@
                  data-price="Rp {{ number_format($product->price, 0, ',', '.') }}"
                  data-description="{{ e($product->description) }}"
                  data-composition="{{ e($product->composition) }}"
-                 data-image="{{ $product->images ? asset('storage/' . $product->images) : 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=1200&q=80' }}"
+                 data-image="{{ $product->images ? asset('storage/' . $product->images) : asset('images/air.jpg') }}"
                  data-model-3d="{{ $product->model_3d ? asset('storage/' . $product->model_3d) : '' }}">
                 <div class="relative aspect-square rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50 mb-2 cursor-pointer product-image-container">
                     @if($product->images)
                         <img src="{{ asset('storage/' . $product->images) }}"
                              alt="{{ $product->name }}"
+                             loading="lazy"
+                             decoding="async"
                              class="w-full h-full object-cover transition-transform group-hover:scale-110">
                     @else
-                        <div class="w-full h-full flex items-center justify-center text-gray-300 font-bold uppercase text-[9px]">No Photo</div>
+                        <img src="{{ asset('images/air.jpg') }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
                     @endif
                     <div class="absolute inset-0 bg-black/0 hover:bg-black/10 transition"></div>
                 </div>
@@ -132,6 +136,12 @@
             </div>
             @endforelse
         </div>
+
+        @if($products->hasPages())
+            <div class="mt-8 flex justify-center">
+                {{ $products->links() }}
+            </div>
+        @endif
     </div>
 
     {{-- Modal Detail Produk --}}
@@ -157,7 +167,6 @@
                     </div>
                     <div class="mt-6 flex flex-wrap gap-3 justify-end">
                         <button id="focus-ar-button" class="rounded-3xl bg-blue-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-blue-600 shadow-lg">Lihat dalam 3D</button>
-                        <button id="focus-add-cart" class="rounded-3xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 shadow-lg">+ Keranjang</button>
                         <button id="focus-close-button" class="rounded-3xl bg-gray-100 px-5 py-3 text-sm font-semibold text-gray-600 transition hover:bg-gray-200">Tutup</button>
                     </div>
                 </div>
@@ -170,7 +179,6 @@
         <a href="{{ route('checkout.index') }}"
            class="flex items-center gap-3 bg-orange-500 text-white px-6 py-4 rounded-full shadow-2xl font-extrabold text-sm hover:bg-orange-600 active:scale-95 transition">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span>Keranjang</span>
             <span id="cart-badge" class="bg-white text-orange-500 rounded-full text-xs font-extrabold w-6 h-6 flex items-center justify-center">0</span>
         </a>
     </div>
@@ -200,30 +208,15 @@
         let focusedProduct = null;
 
         document.addEventListener('DOMContentLoaded', function () {
-            var grid = document.querySelector('.product-grid');
-            var overlay = document.getElementById('product-focus-overlay');
-            var closeButtons = document.querySelectorAll('#product-focus-close, #focus-close-button');
-            var arButton = document.getElementById('focus-ar-button');
-            var addCartBtn = document.getElementById('focus-add-cart');
-
-            if (addCartBtn) {
-                addCartBtn.addEventListener('click', function () {
-                    if (focusedProduct) {
-                        addToCart(focusedProduct);
-                        addCartBtn.textContent = '✅ Ditambahkan!';
-                        addCartBtn.classList.replace('bg-orange-500', 'bg-green-500');
-                        setTimeout(() => {
-                            addCartBtn.textContent = '+ Keranjang';
-                            addCartBtn.classList.replace('bg-green-500', 'bg-orange-500');
-                        }, 1200);
-                    }
-                });
-            }
+            const grid = document.querySelector('.product-grid');
+            const overlay = document.getElementById('product-focus-overlay');
+            const closeButtons = document.querySelectorAll('#product-focus-close, #focus-close-button');
+            const arButton = document.getElementById('focus-ar-button');
 
             if (arButton) {
                 arButton.addEventListener('click', function () {
                     if (arButton.disabled) return;
-                    var arUrl = '/ar.html'
+                    const arUrl = '/ar.html'
                         + '?name=' + encodeURIComponent(document.getElementById('focus-name').textContent)
                         + '&price=' + encodeURIComponent(document.getElementById('focus-price').textContent)
                         + '&description=' + encodeURIComponent(document.getElementById('focus-description').textContent)
@@ -235,14 +228,14 @@
 
             document.querySelectorAll('.product-image-container').forEach(function (container) {
                 container.addEventListener('click', function () {
-                    var card = container.closest('.product-card');
+                    const card = container.closest('.product-card');
                     if (!card || !grid) return;
 
-                    var price = card.dataset.price;
-                    var model3d = card.getAttribute('data-model-3d') || '';
+                    const price = card.dataset.price;
+                    const model3d = card.dataset.model3d || '';
 
                     focusedProduct = {
-                        id: parseInt(card.dataset.productId),
+                        id: parseInt(card.dataset.productId, 10),
                         name: card.dataset.name,
                         price: parseInt(price.replace(/[^0-9]/g, ''), 10),
                         image: card.dataset.image,
@@ -254,11 +247,13 @@
                     document.getElementById('focus-description').textContent = card.dataset.description || 'Deskripsi tidak tersedia.';
                     document.getElementById('focus-composition').textContent = card.dataset.composition || 'Komposisi tidak tersedia.';
                     document.getElementById('focus-type').textContent = card.querySelector('span')?.textContent || '';
-                    arButton.setAttribute('data-model-3d', model3d);
-                    arButton.disabled = !model3d;
-                    arButton.classList.toggle('opacity-50', !model3d);
-                    arButton.classList.toggle('cursor-not-allowed', !model3d);
-                    arButton.textContent = model3d ? 'Lihat dalam 3D' : 'Model 3D belum ada';
+                    if (arButton) {
+                        arButton.setAttribute('data-model-3d', model3d);
+                        arButton.disabled = !model3d;
+                        arButton.classList.toggle('opacity-50', !model3d);
+                        arButton.classList.toggle('cursor-not-allowed', !model3d);
+                        arButton.textContent = model3d ? 'Lihat dalam 3D' : 'Model 3D belum ada';
+                    }
 
                     grid.classList.add('blur');
                     card.classList.add('focused');
@@ -273,6 +268,10 @@
                 overlay.classList.add('hidden');
                 focusedProduct = null;
             }
+
+            closeButtons.forEach(btn => btn.addEventListener('click', closeFocus));
+            overlay.addEventListener('click', e => { if (e.target === overlay) closeFocus(); });
+        });
             closeButtons.forEach(btn => btn.addEventListener('click', closeFocus));
             overlay.addEventListener('click', e => { if (e.target === overlay) closeFocus(); });
         });

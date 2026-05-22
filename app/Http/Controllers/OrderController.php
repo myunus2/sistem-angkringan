@@ -25,7 +25,10 @@ class OrderController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
-        $products = $query->get();
+        $products = $query
+            ->select(['id', 'name', 'price', 'type', 'description', 'composition', 'images', 'model_3d'])
+            ->simplePaginate(30)
+            ->withQueryString();
 
         return view('order.index', compact('products'));
     }

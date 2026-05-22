@@ -9,6 +9,7 @@ use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Illuminate\Support\Facades\Blade; // <-- Pastikan import ini ada di atas
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -26,10 +27,32 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => \Filament\Support\Colors\Color::Amber, // Ganti warna tombol/aksen
-                'gray' => \Filament\Support\Colors\Color::Slate,   // Ganti warna abu-abu dasar
+                'primary' => \Filament\Support\Colors\Color::Orange, 
+                'gray' => \Filament\Support\Colors\Color::Slate,   
             ])
-           
+            
+            // ====================================================================
+            // TAMBAHKAN HOOK CSS DI SINI UNTUK MENGUBAH WARNA SIDEBAR KIRI
+            // ====================================================================
+            ->renderHook(
+                'panels::styles.after',
+                fn (): string => Blade::render('
+                    <style>
+                        /* Mengubah warna background sidebar kiri di tema terang (Light Mode) */
+                        .fi-sidebar {
+                            background-color: #ffffff !important; /* Ganti dengan HEX warna yang Anda mau */
+                            border-right: 1px solid #e5e7eb !important;
+                        }
+
+                        /* Jika Anda ingin mengubah warna background item menu di dalam sidebar */
+                        .fi-sidebar-item-button {
+                            /* Gaya tambahan jika diperlukan */
+                        }
+                    </style>
+                '),
+            )
+            // ====================================================================
+
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\\Pages')
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\\Widgets')
@@ -37,9 +60,7 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
-            ->widgets([
-               
-            ])
+            ->widgets([])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -54,7 +75,5 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
-             
-            
     }
 }

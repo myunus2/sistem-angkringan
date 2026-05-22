@@ -18,12 +18,15 @@ class AdminSalesChart extends ChartWidget
         $startDate = now()->subDays(6)->startOfDay();
         $endDate = now()->endOfDay();
 
-        $salesByDate = Order::query()
-            ->selectRaw('DATE(created_at) as order_date, COALESCE(SUM(total_price), 0) as total_sales')
-            ->where('status', 'done')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy('order_date')
-            ->pluck('total_sales', 'order_date');
+        $cacheKey = 'admin.sales_chart.' . $startDate->format('Ymd') . '.' . $endDate->format('Ymd');
+        $salesByDate = cache()->remember($cacheKey, 30, function () use ($startDate, $endDate) {
+            return Order::query()
+                ->selectRaw('DATE(created_at) as order_date, COALESCE(SUM(total_price), 0) as total_sales')
+                ->where('status', 'done')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('order_date')
+                ->pluck('total_sales', 'order_date');
+        });
 
         $period = CarbonPeriod::create($startDate->toDateString(), $endDate->toDateString());
 

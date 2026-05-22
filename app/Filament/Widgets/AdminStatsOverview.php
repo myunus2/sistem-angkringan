@@ -17,10 +17,10 @@ class AdminStatsOverview extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        $totalPesanan = Order::where('status', 'done')->count();
-        $totalPendapatan = (float) Order::where('status', 'done')->sum('total_price');
-        $jumlahMenu = Product::count();
-        $pesananPending = Order::where('status', 'pending')->count();
+        $totalPesanan = cache()->remember('admin.stats.total_pesanan', 30, fn () => Order::where('status', 'done')->count());
+        $totalPendapatan = cache()->remember('admin.stats.total_pendapatan', 30, fn () => (float) Order::where('status', 'done')->sum('total_price'));
+        $jumlahMenu = cache()->remember('admin.stats.jumlah_menu', 30, fn () => Product::count());
+        $pesananPending = cache()->remember('admin.stats.pending', 30, fn () => Order::where('status', 'pending')->count());
 
         return [
             Stat::make('Total Pesanan', number_format($totalPesanan))
