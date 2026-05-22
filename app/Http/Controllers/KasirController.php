@@ -9,10 +9,24 @@ use App\Models\OrderItem;
 
 class KasirController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-        return view('kasir', compact('products'));
+        $query = Product::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('category') && $request->category !== 'semua') {
+            $query->where('type', $request->category);
+        }
+
+        $products = $query
+            ->latest()
+            ->paginate(24)
+            ->withQueryString();
+
+        return view('order.index', compact('products'));
     }
 
     public function checkout(Request $request)

@@ -1,26 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrderReceiptController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KasirController;
-
-
 use App\Http\Controllers\ProductController;
 
+/*
+|--------------------------------------------------------------------------
+| PRODUK
+|--------------------------------------------------------------------------
+*/
 Route::get('/products/create', function () {
     return view('products.create');
 });
-
 Route::post('/products', [ProductController::class, 'store']);
+
 /*
 |--------------------------------------------------------------------------
 | HALAMAN UTAMA
 |--------------------------------------------------------------------------
 */
-Route::get('/', [OrderController::class, 'index'])->name('index');
+Route::get('/', [KasirController::class, 'index'])->name('index');
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,8 @@ Route::get('/', [OrderController::class, 'index'])->name('index');
 */
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+// Mengubah {order} menjadi {id} agar tidak mencari model Order yang sudah dihapus
+Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +51,7 @@ Route::prefix('api/payment-methods')->group(function () {
 | 🔥 KASIR (POS SYSTEM)
 |--------------------------------------------------------------------------
 */
-Route::get('/kasir', [KasirController::class, 'index'])->name('kasir');
+Route::redirect('/kasir', '/admin/kasir')->name('kasir');
 Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasir.checkout');
 
 /*
@@ -59,8 +61,3 @@ Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasi
 */
 Route::redirect('/filament-fix', '/admin');
 Route::redirect('/admind', '/admin');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/admin/order-receipts/{order}', [OrderReceiptController::class, 'show'])
-        ->name('admin.orders.receipt');
-});
