@@ -6,6 +6,26 @@
         
         .product-card { border-radius: 1.25rem; border: 1px solid #f3f4f6; background: white; transition: all 0.2s; text-align: left; overflow: hidden; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; }
         .product-card:hover { border-color: #f97316; transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+        .product-qty-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            z-index: 20;
+            min-width: 1.75rem;
+            height: 1.75rem;
+            padding: 0 0.45rem;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f97316;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 900;
+            line-height: 1;
+            box-shadow: 0 8px 18px -8px rgba(249, 115, 22, 0.75);
+            border: 2px solid white;
+        }
         
         .price-tag { color: #f97316; font-weight: 800; }
         .cart-container { border-radius: 1.5rem; background: white; border: 1px solid #f3f4f6; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
@@ -37,7 +57,7 @@
         /* Ketika layar masuk ukuran Desktop/Komputer (Lebar di atas 1280px) */
         @media (min-width: 1280px) { 
             .pos-grid { 
-                grid-template-columns: repeat(5, minmax(0, 1fr)); /* Berubah jadi 6 Kolom */
+                grid-template-columns: repeat(4, minmax(0, 1fr)); /* Berubah jadi 6 Kolom */
                 gap: 1.25rem; 
             } 
         }
@@ -116,11 +136,11 @@
 
                 <div class="grid grid-cols-2 gap-3 mb-4">
                     <div>
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">Nama Pelanggan</label>
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-black-400 mb-1 block">Nama Pelanggan</label>
                         <x-filament::input class="w-full text-sm" wire:model.defer="customerName" placeholder="Masukkan nama" />
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1 block">Nomor Meja</label>
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-black-400 mb-1 block">Nomor Meja</label>
                         <x-filament::input class="w-full text-sm" wire:model.defer="tableNumber" placeholder="No. Meja" />
                     </div>
                 </div>
@@ -204,7 +224,13 @@
 
             <div class="pos-grid">
                 @foreach($products as $product)
-                <button type="button" wire:click="addToCart({{ $product->id }})" class="product-card group p-1.5 md:p-3 transition active:scale-95">
+                @php
+                    $productQty = $cart[$product->id]['qty'] ?? 0;
+                @endphp
+                <button type="button" wire:click="addToCart({{ $product->id }})" class="product-card group relative p-1.5 md:p-3 transition active:scale-95">
+                    @if($productQty > 0)
+                        <span class="product-qty-badge">{{ $productQty }}</span>
+                    @endif
                     <div class="relative overflow-hidden rounded-xl aspect-square mb-1.5 bg-gray-50">
                         @if($product->image_url)
                             <img src="{{ $product->image_url }}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">

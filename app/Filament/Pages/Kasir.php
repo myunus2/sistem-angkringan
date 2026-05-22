@@ -79,7 +79,7 @@ class Kasir extends Page
                 'customer_name' => $this->customerName,
                 'table_number' => $this->tableNumber,
                 'total_price' => $this->total,
-                'status' => 'done',
+                'status' => 'pending',
                 'payment_status' => 'unpaid',
                 'payment_method' => 'cash',
                 'completed_at' => now(),
@@ -111,7 +111,7 @@ class Kasir extends Page
 
         if ($this->activeCategory !== 'Semua') {
             // Pastikan kolom di database kamu namanya 'category'
-            $query->where('category', $this->activeCategory);
+            $query->where('type', $this->activeCategory);
         }
 
         return [

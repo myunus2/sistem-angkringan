@@ -42,7 +42,7 @@
         }
     </style>
 </head>
-<body class="bg-gray-200 pb-32">
+<body class="bg-gray-100 pb-32">
 
     <div class="relative w-full h-64 md:h-80 bg-orange-500 overflow-hidden shadow-md hero-banner">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10"></div>

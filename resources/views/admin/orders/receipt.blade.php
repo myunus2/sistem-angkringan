@@ -102,7 +102,7 @@
 
     <!-- META -->
     <div class="meta">
-        <div><strong>No:</strong> #{{ $order->id }}</div>
+        <div><strong>No:</strong> {{ $order->id }}</div>
         <div><strong>Nama:</strong> {{ $order->customer_name ?? '-' }}</div>
         <div><strong>Meja:</strong> {{ $order->table_number ?? '-' }}</div>
         <div><strong>Tanggal:</strong> {{ $order->created_at->format('d-m-Y H:i') }}</div>

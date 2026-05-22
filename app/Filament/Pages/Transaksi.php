@@ -25,6 +25,8 @@ class Transaksi extends Page
 
     public bool $showPaymentResult = false;
 
+    public bool $mobileDetailOpen = false;
+
     public string $statusFilter = 'all';
 
     public function mount(): void
@@ -69,6 +71,7 @@ class Transaksi extends Page
             'selectedOrder' => $this->selectedOrder,
             'change' => $this->change,
             'showPaymentResult' => $this->showPaymentResult,
+            'mobileDetailOpen' => $this->mobileDetailOpen,
         ];
     }
 
@@ -116,6 +119,7 @@ class Transaksi extends Page
     {
         $this->selectedOrderId = $orderId;
         $this->syncPaymentState();
+        $this->mobileDetailOpen = true;
     }
 
     public function updatedStatusFilter(): void
@@ -123,6 +127,12 @@ class Transaksi extends Page
         $firstOrder = $this->orders->first();
         $this->selectedOrderId = $firstOrder?->id;
         $this->syncPaymentState();
+        $this->mobileDetailOpen = false;
+    }
+
+    public function closeMobileDetail(): void
+    {
+        $this->mobileDetailOpen = false;
     }
 
     public function finishCashInput(int|string|null $value): void
@@ -199,6 +209,7 @@ class Transaksi extends Page
 
         $this->selectedOrderId = $this->orders->first()?->id;
         $this->syncPaymentState();
+        $this->mobileDetailOpen = false;
 
         Notification::make()
             ->title('Pesanan dihapus')

@@ -7,6 +7,102 @@
             align-items: start;
         }
 
+        /* ===== Detail transaksi (struk POS style) ===== */
+        .pos-receipt-container {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            border-radius: 0.875rem;
+            padding: 1.1rem;
+        }
+
+        .menu-line {
+            display: grid;
+            grid-template-columns: 38px 1fr auto;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.4rem 0;
+        }
+
+        .menu-thumb {
+            width: 34px;
+            height: 34px;
+            border-radius: 0.6rem;
+            background: #f3f4f6;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+        }
+        .menu-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-name {
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: #111827;
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .menu-sub {
+            margin-top: 0.15rem;
+            font-size: 0.68rem;
+            font-weight: 900;
+            color: #9ca3af;
+        }
+
+        .qty-pill {
+            min-width: 2.25rem;
+            height: 1.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.45rem;
+            border-radius: 0.5rem;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+        }
+
+        .receipt-dashed {
+            border-top: 1px dashed #d1d5db;
+            margin: 0.85rem 0;
+        }
+
+        .money-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .money-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            column-gap: 1rem;
+        }
+        .money-label {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #6b7280;
+        }
+        .money-value {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #111827;
+        }
+        .money-value.bold {
+            font-weight: 1000;
+        }
+        .money-value.change {
+            color: #15803d;
+        }
+
         .queue-panel,
         .detail-panel {
             border: 1px solid #e5e7eb;
@@ -52,10 +148,112 @@
         .status-unpaid { background: #fffbeb; color: #b45309; border-color: #fde68a; }
         .status-order { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
 
-        .summary-grid {
+.summary-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 0.75rem;
+        }
+
+        /* ===== Detail transaksi (struk POS style) ===== */
+        .pos-receipt-container {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            border-radius: 0.875rem;
+            padding: 1.1rem;
+        }
+
+        .menu-line {
+            display: grid;
+            grid-template-columns: 38px 1fr auto;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 0.4rem 0;
+        }
+
+        .menu-thumb {
+            width: 34px;
+            height: 34px;
+            border-radius: 0.6rem;
+            background: #f3f4f6;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+        }
+        .menu-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .menu-name {
+            font-size: 0.78rem;
+            font-weight: 900;
+            color: #111827;
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .menu-sub {
+            margin-top: 0.15rem;
+            font-size: 0.68rem;
+            font-weight: 900;
+            color: #9ca3af;
+        }
+
+        .qty-pill {
+            min-width: 2.25rem;
+            height: 1.35rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.45rem;
+            border-radius: 0.5rem;
+            background: #f3f4f6;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            font-size: 0.68rem;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+        }
+
+        .receipt-dashed {
+            border-top: 1px dashed #d1d5db;
+            margin: 0.85rem 0;
+        }
+
+        .money-rows {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .money-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            column-gap: 1rem;
+        }
+        .money-label {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #6b7280;
+        }
+        .money-value {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #111827;
+        }
+        .money-value.bold {
+            font-weight: 1000;
+        }
+        .money-value.change {
+            color: #15803d;
+        }
+
+        /* Input - buat tampilan kotak jelas */
+        .money-input input {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
         }
 
         .summary-box {
@@ -173,17 +371,68 @@
             color: #b91c1c;
         }
 
+        .mobile-detail-backdrop,
+        .mobile-back-button {
+            display: none;
+        }
+
         @media (max-width: 1024px) {
             .pos-shell {
                 grid-template-columns: 1fr;
             }
 
             .queue-list {
-                max-height: 22rem;
+                max-height: none;
             }
 
             .summary-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .detail-panel {
+                display: none;
+            }
+
+            .detail-panel.is-mobile-open {
+                display: block;
+                position: fixed;
+                inset: 1rem;
+                z-index: 60;
+                max-height: calc(100vh - 2rem);
+                overflow-y: auto;
+                border-radius: 0.875rem;
+                box-shadow: 0 25px 80px -30px rgba(15, 23, 42, 0.7);
+            }
+
+            .mobile-detail-backdrop {
+                display: block;
+                position: fixed;
+                inset: 0;
+                z-index: 50;
+                background: rgba(15, 23, 42, 0.55);
+                backdrop-filter: blur(2px);
+            }
+
+            /* 1. Atur pembungkusnya agar berada di luar/bawah bingkai putih dengan pas */
+            .mobile-back-button {
+                display: block;
+                /* Berikan margin atas agar ada jarak dengan tombol Cetak Struk */
+                margin-top: 0.75rem; 
+                /* Samakan padding kanan kiri dengan tombol Cetak Struk (sesuai layar) */
+                padding: 0 1.25rem 1.25rem 1.25rem; 
+            }
+
+            /* 2. Targetkan class tombol bawaan Filament agar ukurannya flex dan full */
+            .mobile-back-button a, 
+            .mobile-back-button button,
+            .mobile-back-button .fi-btn {
+                width: 100% !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                /* Beri sedikit padding vertikal jika tombol terasa terlalu tipis */
+                padding-top: 0.6rem !important;
+                padding-bottom: 0.6rem !important;
             }
         }
     </style>
@@ -247,7 +496,11 @@
             </div>
         </section>
 
-        <section class="detail-panel">
+        @if($mobileDetailOpen)
+            <button type="button" wire:click="closeMobileDetail" class="mobile-detail-backdrop" aria-label="Tutup detail pesanan"></button>
+        @endif
+
+        <section class="detail-panel {{ $mobileDetailOpen ? 'is-mobile-open' : '' }}">
             @if($selectedOrder)
                 <div class="relative border-b border-gray-100 px-5 py-4 pr-28">
                     <div>
@@ -272,53 +525,68 @@
                     </div>
                 </div>
 
-                <div class="grid gap-5 p-5 xl:grid-cols-[1fr_360px]">
-                    <div>
-                        <h3 class="mb-3 text-xs font-black uppercase tracking-widest text-gray-400">Detail Item</h3>
+                    <div class="grid gap-5 p-5 xl:grid-cols-[1fr_360px]">
+                    <div class="pos-receipt-container">
+                        <h3 class="mb-3 text-xs font-black uppercase tracking-widest text-gray-400">Detail Pesanan</h3>
 
-                        <div class="space-y-2">
+                        <div class="space-y-1">
                             @foreach($selectedOrder->items as $item)
-                                <div class="flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+                                <div class="menu-line">
+                                    <div class="menu-thumb">
+                                        @if($item->product?->image_url)
+                                            <img src="{{ $item->product->image_url }}" alt="{{ $item->product?->name ?? 'Produk' }}" />
+                                        @else
+                                            <img src="{{ asset('images/air.jpg') }}" alt="Produk" />
+                                        @endif
+                                    </div>
+
                                     <div class="min-w-0">
-                                        <div class="truncate text-sm font-black text-gray-900">
+                                        <div class="menu-name">
                                             {{ $item->product?->name ?? 'Produk dihapus' }}
                                         </div>
-                                        <div class="text-xs font-semibold text-gray-500">
-                                            {{ $item->quantity }} x Rp {{ number_format((float) $item->price, 0, ',', '.') }}
+                                        <div class="menu-sub">
+                                            Rp {{ number_format((float) $item->price, 0, ',', '.') }} / item
                                         </div>
                                     </div>
-                                    <div class="text-sm font-black text-gray-950">
-                                        Rp {{ number_format((float) $item->price * $item->quantity, 0, ',', '.') }}
+
+                                    <div class="qty-pill">
+                                        {{ $item->quantity }}x
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                    </div>
 
-                    <aside class="space-y-4">
-                        <div class="summary-grid xl:grid-cols-1">
-                            <div class="summary-box">
-                                <div class="summary-label">Total</div>
-                                <div class="summary-value total">
+                        <div class="receipt-dashed"></div>
+
+                        <div class="money-rows">
+                            <div class="money-row">
+                                <div class="money-label">TOTAL</div>
+                                <div class="money-value bold">
                                     Rp {{ number_format((float) $selectedOrder->total_price, 0, ',', '.') }}
                                 </div>
                             </div>
+
                             @if($showPaymentResult)
-                                <div class="summary-box">
-                                    <div class="summary-label">Dibayar</div>
-                                    <div class="summary-value">
+                                <div class="money-row">
+                                    <div class="money-label">DIBAYAR</div>
+                                    <div class="money-value bold">
                                         Rp {{ number_format((float) preg_replace('/[^0-9]/', '', (string) $cash), 0, ',', '.') }}
                                     </div>
                                 </div>
-                                <div class="summary-box">
-                                    <div class="summary-label">Kembalian</div>
-                                    <div class="summary-value change {{ $change < 0 ? 'negative' : '' }}">
+
+                                <div class="money-row">
+                                    <div class="money-label">KEMBALIAN</div>
+                                    <div class="money-value bold change">
                                         Rp {{ number_format((float) $change, 0, ',', '.') }}
                                     </div>
                                 </div>
                             @endif
                         </div>
 
+                        <div class="receipt-dashed"></div>
+                    </div>
+
+                    <aside class="space-y-4">
                         <div class="payment-box">
                             <div class="mb-3 text-xs font-black uppercase tracking-widest text-gray-400">Pembayaran</div>
 
@@ -416,6 +684,18 @@
                                 </x-filament::button>
                             @endif
                         </div>
+
+                        <div class="mobile-back-button">
+                        <x-filament::button
+                             type="button"
+                             wire:click="closeMobileDetail"
+                             color="gray"
+                            size="lg"
+                            class="w-full justify-center"
+                             >
+                                 Kembali
+                        </x-filament::button>
+                     </div>
                     </aside>
                 </div>
             @else
