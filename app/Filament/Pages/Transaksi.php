@@ -3,42 +3,48 @@
 namespace App\Filament\Pages;
 
 use App\Models\Order;
-use Filament\Actions\Action;
-use Filament\Actions\DeleteAction;
-use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Schemas\Components\EmbeddedTable;
-use Filament\Schemas\Schema;
-use Filament\Tables;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Table;
+use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 
-class Transaksi extends Page implements HasTable
+class Transaksi extends Page
 {
-    use Tables\Concerns\InteractsWithTable;
-
-    protected static ?string $title = 'Kasir';
+    protected static ?string $title = 'Transaksi';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
 
+    protected string $view = 'filament.pages.transaksi';
+
+    public ?int $selectedOrderId = null;
+
+    public string $paymentMethod = 'cash';
+
+    public int|string|null $cash = null;
+
+    public bool $showPaymentResult = false;
+
+    public string $statusFilter = 'all';
+
     public function mount(): void
     {
-        $this->mountInteractsWithTable();
+        $this->selectedOrderId = Order::query()
+            ->whereIn('status', ['done', 'pending'])
+            ->latest('created_at')
+            ->value('id');
+
+        $this->syncPaymentState();
     }
 
     public function getHeading(): string | Htmlable | null
     {
-        return 'Semua Kasir';
+        return 'Transaksi';
     }
 
     public static function getNavigationLabel(): string
     {
-        return 'Kasir';
+        return 'Transaksi';
     }
 
     public static function shouldRegisterNavigation(): bool
@@ -51,143 +57,175 @@ class Transaksi extends Page implements HasTable
         return 3;
     }
 
-    public function table(Table $table): Table
+    public function getMaxContentWidth(): Width | string | null
     {
-        return $table
-            ->query(
-                Order::query()
-                    ->whereIn('status', ['pending', 'done'])
-                    ->latest('created_at')
+        return Width::Full;
+    }
+
+    protected function getViewData(): array
+    {
+        return [
+            'orders' => $this->orders,
+            'selectedOrder' => $this->selectedOrder,
+            'change' => $this->change,
+            'showPaymentResult' => $this->showPaymentResult,
+        ];
+    }
+
+    public function getOrdersProperty(): Collection
+    {
+        return Order::query()
+            ->with(['items.product'])
+            ->whereIn('status', ['done', 'pending'])
+            ->when(
+                $this->statusFilter === 'unpaid',
+                fn ($query) => $query->where('payment_status', 'unpaid'),
             )
-            ->description(fn (): string => 'Menampilkan semua kasir dengan status pending dan selesai.')
-            ->columns([
-                Tables\Columns\TextColumn::make('customer_name')
-                    ->label('Nama')
-                    ->placeholder('-')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('table_number')
-                    ->label('Meja')
-                    ->placeholder('-'),
-                Tables\Columns\TextColumn::make('payment_status')
-                    ->label('Pembayaran')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => $state === 'paid' ? 'Dibayar' : 'Belum Dibayar')
-                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'warning'),
-                Tables\Columns\TextColumn::make('total_price')
-                    ->label('Total')
-                    ->money('IDR')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->label('Status')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pending',
-                        'done' => 'Selesai',
-                        default => str($state)->headline()->toString(),
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'warning',
-                        'done' => 'success',
-                        default => 'gray',
-                    }),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal')
-                    ->dateTime('d M Y H:i')
-                    ->sortable(),
-            ])
-            ->filters([
-                SelectFilter::make('status')
-                    ->label('Status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'done' => 'Selesai',
-                    ]),
-                Filter::make('tanggal')
-                    ->label('Tanggal')
-                    ->form(fn (): array => [
-                        \Filament\Forms\Components\DatePicker::make('dari_tanggal')
-                            ->label('Dari Tanggal')
-                            ->native(false),
-                        \Filament\Forms\Components\DatePicker::make('sampai_tanggal')
-                            ->label('Sampai Tanggal')
-                            ->native(false),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['dari_tanggal'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
-                            )
-                            ->when(
-                                $data['sampai_tanggal'] ?? null,
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
-                            );
-                    }),
-            ])
-            ->actions([
-                Action::make('change_payment')
-                    ->label('Ubah Pembayaran')
-                    ->icon('heroicon-o-credit-card')
-                    ->color('info')
-                    ->fillForm(fn (Order $record): array => [
-                        'payment_status' => $record->payment_status,
-                    ])
-                    ->schema([
-                        Select::make('payment_status')
-                            ->label('Status Pembayaran')
-                            ->options([
-                                'unpaid' => 'Belum Dibayar',
-                                'paid' => 'Dibayar',
-                            ])
-                            ->native(false)
-                            ->required(),
-                    ])
-                    ->action(function (Order $record, array $data): void {
-                        $isPaid = ($data['payment_status'] ?? 'unpaid') === 'paid';
-
-                        $record->update([
-                            'payment_status' => $data['payment_status'],
-                            'payment_method' => $isPaid ? ($record->payment_method ?: 'cash') : null,
-                        ]);
-
-                        Notification::make()
-                            ->title('Status pembayaran berhasil diubah')
-                            ->success()
-                            ->send();
-                    }),
-                Action::make('confirm')
-                    ->label('Konfirmasi')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->requiresConfirmation()
-                    ->visible(fn (Order $record): bool => $record->status === 'pending')
-                    ->action(function (Order $record): void {
-                        $record->update([
-                            'status' => 'done',
-                            'completed_at' => now(),
-                        ]);
-
-                        Notification::make()
-                            ->title('Transaksi dipindahkan ke pesanan selesai')
-                            ->success()
-                            ->send();
-                    }),
-                Action::make('print_receipt')
-                    ->label('Cetak Struk')
-                    ->icon('heroicon-o-printer')
-                    ->color('warning')
-                    ->url(fn (Order $record): string => route('admin.orders.receipt', $record))
-                    ->openUrlInNewTab(),
-                DeleteAction::make()
-                    ->label('Hapus')
-                    ->requiresConfirmation(),
-            ]);
+            ->when(
+                $this->statusFilter === 'paid',
+                fn ($query) => $query->where('payment_status', 'paid'),
+            )
+            ->latest('created_at')
+            ->limit(80)
+            ->get();
     }
 
-    public function content(Schema $schema): Schema
+    public function getSelectedOrderProperty(): ?Order
     {
-        return $schema->components([
-            EmbeddedTable::make(),
-        ]);
+        if (! $this->selectedOrderId) {
+            return null;
+        }
+
+        return Order::query()
+            ->with(['items.product'])
+            ->find($this->selectedOrderId);
     }
+
+    public function getChangeProperty(): float
+    {
+        $order = $this->selectedOrder;
+
+        if (! $order) {
+            return 0;
+        }
+
+        return $this->parseCurrency($this->cash) - (float) $order->total_price;
+    }
+
+    public function selectOrder(int $orderId): void
+    {
+        $this->selectedOrderId = $orderId;
+        $this->syncPaymentState();
+    }
+
+    public function updatedStatusFilter(): void
+    {
+        $firstOrder = $this->orders->first();
+        $this->selectedOrderId = $firstOrder?->id;
+        $this->syncPaymentState();
+    }
+
+    public function finishCashInput(int|string|null $value): void
+    {
+        $this->cash = (string) (int) $this->parseCurrency($value);
+        $this->showPaymentResult = true;
+    }
+
+    public function paySelected(): void
+    {
+        $order = $this->selectedOrder;
+
+        if (! $order) {
+            return;
+        }
+
+        $paid = $this->parseCurrency($this->cash);
+
+        if ($paid < (float) $order->total_price) {
+            Notification::make()
+                ->title('Nominal pembayaran kurang')
+                ->body('Jumlah dibayar harus sama dengan atau lebih dari total pesanan.')
+                ->danger()
+                ->send();
+
+            return;
+        }
+
+        $order->update([
+            'payment_method' => $this->paymentMethod,
+            'cash' => (int) $paid,
+            'payment_status' => 'paid',
+            'status' => 'done',
+            'completed_at' => $order->completed_at ?: now(),
+        ]);
+
+        Notification::make()
+            ->title('Pembayaran berhasil disimpan')
+            ->body('Kembalian: Rp ' . number_format($this->change, 0, ',', '.'))
+            ->success()
+            ->send();
+
+        $this->syncPaymentState();
+    }
+
+    public function confirmSelected(): void
+    {
+        $order = $this->selectedOrder;
+
+        if (! $order) {
+            return;
+        }
+
+        $order->update([
+            'status' => 'done',
+            'completed_at' => $order->completed_at ?: now(),
+        ]);
+
+        Notification::make()
+            ->title('Pesanan dikonfirmasi')
+            ->success()
+            ->send();
+    }
+
+    public function deleteSelected(): void
+    {
+        $order = $this->selectedOrder;
+
+        if (! $order) {
+            return;
+        }
+
+        $order->delete();
+
+        $this->selectedOrderId = $this->orders->first()?->id;
+        $this->syncPaymentState();
+
+        Notification::make()
+            ->title('Pesanan dihapus')
+            ->success()
+            ->send();
+    }
+
+    protected function syncPaymentState(): void
+    {
+        $order = $this->selectedOrder;
+
+        if (! $order) {
+            $this->paymentMethod = 'cash';
+            $this->cash = '0';
+            $this->showPaymentResult = false;
+
+            return;
+        }
+
+        $this->paymentMethod = $order->payment_method ?: 'cash';
+        $this->cash = (string) ($order->cash ?: 0);
+        $this->showPaymentResult = $order->payment_status === 'paid';
+    }
+
+    protected function parseCurrency(int|string|null $value): float
+    {
+        return (float) preg_replace('/[^0-9]/', '', (string) $value);
+    }
+
 }

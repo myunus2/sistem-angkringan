@@ -8,15 +8,18 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        margin: 24px;
+        margin: 0;
         color: #111827;
+        background: #f3f4f6;
     }
 
     .receipt {
-        max-width: 420px;
-        margin: 0 auto;
+        width: 58mm;
+        box-sizing: border-box;
+        margin: 24px auto;
         border: 1px dashed #9ca3af;
-        padding: 20px;
+        padding: 4mm;
+        background: white;
     }
 
     .title, .center {
@@ -30,8 +33,8 @@
     }
 
     th, td {
-        padding: 6px 0;
-        font-size: 13px;
+        padding: 4px 0;
+        font-size: 11px;
         border-bottom: 1px dashed #d1d5db;
     }
 
@@ -41,11 +44,11 @@
 
     .total {
         font-weight: bold;
-        font-size: 15px;
+        font-size: 12px;
     }
 
     .meta {
-        font-size: 13px;
+        font-size: 11px;
         margin-top: 10px;
         line-height: 1.6;
     }
@@ -64,10 +67,24 @@
         margin-top: 15px;
     }
 
+    @page {
+        size: 58mm auto;
+        margin: 0;
+    }
+
     @media print {
         button { display: none; }
-        body { margin: 0; }
-        .receipt { border: none; }
+        body {
+            width: 58mm;
+            margin: 0;
+            background: white;
+        }
+        .receipt {
+            width: 58mm;
+            margin: 0;
+            border: none;
+            padding: 4mm;
+        }
     }
 </style>
 </head>
@@ -132,7 +149,7 @@
             <tr>
                 <td colspan="2">Kembalian</td>
                 <td>
-                    Rp {{ number_format(($order->cash ?? 0) - $total, 0, ',', '.') }}
+                    Rp {{ number_format(max(($order->cash ?? 0) - $total, 0), 0, ',', '.') }}
                 </td>
             </tr>
 

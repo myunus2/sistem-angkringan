@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KasirController;
+use App\Http\Controllers\OrderReceiptController;
 use App\Http\Controllers\ProductController;
 
 /*
@@ -59,5 +60,7 @@ Route::post('/kasir/checkout', [KasirController::class, 'checkout'])->name('kasi
 | ADMIN
 |--------------------------------------------------------------------------
 */
+Route::get('/admin/orders/{order}/receipt', [OrderReceiptController::class, 'show'])
+    ->name('admin.orders.receipt');
 Route::redirect('/filament-fix', '/admin');
 Route::redirect('/admind', '/admin');

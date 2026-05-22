@@ -76,7 +76,6 @@ class Kasir extends Page
 
         DB::transaction(function () {
             $order = Order::create([
-                'user_id' => auth()->id(),
                 'customer_name' => $this->customerName,
                 'table_number' => $this->tableNumber,
                 'total_price' => $this->total,
