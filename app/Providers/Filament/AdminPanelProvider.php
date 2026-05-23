@@ -38,37 +38,46 @@ class AdminPanelProvider extends PanelProvider
                 'panels::styles.after',
                 fn (): string => Blade::render('
                     <style>
-                        /* Light Mode */
-                        .fi-sidebar {
+                        /* ==========================================
+                           LIGHT MODE (Default)
+                           ========================================== */
+                        .fi-sidebar, 
+                        aside.fi-sidebar {
                             background-color: #ffffff !important;
                             border-right: 1px solid #e5e7eb !important;
                         }
 
-                        /* Dark Mode */
-                        /* Filament umumnya menambahkan class dark pada root (html/body). */
-                        html.fi-dark .fi-sidebar,
-                        body.fi-dark .fi-sidebar,
-                        .fi-dark .fi-sidebar {
+                        /* ==========================================
+                           DARK MODE FIXES
+                           ========================================== */
+                        /* Menimpa root HTML & elemen sidebar utama */
+                        .dark .fi-sidebar,
+                        html.dark .fi-sidebar,
+                        aside.fi-sidebar.dark,
+                        .dark aside.fi-sidebar {
                             background-color: #0b1220 !important;
                             border-right: 1px solid #1f2937 !important;
+                            --gray-50: #0b1220; /* Menambal warna background grup navigasi internal */
                         }
 
-                        html.fi-dark .fi-sidebar-item-button,
-                        body.fi-dark .fi-sidebar-item-button,
-                        .fi-dark .fi-sidebar-item-button {
+                        /* Menimpa container navigasi internal di dalam sidebar */
+                        .dark .fi-sidebar nav,
+                        html.dark aside.fi-sidebar nav {
+                            background-color: #0b1220 !important;
+                        }
+
+                        /* Warna teks tombol menu saat Dark Mode */
+                        .dark .fi-sidebar-item-button {
                             color: #e5e7eb !important;
                         }
 
-                        html.fi-dark .fi-sidebar-item-button:hover,
-                        body.fi-dark .fi-sidebar-item-button:hover,
-                        .fi-dark .fi-sidebar-item-button:hover {
+                        /* Warna hover tombol menu saat Dark Mode */
+                        .dark .fi-sidebar-item-button:hover {
                             background-color: rgba(249, 115, 22, 0.12) !important;
                         }
-
                     </style>
                 '),
             )
-            // ====================================================================
 
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\\Pages')

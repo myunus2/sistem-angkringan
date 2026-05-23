@@ -1,152 +1,115 @@
 <x-filament-panels::page>
     <style>
-        /* ===== Dark Mode overrides ===== */
-        body.fi-dark .queue-panel,
-        html.fi-dark .queue-panel,
-        .fi-dark .queue-panel,
-        body.fi-dark .detail-panel,
-        html.fi-dark .detail-panel,
-        .fi-dark .detail-panel {
-            border-color: #1f2937 !important;
-            background: #0b1220 !important;
-            box-shadow: 0 18px 45px -35px rgba(0, 0, 0, 0.55) !important;
+        /* ====================================================================
+           PERBAIKAN FITUR DARK MODE UNTUK HALAMAN TRANSAKSI (ANTREAN)
+           ==================================================================== */
+        
+        /* 1. ROOT UTAMA PANEL */
+        .dark .queue-panel,
+        .dark .detail-panel {
+            background: #1e293b !important;
+            border-color: #334155 !important;
         }
 
-        body.fi-dark .pos-receipt-container,
-        html.fi-dark .pos-receipt-container,
-        .fi-dark .pos-receipt-container {
-            border-color: #1f2937 !important;
-            background: #0b1220 !important;
+        /* 2. AREA DAFTAR ANTREAN */
+        .dark .queue-panel h2 {
+            color: #f1f5f9 !important;
         }
-
-        body.fi-dark .order-card,
-        html.fi-dark .order-card,
-        .fi-dark .order-card {
-            border-color: #1f2937 !important;
-            background: #0b1220 !important;
+        .dark .queue-panel select {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
         }
-
-        body.fi-dark .order-card:hover,
-        html.fi-dark .order-card:hover,
-        .fi-dark .order-card:hover,
-        body.fi-dark .order-card.is-active,
-        html.fi-dark .order-card.is-active,
-        .fi-dark .order-card.is-active {
+        .dark .order-card {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        .dark .order-card .text-gray-950 {
+            color: #f1f5f9 !important;
+        }
+        .dark .order-card:hover,
+        .dark .order-card.is-active {
             border-color: #f97316 !important;
-            background: rgba(249, 115, 22, 0.08) !important;
-            box-shadow: 0 12px 28px -22px rgba(0, 0, 0, 0.6) !important;
+            background: rgba(249, 115, 22, 0.1) !important;
         }
 
-        body.fi-dark .menu-thumb,
-        html.fi-dark .menu-thumb,
-        .fi-dark .menu-thumb {
-            background: #111827 !important;
-            border-color: #1f2937 !important;
+        /* 3. WRAPPER STRUK / RECEIPT STYLE */
+        .dark .pos-receipt-container {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        .dark .menu-name {
+            color: #f1f5f9 !important;
+        }
+        .dark .qty-pill {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #cbd5e1 !important;
+        }
+        .dark .receipt-dashed {
+            border-top-color: #334155 !important;
+        }
+        .dark .money-value {
+            color: #f1f5f9 !important;
         }
 
-        body.fi-dark .menu-name,
-        html.fi-dark .menu-name,
-        .fi-dark .menu-name {
-            color: #e5e7eb !important;
+        /* 4. ASIDE / KOTAK INPUT PEMBAYARAN */
+        .dark .payment-box {
+            background: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        .dark .payment-box select,
+        .dark .payment-box input {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        .dark .payment-box label span {
+            color: #94a3b8 !important;
+        }
+        .dark .money-input span {
+            color: #94a3b8 !important;
+        }
+        .dark .payment-field + .payment-field {
+            border-top-color: #334155 !important;
         }
 
-        body.fi-dark .menu-sub,
-        html.fi-dark .menu-sub,
-        .fi-dark .menu-sub {
-            color: #9ca3af !important;
+        /* 5. STATE KOSONG (KONDISI JIKA TIDAK ADA PESANAN) */
+        .dark .bg-gray-100 {
+            background-color: #0f172a !important;
+        }
+        .dark .text-gray-900 {
+            color: #f1f5f9 !important;
+        }
+        .dark .border-dashed {
+            border-color: #334155 !important;
         }
 
-        body.fi-dark .qty-pill,
-        html.fi-dark .qty-pill,
-        .fi-dark .qty-pill {
-            background: #111827 !important;
-            color: #d1d5db !important;
-            border-color: #1f2937 !important;
-        }
+        /* 6. PILL STATUS */
+        .dark .status-paid { background: rgba(21, 128, 61, 0.2); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+        .dark .status-unpaid { background: rgba(180, 83, 9, 0.2); color: #fbbf24; border-color: rgba(245, 158, 11, 0.3); }
+        .dark .status-order { background: rgba(29, 78, 216, 0.2); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
 
-        body.fi-dark .receipt-dashed,
-        html.fi-dark .receipt-dashed,
-        .fi-dark .receipt-dashed {
-            border-top-color: rgba(31, 41, 55, 0.75) !important;
-        }
-
-        body.fi-dark .money-label,
-        html.fi-dark .money-label,
-        .fi-dark .money-label {
-            color: #9ca3af !important;
-        }
-
-        body.fi-dark .money-value,
-        html.fi-dark .money-value,
-        .fi-dark .money-value {
-            color: #e5e7eb !important;
-        }
-
-        body.fi-dark .money-input input,
-        html.fi-dark .money-input input,
-        .fi-dark .money-input input {
-            background: #0b1220 !important;
-            border-color: #1f2937 !important;
-            color: #e5e7eb !important;
-        }
-
-        body.fi-dark .payment-box,
-        html.fi-dark .payment-box,
-        .fi-dark .payment-box {
-            border-color: #1f2937 !important;
-            background: #0b1220 !important;
-        }
-
-        body.fi-dark select,
-        html.fi-dark select,
-        .fi-dark select {
-            background: #0b1220 !important;
-            color: #e5e7eb !important;
-            border-color: #1f2937 !important;
-        }
-
-        body.fi-dark input,
-        html.fi-dark input,
-        .fi-dark input {
-            background: #0b1220 !important;
-            color: #e5e7eb !important;
-            border-color: #1f2937 !important;
-        }
-
-        body.fi-dark .text-gray-900,
-        html.fi-dark .text-gray-900,
-        .fi-dark .text-gray-900,
-        body.fi-dark .text-gray-950,
-        html.fi-dark .text-gray-950,
-        .fi-dark .text-gray-950 {
-            color: #e5e7eb !important;
-        }
-
-        body.fi-dark .text-gray-500,
-        html.fi-dark .text-gray-500,
-        .fi-dark .text-gray-500 {
-            color: #9ca3af !important;
-        }
-
-        body.fi-dark .text-gray-400,
-        html.fi-dark .text-gray-400,
-        .fi-dark .text-gray-400 {
-            color: #9ca3af !important;
-        }
-
-        body.fi-dark .border-gray-100,
-        html.fi-dark .border-gray-100,
-        .fi-dark .border-gray-100 {
-            border-color: rgba(31, 41, 55, 0.65) !important;
-        }
-
+        /* ====================================================================
+           UKURAN GRID DESKTOP BARU (ANTREAN PESANAN LEBIH BESAR)
+           ==================================================================== */
         .pos-shell {
-
-
             display: grid;
-            grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
-            gap: 1rem;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 1.25rem;
             align-items: start;
+        }
+
+        @media (min-width: 1400px) {
+            .pos-shell {
+                grid-template-columns: 1.4fr 1fr;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .pos-shell {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* ===== Detail transaksi (struk POS style) ===== */
@@ -233,6 +196,9 @@
             font-weight: 900;
             color: #6b7280;
         }
+        .dark .money-label {
+            color: #94a3b8 !important;
+        }
         .money-value {
             font-size: 0.95rem;
             font-weight: 900;
@@ -245,8 +211,16 @@
             color: #15803d;
         }
 
-        .queue-panel,
+        .queue-panel {
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 18px 45px -35px rgba(15, 23, 42, 0.35);
+        }
+
+        /* FIX KUNCI ABSOLUTE KONTANER DETAIL */
         .detail-panel {
+            position: relative; 
             border: 1px solid #e5e7eb;
             background: #ffffff;
             border-radius: 0.75rem;
@@ -290,109 +264,12 @@
         .status-unpaid { background: #fffbeb; color: #b45309; border-color: #fde68a; }
         .status-order { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
 
-.summary-grid {
+        .summary-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 0.75rem;
         }
 
-        /* ===== Detail transaksi (struk POS style) ===== */
-        .pos-receipt-container {
-            border: 1px solid #e5e7eb;
-            background: #ffffff;
-            border-radius: 0.875rem;
-            padding: 1.1rem;
-        }
-
-        .menu-line {
-            display: grid;
-            grid-template-columns: 38px 1fr auto;
-            gap: 0.75rem;
-            align-items: center;
-            padding: 0.4rem 0;
-        }
-
-        .menu-thumb {
-            width: 34px;
-            height: 34px;
-            border-radius: 0.6rem;
-            background: #f3f4f6;
-            overflow: hidden;
-            border: 1px solid #f0f0f0;
-        }
-        .menu-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .menu-name {
-            font-size: 0.78rem;
-            font-weight: 900;
-            color: #111827;
-            line-height: 1.1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .menu-sub {
-            margin-top: 0.15rem;
-            font-size: 0.68rem;
-            font-weight: 900;
-            color: #9ca3af;
-        }
-
-        .qty-pill {
-            min-width: 2.25rem;
-            height: 1.35rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 0.45rem;
-            border-radius: 0.5rem;
-            background: #f3f4f6;
-            color: #6b7280;
-            border: 1px solid #e5e7eb;
-            font-size: 0.68rem;
-            font-weight: 900;
-            letter-spacing: 0.02em;
-        }
-
-        .receipt-dashed {
-            border-top: 1px dashed #d1d5db;
-            margin: 0.85rem 0;
-        }
-
-        .money-rows {
-            display: flex;
-            flex-direction: column;
-            gap: 0.45rem;
-        }
-        .money-row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            align-items: center;
-            column-gap: 1rem;
-        }
-        .money-label {
-            font-size: 0.75rem;
-            font-weight: 900;
-            color: #6b7280;
-        }
-        .money-value {
-            font-size: 0.95rem;
-            font-weight: 900;
-            color: #111827;
-        }
-        .money-value.bold {
-            font-weight: 1000;
-        }
-        .money-value.change {
-            color: #15803d;
-        }
-
-        /* Input - buat tampilan kotak jelas */
         .money-input input {
             background: #ffffff;
             border: 1px solid #d1d5db;
@@ -493,7 +370,13 @@
             padding-top: 0.5rem;
         }
 
+        /* PENETAPAN DENGAN PRIORITAS TINGGI UNTUK TOMBOL HAPUS */
         .danger-action {
+            position: absolute !important;
+            top: 1.15rem !important;
+            right: 1.25rem !important;
+            z-index: 40 !important;
+
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -501,16 +384,16 @@
             border: 1px solid #fecaca;
             background: #fef2f2;
             color: #dc2626;
-            padding: 0.375rem 0.75rem;
+            padding: 0.4rem 0.85rem;
             font-size: 0.75rem;
             font-weight: 800;
             transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
         }
 
         .danger-action:hover {
-            background: #fee2e2;
-            border-color: #fca5a5;
-            color: #b91c1c;
+            background: #fee2e2 !important;
+            border-color: #fca5a5 !important;
+            color: #b91c1c !important;
         }
 
         .mobile-detail-backdrop,
@@ -519,10 +402,6 @@
         }
 
         @media (max-width: 1024px) {
-            .pos-shell {
-                grid-template-columns: 1fr;
-            }
-
             .queue-list {
                 max-height: none;
             }
@@ -555,16 +434,12 @@
                 backdrop-filter: blur(2px);
             }
 
-            /* 1. Atur pembungkusnya agar berada di luar/bawah bingkai putih dengan pas */
             .mobile-back-button {
                 display: block;
-                /* Berikan margin atas agar ada jarak dengan tombol Cetak Struk */
                 margin-top: 0.75rem; 
-                /* Samakan padding kanan kiri dengan tombol Cetak Struk (sesuai layar) */
                 padding: 0 1.25rem 1.25rem 1.25rem; 
             }
 
-            /* 2. Targetkan class tombol bawaan Filament agar ukurannya flex dan full */
             .mobile-back-button a, 
             .mobile-back-button button,
             .mobile-back-button .fi-btn {
@@ -572,7 +447,6 @@
                 display: flex !important;
                 justify-content: center !important;
                 align-items: center !important;
-                /* Beri sedikit padding vertikal jika tombol terasa terlalu tipis */
                 padding-top: 0.6rem !important;
                 padding-bottom: 0.6rem !important;
             }
@@ -580,11 +454,12 @@
     </style>
 
     <div class="pos-shell">
+        <!-- SEKSYEN KIRI: ANTREAN PESANAN -->
         <section class="queue-panel">
-            <div class="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3">
+            <div class="flex items-center justify-between gap-3 border-b border-gray-100 dark:border-slate-700 px-4 py-3">
                 <div>
                     <h2 class="text-sm font-black uppercase tracking-wide text-gray-900">Antrean Pesanan</h2>
-                    <p class="text-xs text-gray-500">{{ $orders->count() }} pesanan</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">{{ $orders->count() }} pesanan</p>
                 </div>
 
                 <select
@@ -609,7 +484,7 @@
                                 <div class="truncate text-sm font-black text-gray-950">
                                     {{ $order->customer_name ? ucwords($order->customer_name) : 'Tanpa Nama' }}
                                 </div>
-                                <div class="mt-1 text-xs font-semibold text-gray-500">
+                                <div class="mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400">
                                     Meja {{ $order->table_number ?: '-' }} &middot; {{ $order->created_at?->format('H:i') }}
                                 </div>
                             </div>
@@ -642,32 +517,55 @@
             <button type="button" wire:click="closeMobileDetail" class="mobile-detail-backdrop" aria-label="Tutup detail pesanan"></button>
         @endif
 
+        <!-- SEKSYEN KANAN: DETAIL PESANAN -->
         <section class="detail-panel {{ $mobileDetailOpen ? 'is-mobile-open' : '' }}">
             @if($selectedOrder)
-                <div class="relative border-b border-gray-100 px-5 py-4 pr-28">
-                    <div>
-                        <h2 class="mt-1 text-xl font-black text-gray-950">
-                            {{ $selectedOrder->customer_name ? ucwords($selectedOrder->customer_name) : 'Tanpa Nama' }}
-                        </h2>
-                        <p class="text-sm font-medium text-gray-500">
-                            Meja {{ $selectedOrder->table_number ?: '-' }} &middot; {{ $selectedOrder->created_at?->format('d M Y H:i') }}
-                        </p>
+                <!-- AREA HEADER BARU: NAMA, NO MEJA & TOMBOL HAPUS -->
+                <!-- AREA HEADER BARU: WRAPPER BOX UNTUK NAMA & NO MEJA -->
+                <div class="border-b border-gray-100 dark:border-slate-700 p-5 pr-32 block w-full">
+                    
+                    <!-- Kotak Pembungkus Utama (Card Box) -->
+                    <div class="w-full bg-gray-50 dark:bg-slate-900 border border-gray-100 dark:border-slate-800 rounded-xl p-4 shadow-sm transition-colors">
+                        <div class="flex items-start gap-3">
+                            <!-- Slot Ikon Profil Mini -->
+                            <div class="p-2 bg-orange-100 dark:bg-orange-950 text-orange-600 dark:text-orange-400 rounded-lg flex-shrink-0 mt-0.5">
+                            </div>
+                            
+                            <!-- Isi Informasi Utama -->
+                            <div class="min-w-0 flex-1">
+                                <span class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block mb-0.5">Pelanggan</span>
+                                <h2 class="text-lg font-black text-gray-900 dark:text-white truncate tracking-tight leading-tight">
+                                    {{ $selectedOrder->customer_name ? ucwords($selectedOrder->customer_name) : 'Tanpa Nama' }}
+                               </h2>
+                                
+                                <!-- Garis Pembatas Halus Internal -->
+                                <div class="my-2.5 border-t border-gray-200/60 dark:border-slate-800"></div>
+                                
+                                <!-- Baris badge meja & waktu -->
+                                <div class="flex flex-wrap items-center gap-2 text-xs font-bold text-gray-500 dark:text-gray-400">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-white dark:bg-slate-800 rounded-md border border-gray-200 dark:border-slate-700 text-orange-600 dark:text-orange-500 shadow-xs">
+                                        Meja: <span class="font-black text-sm">{{ $selectedOrder->table_number ?: '-' }}</span>
+                                    </span>
+                                    <span class="text-gray-300 dark:text-slate-700 font-normal">&middot;</span>
+                                    <span class="text-[11px] font-medium opacity-85 mt-0.5">{{ $selectedOrder->created_at?->format('d M Y H:i') }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="absolute right-5 top-4">
-                        <button
-                            type="button"
-                            wire:click="deleteSelected"
-                            wire:confirm="Hapus pesanan ini?"
-                            class="danger-action"
-                            title="Hapus pesanan"
-                        >
-                            Hapus
-                        </button>
-                    </div>
+                    <!-- Tombol Hapus Tetap Mengapung Secara Absolut di Sisi Luar Kanan Atas -->
+                    <button
+                        type="button"
+                        wire:click="deleteSelected"
+                        wire:confirm="Hapus pesanan ini?"
+                        class="danger-action"
+                        title="Hapus pesanan"
+                    >
+                        Hapus
+                    </button>
                 </div>
 
-                    <div class="grid gap-5 p-5 xl:grid-cols-[1fr_360px]">
+                <div class="grid gap-5 p-5 xl:grid-cols-[1.1fr_1fr]">
                     <div class="pos-receipt-container">
                         <h3 class="mb-3 text-xs font-black uppercase tracking-widest text-gray-400">Detail Pesanan</h3>
 
@@ -828,25 +726,25 @@
                         </div>
 
                         <div class="mobile-back-button">
-                        <x-filament::button
-                             type="button"
-                             wire:click="closeMobileDetail"
-                             color="gray"
-                            size="lg"
-                            class="w-full justify-center"
-                             >
-                                 Kembali
-                        </x-filament::button>
-                     </div>
+                            <x-filament::button
+                                type="button"
+                                wire:click="closeMobileDetail"
+                                color="gray"
+                                size="lg"
+                                class="w-full justify-center"
+                            >
+                                Kembali
+                            </x-filament::button>
+                        </div>
                     </aside>
                 </div>
             @else
                 <div class="p-12 text-center">
-                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-slate-800 dark:text-gray-500">
                         <x-heroicon-o-clipboard-document-list class="h-7 w-7" />
                     </div>
-                    <h2 class="text-lg font-black text-gray-900">Tidak ada pesanan</h2>
-                    <p class="mt-1 text-sm text-gray-500">Pesanan dari kasir akan muncul di sini.</p>
+                    <h2 class="text-lg font-black text-gray-900 dark:text-white">Tidak ada pesanan</h2>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Pesanan dari kasir akan muncul di sini.</p>
                 </div>
             @endif
         </section>

@@ -1,11 +1,43 @@
 <x-filament-panels::page>
     <style>
-        /* Desain Kustom - Putih & Oranye */
-        .category-btn { transition: all 0.3s; border: 1px solid #e5e7eb; background: white; font-size: clamp(0.65rem, 2vw, 0.75rem); padding: clamp(0.4rem, 2vw, 0.5rem) clamp(0.75rem, 3vw, 1.25rem); }
-        .category-active { background-color: #f97316 !important; color: white !important; border-color: #f97316 !important; box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2); }
+        /* ====================================================================
+           DESAIN UTAMA KASIR (LIGHT MODE DEFAULT)
+           ==================================================================== */
+        .category-btn { 
+            transition: all 0.3s; 
+            border: 1px solid #e5e7eb; 
+            background: white; 
+            color: #4b5563;
+            font-size: clamp(0.65rem, 2vw, 0.75rem); 
+            padding: clamp(0.4rem, 2vw, 0.5rem) clamp(0.75rem, 3vw, 1.25rem); 
+        }
         
-        .product-card { border-radius: 1.25rem; border: 1px solid #f3f4f6; background: white; transition: all 0.2s; text-align: left; overflow: hidden; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; }
-        .product-card:hover { border-color: #f97316; transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+        .category-active { 
+            background-color: #f97316 !important; 
+            color: white !important; 
+            border-color: #f97316 !important; 
+            box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.2); 
+        }
+        
+        .product-card { 
+            border-radius: 1.25rem; 
+            border: 1px solid #f3f4f6; 
+            background: white; 
+            transition: all 0.2s; 
+            text-align: left; 
+            overflow: hidden; 
+            min-height: 220px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        
+        .product-card:hover { 
+            border-color: #f97316; 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
+        }
+        
         .product-qty-badge {
             position: absolute;
             top: 0.5rem;
@@ -28,9 +60,22 @@
         }
         
         .price-tag { color: #f97316; font-weight: 800; }
-        .cart-container { border-radius: 1.5rem; background: white; border: 1px solid #f3f4f6; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
         
-        .btn-pay { background-color: #f97316 !important; color: white !important; font-weight: 800 !important; border-radius: 0.75rem !important; min-height: 3rem; }
+        .cart-container { 
+            border-radius: 1.5rem; 
+            background: white; 
+            border: 1px solid #f3f4f6; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); 
+        }
+        
+        .btn-pay { 
+            background-color: #f97316 !important; 
+            color: white !important; 
+            font-weight: 800 !important; 
+            border-radius: 0.75rem !important; 
+            min-height: 3rem; 
+        }
+        
         .btn-pay:hover { background-color: #ea580c !important; }
 
         /* Pembatas khusus agar icon SVG internal tidak merusak sidebar Filament */
@@ -38,26 +83,118 @@
         .cart-container .big-icon svg { width: 4rem !important; height: 4rem !important; margin-bottom: 1rem; opacity: 0.2; }
 
         /* ====================================================================
-           RANCANGAN GRID RESPONSIVE BARU (2-4-6 KOLOM)
+           FORCE STYLE INPUT KASIR (TEKS HITAM PEKAT & PLACEHOLDER MIRING ABU)
+           ==================================================================== */
+        /* Memaksa tulisan Label di atas kotak input (Nama Pelanggan & No Meja) menjadi HITAM */
+        .cart-container label {
+            color: #313131 !important;
+            font-weight: 900 !important;
+        }
+
+        /* Memaksa teks yang DIKETIK oleh kasir menjadi HITAM PEKAT */
+        .cart-container input[type="text"] {
+            color: #0f0f0f !important; 
+            font-weight: 700 !important;
+        }
+
+        /* Memaksa teks petunjuk (placeholder) tetap abu-abu dan miring */
+        .cart-container input[type="text"]::placeholder {
+            color: #9ca3af !important; 
+            font-style: italic !important; 
+            font-weight: 500 !important;
+        }
+
+        /* ====================================================================
+           PERBAIKAN FITUR DARK MODE UNTUK ELEMEN KUSTOM (KASIR)
+           ==================================================================== */
+        /* 1. KATEGORI MENU */
+        .dark .category-btn {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: #94a3b8 !important;
+        }
+        .dark .category-active {
+            background-color: #f97316 !important;
+            color: white !important;
+            border-color: #f97316 !important;
+        }
+
+        /* 2. KARTU PRODUK / MENU */
+        .dark .product-card {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        .dark .product-card h4 {
+            color: #f1f5f9 !important;
+        }
+        .dark .product-card .bg-gray-50 {
+            background-color: #0f172a !important;
+        }
+        .dark .product-card .bg-white\/90 {
+            background-color: rgba(15, 23, 42, 0.85) !important;
+        }
+        .dark .product-qty-badge {
+            border-color: #1e293b !important;
+        }
+
+        /* 3. DETAIL PESANAN / KERANJANG */
+        .dark .cart-container {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+        }
+        .dark .cart-container h2, 
+        .dark .cart-container .font-bold {
+            color: #f1f5f9 !important;
+        }
+        .dark .cart-container .bg-gray-50 {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+        }
+        .dark .cart-container .text-gray-900 {
+            color: #f8fafc !important;
+        }
+        .dark .cart-container .border-gray-50,
+        .dark .cart-container .border-gray-100 {
+            border-color: #334155 !important;
+        }
+        .dark .cart-container button.bg-white {
+            background-color: #334155 !important;
+            color: #f1f5f9 !important;
+        }
+        
+        /* 4. SINKRONISASI INPUT KASIR SAAT DARK MODE AKTIF */
+        .dark .cart-container .fi-input-wrp {
+            border-color: #475569 !important; /* Warna border kotak saat malam */
+        }
+        .dark .cart-container label {
+            color: #f1f5f9 !important; /* Mengubah label menjadi putih saat malam */
+        }
+        .dark .cart-container input[type="text"] {
+            color: #ffffff !important; /* Mengubah tulisan ketikan menjadi putih saat malam */
+        }
+        .dark .cart-container input[type="text"]::placeholder {
+            color: #6b7280 !important;
+        }
+
+        /* ====================================================================
+           RANCANGAN GRID RESPONSIVE (2-3-4 KOLOM)
            ==================================================================== */
         .pos-grid { 
             display: grid; 
-            grid-template-columns: repeat(2, minmax(0, 1fr)); /* Standar HP: 2 Kolom */
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
             gap: 0.75rem; 
         }
         
-        /* Ketika layar masuk ukuran Tablet (Lebar di atas 640px) */
         @media (min-width: 640px) { 
             .pos-grid { 
-                grid-template-columns: repeat(3, minmax(0, 1fr)); /* Berubah jadi 4 Kolom */
+                grid-template-columns: repeat(3, minmax(0, 1fr)); 
                 gap: 1rem; 
             } 
         }
         
-        /* Ketika layar masuk ukuran Desktop/Komputer (Lebar di atas 1280px) */
         @media (min-width: 1280px) { 
             .pos-grid { 
-                grid-template-columns: repeat(4, minmax(0, 1fr)); /* Berubah jadi 6 Kolom */
+                grid-template-columns: repeat(4, minmax(0, 1fr)); 
                 gap: 1.25rem; 
             } 
         }
@@ -86,31 +223,24 @@
             font-weight: 700 !important;
         }
 
-            @media (max-width: 1024px) {
-            /* Sembunyikan sidebar bawaan secara default di mobile */
+        /* RESPONSIVE LAYOUT UNTUK SIDEBAR MOBILE */
+        @media (max-width: 1024px) {
             body.kasir-page .fi-main-sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
             }
-
-            /* Ketika hamburger diklik, Filament akan menambahkan class .fi-sidebar-open */
-            /* Baris ini yang bertugas memunculkan kembali navigasinya */
             body.kasir-page .fi-main-sidebar.fi-sidebar-open {
                 transform: translateX(0) !important;
                 display: flex !important;
                 position: fixed;
                 z-index: 50;
             }
-
-            /* Biarkan overlay penutup bekerja saat area luar sidebar diklik */
             body.kasir-page .fi-sidebar-open-overlay {
                 position: fixed;
                 inset: 0;
                 z-index: 40;
                 background-color: rgba(0, 0, 0, 0.4);
             }
-            
-            /* Menyelaraskan konten utama agar melebar rapi */
             body.kasir-page .fi-main-ctn {
                 margin-left: 0 !important;
                 padding-left: 0 !important;
@@ -120,7 +250,8 @@
                 margin-left: 0 !important;
                 width: auto !important;
             }
-}
+        }
+    </style>
     </style>
 
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 pt-2 lg:pt-0 lg:-mt-6 px-1 md:px-4 lg:px-0 w-full items-start">
@@ -134,14 +265,38 @@
                     </div>
                 </div>
 
+                <!-- INPUT DENGAN BORDER TEGAS, TEKS HITAM & PLACEHOLDER MIRING -->
+               <!-- POTONGAN KODE LABEL YANG DIUBAH MENJADI HITAM -->
                 <div class="grid grid-cols-2 gap-3 mb-4">
                     <div>
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-black-400 mb-1 block">Nama Pelanggan</label>
-                        <x-filament::input class="w-full text-sm" wire:model.defer="customerName" placeholder="Masukkan nama" />
+                        <!-- text-black memaksa tulisan label menjadi hitam pekat -->
+                        <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1 block">Nama Pelanggan</label>
+                        <x-filament::input.wrapper 
+                            class="rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-orange-500 transition-all duration-200"
+                            style="border: 2px solid #cbd5e1 !important;"
+                        >
+                            <x-filament::input 
+                                type="text"
+                                class="w-full text-base font-bold py-3.5 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
+                                wire:model.defer="customerName" 
+                            
+                            />
+                        </x-filament::input.wrapper>
                     </div>
                     <div>
-                        <label class="text-[10px] font-bold uppercase tracking-wider text-black-400 mb-1 block">Nomor Meja</label>
-                        <x-filament::input class="w-full text-sm" wire:model.defer="tableNumber" placeholder="No. Meja" />
+                        <!-- text-black memaksa tulisan label menjadi hitam pekat -->
+                        <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1 block">Nomor Meja</label>
+                        <x-filament::input.wrapper 
+                            class="rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-orange-500 transition-all duration-200"
+                            style="border: 2px solid #cbd5e1 !important;"
+                        >
+                            <x-filament::input 
+                                type="text"
+                                class="w-full text-base font-bold py-3.5 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
+                                wire:model.defer="tableNumber" 
+                            
+                            />
+                        </x-filament::input.wrapper>
                     </div>
                 </div>
 
@@ -191,7 +346,7 @@
                         type="button"
                         wire:click="checkout" 
                         size="xl" 
-                        class="w-full btn-pay py-3 shadow-lg shadow-orange-100 uppercase tracking-widest text-xs"
+                        class="w-full btn-pay py-3  uppercase tracking-widest text-xs"
                     >
                         Konfirmasi
                     </x-filament::button>
@@ -201,12 +356,17 @@
 
         <div class="w-full flex-1 lg:order-first mt-4 lg:mt-0">
             <div class="mb-4">
-                <x-filament::input.wrapper prefix-icon="heroicon-m-magnifying-glass">
+                <x-filament::input.wrapper 
+                    prefix-icon="heroicon-m-magnifying-glass"
+                    class="rounded-xl focus-within:ring-2 focus-within:ring-orange-500"
+                >
+                    <!-- py-3.5 (besar di mobile) -> lg:py-2 (kembali standar di desktop) -->
+                    <!-- text-base (besar di mobile) -> lg:text-sm (kembali standar di desktop) -->
                     <x-filament::input 
                         type="text" 
                         wire:model.live="search" 
                         placeholder="Cari menu..." 
-                        class="text-sm md:text-base"
+                        class="text-base font-medium py-3.5 md:py-4 lg:py-2 lg:text-sm border-none focus:ring-0"
                     />
                 </x-filament::input.wrapper>
             </div>
@@ -223,7 +383,7 @@
             </div>
 
             <div class="pos-grid">
-                @foreach($products as $product)
+                @forelse($products as $product)
                 @php
                     $productQty = $cart[$product->id]['qty'] ?? 0;
                 @endphp
@@ -246,7 +406,16 @@
                         <p class="price-tag text-[10px] sm:text-xs md:text-sm mt-0.5 leading-none">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                     </div>
                 </button>
-                @endforeach
+                @empty
+                <!-- Tampilan ini akan muncul jika $products kosong -->
+                <div class="col-span-full flex flex-col items-center justify-center py-12 px-4 text-center">
+                    <div class="p-4 bg-gray-50 rounded-full text-gray-400 mb-3">
+                        <x-heroicon-o-magnifying-glass class="w-8 h-8 opacity-40 mx-auto" style="width: 2.5rem !important; height: 2.5rem !important;"/>
+                    </div>
+                    <h3 class="text-sm font-bold text-gray-700">Menu Tidak Ditemukan</h3>
+                     <a href="{{ route('kasir') }}" class="text-orange-500 font-bold text-sm mt-2 block">Lihat Semua Menu</a>
+                </div>
+                @endforelse
             </div>
             
             @if($products->hasPages())
