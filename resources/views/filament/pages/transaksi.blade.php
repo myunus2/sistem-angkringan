@@ -1,6 +1,148 @@
 <x-filament-panels::page>
     <style>
+        /* ===== Dark Mode overrides ===== */
+        body.fi-dark .queue-panel,
+        html.fi-dark .queue-panel,
+        .fi-dark .queue-panel,
+        body.fi-dark .detail-panel,
+        html.fi-dark .detail-panel,
+        .fi-dark .detail-panel {
+            border-color: #1f2937 !important;
+            background: #0b1220 !important;
+            box-shadow: 0 18px 45px -35px rgba(0, 0, 0, 0.55) !important;
+        }
+
+        body.fi-dark .pos-receipt-container,
+        html.fi-dark .pos-receipt-container,
+        .fi-dark .pos-receipt-container {
+            border-color: #1f2937 !important;
+            background: #0b1220 !important;
+        }
+
+        body.fi-dark .order-card,
+        html.fi-dark .order-card,
+        .fi-dark .order-card {
+            border-color: #1f2937 !important;
+            background: #0b1220 !important;
+        }
+
+        body.fi-dark .order-card:hover,
+        html.fi-dark .order-card:hover,
+        .fi-dark .order-card:hover,
+        body.fi-dark .order-card.is-active,
+        html.fi-dark .order-card.is-active,
+        .fi-dark .order-card.is-active {
+            border-color: #f97316 !important;
+            background: rgba(249, 115, 22, 0.08) !important;
+            box-shadow: 0 12px 28px -22px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        body.fi-dark .menu-thumb,
+        html.fi-dark .menu-thumb,
+        .fi-dark .menu-thumb {
+            background: #111827 !important;
+            border-color: #1f2937 !important;
+        }
+
+        body.fi-dark .menu-name,
+        html.fi-dark .menu-name,
+        .fi-dark .menu-name {
+            color: #e5e7eb !important;
+        }
+
+        body.fi-dark .menu-sub,
+        html.fi-dark .menu-sub,
+        .fi-dark .menu-sub {
+            color: #9ca3af !important;
+        }
+
+        body.fi-dark .qty-pill,
+        html.fi-dark .qty-pill,
+        .fi-dark .qty-pill {
+            background: #111827 !important;
+            color: #d1d5db !important;
+            border-color: #1f2937 !important;
+        }
+
+        body.fi-dark .receipt-dashed,
+        html.fi-dark .receipt-dashed,
+        .fi-dark .receipt-dashed {
+            border-top-color: rgba(31, 41, 55, 0.75) !important;
+        }
+
+        body.fi-dark .money-label,
+        html.fi-dark .money-label,
+        .fi-dark .money-label {
+            color: #9ca3af !important;
+        }
+
+        body.fi-dark .money-value,
+        html.fi-dark .money-value,
+        .fi-dark .money-value {
+            color: #e5e7eb !important;
+        }
+
+        body.fi-dark .money-input input,
+        html.fi-dark .money-input input,
+        .fi-dark .money-input input {
+            background: #0b1220 !important;
+            border-color: #1f2937 !important;
+            color: #e5e7eb !important;
+        }
+
+        body.fi-dark .payment-box,
+        html.fi-dark .payment-box,
+        .fi-dark .payment-box {
+            border-color: #1f2937 !important;
+            background: #0b1220 !important;
+        }
+
+        body.fi-dark select,
+        html.fi-dark select,
+        .fi-dark select {
+            background: #0b1220 !important;
+            color: #e5e7eb !important;
+            border-color: #1f2937 !important;
+        }
+
+        body.fi-dark input,
+        html.fi-dark input,
+        .fi-dark input {
+            background: #0b1220 !important;
+            color: #e5e7eb !important;
+            border-color: #1f2937 !important;
+        }
+
+        body.fi-dark .text-gray-900,
+        html.fi-dark .text-gray-900,
+        .fi-dark .text-gray-900,
+        body.fi-dark .text-gray-950,
+        html.fi-dark .text-gray-950,
+        .fi-dark .text-gray-950 {
+            color: #e5e7eb !important;
+        }
+
+        body.fi-dark .text-gray-500,
+        html.fi-dark .text-gray-500,
+        .fi-dark .text-gray-500 {
+            color: #9ca3af !important;
+        }
+
+        body.fi-dark .text-gray-400,
+        html.fi-dark .text-gray-400,
+        .fi-dark .text-gray-400 {
+            color: #9ca3af !important;
+        }
+
+        body.fi-dark .border-gray-100,
+        html.fi-dark .border-gray-100,
+        .fi-dark .border-gray-100 {
+            border-color: rgba(31, 41, 55, 0.65) !important;
+        }
+
         .pos-shell {
+
+
             display: grid;
             grid-template-columns: minmax(280px, 380px) minmax(0, 1fr);
             gap: 1rem;

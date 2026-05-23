@@ -38,16 +38,33 @@ class AdminPanelProvider extends PanelProvider
                 'panels::styles.after',
                 fn (): string => Blade::render('
                     <style>
-                        /* Mengubah warna background sidebar kiri di tema terang (Light Mode) */
+                        /* Light Mode */
                         .fi-sidebar {
-                            background-color: #ffffff !important; /* Ganti dengan HEX warna yang Anda mau */
+                            background-color: #ffffff !important;
                             border-right: 1px solid #e5e7eb !important;
                         }
 
-                        /* Jika Anda ingin mengubah warna background item menu di dalam sidebar */
-                        .fi-sidebar-item-button {
-                            /* Gaya tambahan jika diperlukan */
+                        /* Dark Mode */
+                        /* Filament umumnya menambahkan class dark pada root (html/body). */
+                        html.fi-dark .fi-sidebar,
+                        body.fi-dark .fi-sidebar,
+                        .fi-dark .fi-sidebar {
+                            background-color: #0b1220 !important;
+                            border-right: 1px solid #1f2937 !important;
                         }
+
+                        html.fi-dark .fi-sidebar-item-button,
+                        body.fi-dark .fi-sidebar-item-button,
+                        .fi-dark .fi-sidebar-item-button {
+                            color: #e5e7eb !important;
+                        }
+
+                        html.fi-dark .fi-sidebar-item-button:hover,
+                        body.fi-dark .fi-sidebar-item-button:hover,
+                        .fi-dark .fi-sidebar-item-button:hover {
+                            background-color: rgba(249, 115, 22, 0.12) !important;
+                        }
+
                     </style>
                 '),
             )

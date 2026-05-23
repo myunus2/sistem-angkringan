@@ -91,7 +91,7 @@
 
         <div class="grid product-grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             @forelse($products as $product)
-            <div class="product-card flex flex-col group bg-white rounded-3xl p-3 shadow-sm border border-gray-100"
+            <div class="product-card flex flex-col group bg-white rounded-3xl p-3 shadow-lg shadow-gray-300/70 border border-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-gray-400/60"
                  data-product-id="{{ $product->id }}"
                  data-name="{{ e($product->name) }}"
                  data-price="Rp {{ number_format($product->price, 0, ',', '.') }}"
@@ -269,9 +269,6 @@
                 focusedProduct = null;
             }
 
-            closeButtons.forEach(btn => btn.addEventListener('click', closeFocus));
-            overlay.addEventListener('click', e => { if (e.target === overlay) closeFocus(); });
-        });
             closeButtons.forEach(btn => btn.addEventListener('click', closeFocus));
             overlay.addEventListener('click', e => { if (e.target === overlay) closeFocus(); });
         });
