@@ -323,7 +323,7 @@
                                 <div class="font-black text-xs text-gray-900">Rp {{ number_format($item['qty'] * $item['price']) }}</div>
                             </div>
                             
-                            <button type="button" wire:click="removeItem({{ $id }})" class="text-gray-200 hover:text-red-500 transition-colors flex-shrink-0">
+                            <button type="button" wire:click="removeItem({{ $id }})" class="text-red-400 hover:text-red-500 transition-colors flex-shrink-0">
                                 <x-heroicon-m-trash class="w-4 h-4"/>
                             </button>
                         </div>
