@@ -37,6 +37,7 @@ class PendingOrders extends Page implements HasTable
         return $table
             ->query(
                 Order::query()
+                    ->with(['items.product'])
                     ->where('status', 'pending')
                     ->latest('created_at')
             )
@@ -46,33 +47,20 @@ class PendingOrders extends Page implements HasTable
                     ->label('Nama')
                     ->placeholder('-')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('table_number')
-                    ->label('Meja')
+                Tables\Columns\TextColumn::make('items_summary')
+                    ->label('Pesanan')
+                    ->state(fn (Order $record): string => $record->items
+                        ->map(fn ($item): string => ($item->product?->name ?? 'Produk dihapus') . ' x' . $item->quantity)
+                        ->join(', '))
+                    ->wrap()
                     ->placeholder('-'),
-                Tables\Columns\TextColumn::make('total_price')
-                    ->label('Total')
-                    ->money('IDR')
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('payment_status')
-                    ->label('Pembayaran')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => $state === 'paid' ? 'Dibayar' : 'Belum Dibayar')
-                    ->color(fn (string $state): string => $state === 'paid' ? 'success' : 'warning'),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pending',
-                        default => str($state)->headline()->toString(),
-                    })
-                    ->color('warning'),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->label('Tanggal')
-                    ->dateTime('d M Y H:i')
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('table_number')
+                    ->label('No Meja')
+                    ->placeholder('-'),
             ])
             ->actions([
                 Action::make('confirm')
-                    ->label('Konfirmasi')
+                    ->label('Selesai')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->requiresConfirmation()
