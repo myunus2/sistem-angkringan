@@ -94,7 +94,7 @@
 <div class="receipt">
 
     <div class="title">
-        <h2>ANGKRINGAN POS</h2>
+        
         <div>STRUK PEMBAYARAN</div>
     </div>
 
@@ -107,7 +107,7 @@
         <div><strong>Meja:</strong> {{ $order->table_number ?? '-' }}</div>
         <div><strong>Tanggal:</strong> {{ $order->created_at->format('d-m-Y H:i') }}</div>
 
-        <!-- 💰 UANG BAYAR -->
+        <!--  UANG BAYAR -->
         <div><strong>Uang Bayar:</strong> Rp {{ number_format($order->cash ?? 0, 0, ',', '.') }}</div>
     </div>
 
@@ -145,7 +145,7 @@
                 <td class="total">Rp {{ number_format($total, 0, ',', '.') }}</td>
             </tr>
 
-            <!-- 🔁 KEMBALIAN -->
+            <!--  KEMBALIAN -->
             <tr>
                 <td colspan="2">Kembalian</td>
                 <td>
@@ -159,7 +159,7 @@
     <div class="line"></div>
 
     <div class="center">
-        <b>Terima kasih 🙏</b><br>
+        <b>Terima kasih </b><br>
         Selamat datang kembali
     </div>
 

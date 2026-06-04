@@ -2,7 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Pages\Transaksi;
 use App\Models\Order;
+use Filament\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -12,7 +14,10 @@ class LatestOrdersTable extends TableWidget
 {
     protected static ?string $heading = 'Pesanan Terbaru';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = [
+        'default' => 'full',
+        'xl' => 2,
+    ];
 
     public function table(Table $table): Table
     {
@@ -49,7 +54,7 @@ class LatestOrdersTable extends TableWidget
                     ->color(fn (?string $state): string => match ($state) {
                         'pending' => 'warning',
                         'ready' => 'info',
-                        'done' => 'success',
+                        'done' => 'info',
                         'cancelled' => 'danger',
                         default => 'gray',
                     }),
@@ -57,6 +62,20 @@ class LatestOrdersTable extends TableWidget
                     ->label('Tanggal')
                     ->dateTime('d M Y H:i')
                     ->sortable(),
+            ])
+            ->actions([
+                Action::make('edit')
+                    ->label('Ubah')
+                    ->icon('heroicon-o-pencil-square')
+                    ->iconButton()
+                    ->tooltip('Ubah data pesanan')
+                    ->url(fn (): string => Transaksi::getUrl()),
+                Action::make('view')
+                    ->label('Detail')
+                    ->icon('heroicon-o-eye')
+                    ->iconButton()
+                    ->tooltip('Lihat detail pesanan')
+                    ->url(fn (): string => Transaksi::getUrl()),
             ]);
     }
 

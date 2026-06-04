@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Filament\Widgets\AdminSalesChart;
 use App\Filament\Widgets\AdminStatsOverview;
+use App\Filament\Widgets\FavoriteMenusTable;
 use App\Filament\Widgets\LatestOrdersTable;
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -15,12 +16,16 @@ class Dashboard extends \Filament\Pages\Dashboard
         return [
             AdminStatsOverview::class,
             AdminSalesChart::class,
+            FavoriteMenusTable::class,
             LatestOrdersTable::class,
         ];
     }
 
     public function getColumns(): int | array
     {
-        return 1;
+        return [
+            'default' => 1,
+            'xl' => 3,
+        ];
     }
 }

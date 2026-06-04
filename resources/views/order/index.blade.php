@@ -24,12 +24,16 @@
             filter: none !important;
             pointer-events: auto;
         }
-        .focus-overlay { backdrop-filter: blur(6px); }
-        .hero-banner {
-            background-image: linear-gradient(180deg, rgba(0,0,0,0.3), rgba(0,0,0,0.75)), url('{{ asset('images/air.jpg') }}');
-            background-size: cover;
-            background-position: center;
-        }
+       .hero-banner {
+    background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.75)), url('{{ asset('images/image.png') }}');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; 
+    min-height: 30vh; 
+    display: flex; /* Mempermudah pengaturan posisi teks di dalam banner */
+    align-items: center; /* Membuat teks otomatis berada di tengah secara vertikal */
+    justify-content: center; /* Membuat teks otomatis berada di tengah secara horizontal */
+}
         @media (max-width: 768px) {
             .snap-x-container {
                 display: flex;
@@ -180,11 +184,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- FAB Cart -->
-    <div id="cart-fab" class="hidden fixed bottom-6 right-4 sm:bottom-8 sm:right-8 z-40 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-orange-500 text-white rounded-full shadow-2xl font-bold text-base sm:text-lg cursor-pointer hover:bg-orange-600 transition">
-        <span id="cart-badge">0</span>
     </div>
 
     <script>
