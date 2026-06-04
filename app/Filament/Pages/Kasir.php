@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class Kasir extends Page
 {
-     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
     protected static ?string $navigationLabel = 'Pesanan';
     protected static ?string $title = 'Pesanan';
 

@@ -41,7 +41,7 @@
         .product-qty-badge {
             position: absolute;
             top: 0.5rem;
-            right: 0.5rem;
+            left: 0.5rem; /* DIUBAH KE KIRI: Agar tidak menabrak label kategori di kanan */
             z-index: 20;
             min-width: 1.75rem;
             height: 1.75rem;
@@ -85,19 +85,16 @@
         /* ====================================================================
            FORCE STYLE INPUT KASIR (TEKS HITAM PEKAT & PLACEHOLDER MIRING ABU)
            ==================================================================== */
-        /* Memaksa tulisan Label di atas kotak input (Nama Pelanggan & No Meja) menjadi HITAM */
         .cart-container label {
             color: #313131 !important;
             font-weight: 900 !important;
         }
 
-        /* Memaksa teks yang DIKETIK oleh kasir menjadi HITAM PEKAT */
         .cart-container input[type="text"] {
             color: #0f0f0f !important; 
             font-weight: 700 !important;
         }
 
-        /* Memaksa teks petunjuk (placeholder) tetap abu-abu dan miring */
         .cart-container input[type="text"]::placeholder {
             color: #9ca3af !important; 
             font-style: italic !important; 
@@ -107,7 +104,6 @@
         /* ====================================================================
            PERBAIKAN FITUR DARK MODE UNTUK ELEMEN KUSTOM (KASIR)
            ==================================================================== */
-        /* 1. KATEGORI MENU */
         .dark .category-btn {
             background: #1e293b !important;
             border-color: #334155 !important;
@@ -119,7 +115,6 @@
             border-color: #f97316 !important;
         }
 
-        /* 2. KARTU PRODUK / MENU */
         .dark .product-card {
             background: #1e293b !important;
             border-color: #334155 !important;
@@ -137,7 +132,6 @@
             border-color: #1e293b !important;
         }
 
-        /* 3. DETAIL PESANAN / KERANJANG */
         .dark .cart-container {
             background: #1e293b !important;
             border-color: #334155 !important;
@@ -162,15 +156,14 @@
             color: #f1f5f9 !important;
         }
         
-        /* 4. SINKRONISASI INPUT KASIR SAAT DARK MODE AKTIF */
         .dark .cart-container .fi-input-wrp {
-            border-color: #475569 !important; /* Warna border kotak saat malam */
+            border-color: #475569 !important;
         }
         .dark .cart-container label {
-            color: #f1f5f9 !important; /* Mengubah label menjadi putih saat malam */
+            color: #f1f5f9 !important;
         }
         .dark .cart-container input[type="text"] {
-            color: #ffffff !important; /* Mengubah tulisan ketikan menjadi putih saat malam */
+            color: #ffffff !important;
         }
         .dark .cart-container input[type="text"]::placeholder {
             color: #6b7280 !important;
@@ -252,7 +245,6 @@
             }
         }
     </style>
-    </style>
 
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 pt-2 lg:pt-0 lg:-mt-6 px-1 md:px-4 lg:px-0 w-full items-start">
         
@@ -265,11 +257,8 @@
                     </div>
                 </div>
 
-                <!-- INPUT DENGAN BORDER TEGAS, TEKS HITAM & PLACEHOLDER MIRING -->
-               <!-- POTONGAN KODE LABEL YANG DIUBAH MENJADI HITAM -->
                 <div class="grid grid-cols-2 gap-3 mb-4">
                     <div>
-                        <!-- text-black memaksa tulisan label menjadi hitam pekat -->
                         <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1 block">Nama Pelanggan</label>
                         <x-filament::input.wrapper 
                             class="rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-orange-500 transition-all duration-200"
@@ -279,12 +268,10 @@
                                 type="text"
                                 class="w-full text-base font-bold py-3.5 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
                                 wire:model.defer="customerName" 
-                            
                             />
                         </x-filament::input.wrapper>
                     </div>
                     <div>
-                        <!-- text-black memaksa tulisan label menjadi hitam pekat -->
                         <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1 block">Nomor Meja</label>
                         <x-filament::input.wrapper 
                             class="rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-orange-500 transition-all duration-200"
@@ -294,21 +281,20 @@
                                 type="text"
                                 class="w-full text-base font-bold py-3.5 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
                                 wire:model.defer="tableNumber" 
-                            
                             />
                         </x-filament::input.wrapper>
                     </div>
                 </div>
 
-                <div class="space-y-3 max-h-[220px] lg:max-h-[350px] overflow-y-auto mb-4 pr-2">
+                <div class="space-y-3 max-h-[220px] lg:max-h-[350px] overflow-y-auto mb-4 pr-1">
                     @forelse($cart as $id => $item)
-                    <div class="flex justify-between items-center group pb-3 border-b border-gray-50 gap-2">
+                    <div class="flex justify-between items-center group pb-3 border-b border-gray-50 gap-3">
                         <div class="flex-1 min-w-0">
-                            <div class="font-bold text-xs md:text-sm text-gray-800 truncate">{{ $item['name'] }}</div>
+                            <div class="font-bold text-xs md:text-sm text-gray-800 leading-tight mb-0.5">{{ $item['name'] }}</div>
                             <div class="price-tag text-[10px]">Rp {{ number_format($item['price']) }}</div>
                         </div>
                         
-                        <div class="flex items-center gap-2 flex-shrink-0">
+                        <div class="flex items-center gap-3 flex-shrink-0 pr-1">
                             <div class="flex items-center bg-gray-50 rounded-lg p-0.5 border border-gray-100">
                                 <button type="button" wire:click="decrementQty({{ $id }})" class="w-6 h-6 flex items-center justify-center bg-white rounded-md shadow-sm hover:text-orange-600 transition active:scale-90">
                                     <x-heroicon-m-minus class="w-3 h-3"/>
@@ -319,11 +305,11 @@
                                 </button>
                             </div>
 
-                            <div class="text-right min-w-[65px] flex-shrink-0">
+                            <div class="text-right min-w-[70px] flex-shrink-0">
                                 <div class="font-black text-xs text-gray-900">Rp {{ number_format($item['qty'] * $item['price']) }}</div>
                             </div>
                             
-                            <button type="button" wire:click="removeItem({{ $id }})" class="text-red-400 hover:text-red-500 transition-colors flex-shrink-0">
+                            <button type="button" wire:click="removeItem({{ $id }})" class="text-red-400 hover:text-red-500 transition-colors flex-shrink-0 ml-1">
                                 <x-heroicon-m-trash class="w-4 h-4"/>
                             </button>
                         </div>
@@ -346,7 +332,7 @@
                         type="button"
                         wire:click="checkout" 
                         size="xl" 
-                        class="w-full btn-pay py-3  uppercase tracking-widest text-xs"
+                        class="w-full btn-pay py-4 uppercase tracking-wider text-sm font-black shadow-lg"
                     >
                         Konfirmasi
                     </x-filament::button>
@@ -360,8 +346,6 @@
                     prefix-icon="heroicon-m-magnifying-glass"
                     class="rounded-xl focus-within:ring-2 focus-within:ring-orange-500"
                 >
-                    <!-- py-3.5 (besar di mobile) -> lg:py-2 (kembali standar di desktop) -->
-                    <!-- text-base (besar di mobile) -> lg:text-sm (kembali standar di desktop) -->
                     <x-filament::input 
                         type="text" 
                         wire:model.live="search" 
@@ -402,17 +386,17 @@
                         </div>
                     </div>
                     <div class="px-0.5">
-                        <h4 class="font-bold text-gray-800 text-[10px] sm:text-xs md:text-sm truncate leading-tight">{{ $product->name }}</h4>
+                        <h4 class="font-bold text-gray-800 text-[10px] sm:text-xs md:text-sm line-clamp-2 leading-tight min-h-[2.25rem]">{{ $product->name }}</h4>
                         <p class="price-tag text-[10px] sm:text-xs md:text-sm mt-0.5 leading-none">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                     </div>
                 </button>
                 @empty
-                <!-- Tampilan ini akan muncul jika $products kosong -->
                 <div class="col-span-full flex flex-col items-center justify-center py-12 px-4 text-center">
                     <div class="p-4 bg-gray-50 rounded-full text-gray-400 mb-3">
                         <x-heroicon-o-magnifying-glass class="w-8 h-8 opacity-40 mx-auto" style="width: 2.5rem !important; height: 2.5rem !important;"/>
                     </div>
                     <h3 class="text-sm font-bold text-gray-700">Menu Tidak Ditemukan</h3>
+                </div>
                 @endforelse
             </div>
             
