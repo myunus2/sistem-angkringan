@@ -413,8 +413,6 @@
                         <x-heroicon-o-magnifying-glass class="w-8 h-8 opacity-40 mx-auto" style="width: 2.5rem !important; height: 2.5rem !important;"/>
                     </div>
                     <h3 class="text-sm font-bold text-gray-700">Menu Tidak Ditemukan</h3>
-                     <a href="{{ route('kasir') }}" class="text-orange-500 font-bold text-sm mt-2 block">Lihat Semua Menu</a>
-                </div>
                 @endforelse
             </div>
             
