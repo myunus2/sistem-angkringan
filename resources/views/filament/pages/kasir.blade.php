@@ -250,6 +250,7 @@
         
         <div class="order-first lg:order-last w-full lg:w-[400px] flex-shrink-0">
             <div class="cart-container p-4 md:p-6 lg:sticky lg:top-4">
+                
                 <div class="flex justify-between items-center mb-4 border-b border-gray-50 pb-3">
                     <h2 class="font-black text-base md:text-lg text-gray-900 uppercase tracking-tight">Detail Pesanan</h2>
                     <div class="text-[9px] md:text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-lg uppercase tracking-widest">
@@ -334,7 +335,7 @@
                         size="xl" 
                         class="w-full btn-pay py-4 uppercase tracking-wider text-sm font-black shadow-lg"
                     >
-                        Konfirmasi
+                        Konfirmasi Transaksi
                     </x-filament::button>
                 </div>
             </div>

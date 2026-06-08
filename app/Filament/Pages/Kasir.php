@@ -82,7 +82,6 @@ class Kasir extends Page
                 'status' => 'pending',
                 'payment_status' => 'unpaid',
                 'payment_method' => 'cash',
-                'completed_at' => now(),
             ]);
 
             foreach ($this->cart as $item) {

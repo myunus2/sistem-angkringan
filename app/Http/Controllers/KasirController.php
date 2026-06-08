@@ -34,25 +34,27 @@ class KasirController extends Controller
         // 🔍 DEBUG (aktifkan kalau masih error)
         // dd($request->all());
 
-        if (!$request->cart || count($request->cart) == 0) {
+        if (!$request->items || count($request->items) == 0) {
             return response()->json(['error' => 'Cart kosong'], 400);
         }
 
         $cash = $request->cash ?? 0;
 
-        // 🔥 SIMPAN ORDER
         $order = Order::create([
-            'customer_name'  => $request->customer_name ?? null,
-            'table_number'   => $request->table ?? '-',
+            'customer_name'  => $request->customer_name,
+            'table_number'   => $request->table_number,
+            'phone'          => $request->phone,
+            'notes'          => $request->notes,
             'cash'           => (int) $cash, // FIX HARD
             'payment_method' => 'cash',
-            'payment_status' => 'paid',
-            'status'         => 'done',
+            'payment_status' => 'unpaid',
+            'status'         => 'pending',
+            'completed_at'   => null,
         ]);
 
         $total = 0;
 
-        foreach ($request->cart as $item) {
+        foreach ($request->items as $item) {
 
             $product = Product::find($item['id']);
             if (!$product) continue;

@@ -177,12 +177,84 @@
                             <p id="focus-composition" class="leading-relaxed min-h-[1rem] whitespace-pre-wrap"></p>
                         </div>
                     </div>
-                    <div class="mt-4 sm:mt-6 modal-buttons flex flex-wrap gap-2 sm:gap-3 justify-end">
-                        <button id="focus-ar-button" class="rounded-2xl sm:rounded-3xl bg-blue-500 px-4 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-600 shadow-lg">Lihat 3D</button>
-                        <button id="focus-close-button" class="rounded-2xl sm:rounded-3xl bg-gray-100 px-4 sm:px-5 py-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-600 transition hover:bg-gray-200">Tutup</button>
+                    <div class="mt-4 sm:mt-6 modal-buttons flex flex-col sm:flex-row gap-3 justify-between items-center">
+                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                            <button id="btn-tambah" class="w-full sm:w-auto rounded-2xl sm:rounded-3xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600 shadow-lg">Pesan</button>
+                            <div id="qty-controls" class="hidden items-center bg-gray-100 rounded-3xl p-1 w-full sm:w-auto justify-between sm:justify-start">
+                                <button id="btn-minus" class="w-10 h-10 flex items-center justify-center bg-white rounded-2xl shadow-sm text-gray-700 font-bold hover:text-orange-600 transition text-lg">-</button>
+                                <span id="qty-display" class="px-6 text-base font-black text-gray-800">1</span>
+                                <button id="btn-plus" class="w-10 h-10 flex items-center justify-center bg-white rounded-2xl shadow-sm text-gray-700 font-bold hover:text-orange-600 transition text-lg">+</button>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <button id="focus-ar-button" class="flex-1 sm:flex-none rounded-2xl sm:rounded-3xl bg-blue-500 px-4 py-3 text-xs sm:text-sm font-semibold text-white transition hover:bg-blue-600 shadow-md">Lihat 3D</button>
+                            <button id="focus-close-button" class="flex-1 sm:flex-none rounded-2xl sm:rounded-3xl bg-gray-100 px-4 py-3 text-xs sm:text-sm font-semibold text-gray-600 transition hover:bg-gray-200">Tutup</button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    
+    {{-- Floating Cart --}}
+    <div id="floating-cart" class="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.1)] p-4 z-40 transition-transform duration-300 transform translate-y-full flex justify-between items-center cursor-pointer rounded-t-3xl sm:px-8">
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <svg class="w-8 h-8 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span id="cart-badge-floating" class="absolute -top-2 -right-2 bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full border-2 border-white">0</span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Pesanan</span>
+                <span id="cart-total-floating" class="text-lg font-black text-gray-900 leading-none mt-1">Rp 0</span>
+            </div>
+        </div>
+        <button id="btn-show-cart" class="bg-orange-500 text-white px-6 py-2.5 rounded-2xl text-sm font-bold shadow-lg hover:bg-orange-600 transition">Lihat Keranjang</button>
+    </div>
+
+    {{-- Cart Modal --}}
+    <div id="cart-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm p-0 sm:p-4 transition-opacity">
+        <div class="w-full max-w-lg bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="p-4 sm:p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                <h2 class="text-lg sm:text-xl font-black text-gray-800">Keranjang Pesanan</h2>
+                <button id="close-cart-modal" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 font-bold transition">&times;</button>
+            </div>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50"></div>
+            <div class="p-4 sm:p-5 bg-white border-t border-gray-100 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-bold text-gray-500 uppercase tracking-widest">Total Tagihan</span>
+                    <span id="cart-modal-total" class="text-xl sm:text-2xl font-black text-orange-600">Rp 0</span>
+                </div>
+                <button id="btn-checkout-modal" class="w-full bg-orange-500 hover:bg-orange-600 transition text-white py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg shadow-orange-500/30">Checkout Pesanan</button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Checkout Modal --}}
+    <div id="checkout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-opacity">
+        <div class="bg-white w-full max-w-md rounded-3xl p-5 sm:p-6 shadow-2xl relative">
+            <button id="close-checkout-modal" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 font-bold transition">&times;</button>
+            <h2 class="text-xl font-black text-gray-800 mb-5">Detail Pemesan</h2>
+            
+            <form id="checkout-form" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Nama Pemesan <span class="text-red-500">*</span></label>
+                    <input type="text" id="checkout-name" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white transition" placeholder="Masukkan nama Anda">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Nomor HP <span class="text-red-500">*</span></label>
+                    <input type="tel" id="checkout-phone" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white transition" placeholder="Contoh: 08123456789">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Nomor Meja <span class="text-red-500">*</span></label>
+                    <input type="text" id="checkout-table" required class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white transition" placeholder="Contoh: 12">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1.5 ml-1">Saran / Catatan Tambahan <span class="text-gray-400 font-normal">(Opsional)</span></label>
+                    <textarea id="checkout-notes" rows="2" class="w-full bg-gray-50 border border-gray-200 rounded-2xl p-3.5 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:bg-white transition" placeholder="Contoh: Es dipisah, dll..."></textarea>
+                </div>
+                
+                <button type="submit" id="btn-submit-order" class="w-full bg-orange-500 hover:bg-orange-600 transition text-white py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg shadow-orange-500/30 mt-2">Konfirmasi & Kirim Pesanan</button>
+            </form>
         </div>
     </div>
 
@@ -193,20 +265,98 @@
             catch { return []; }
         }
         function saveCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+        
         function updateFab() {
-            const cart = getCart();
-            const total = cart.reduce((s, i) => s + i.qty, 0);
-            const badge = document.getElementById('cart-badge');
-            const fab = document.getElementById('cart-fab');
-            if (badge) badge.textContent = total;
-            if (fab) fab.classList.toggle('hidden', total === 0);
+            updateFloatingCart();
         }
-        function addToCart(product) {
+        
+        function updateFloatingCart() {
+            const cart = getCart();
+            const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+            const totalPrice = cart.reduce((s, i) => s + (i.price * i.qty), 0);
+            
+            const floatingCart = document.getElementById('floating-cart');
+            if (floatingCart) {
+                if (totalQty > 0) {
+                    floatingCart.classList.remove('translate-y-full');
+                    document.getElementById('cart-badge-floating').textContent = totalQty;
+                    document.getElementById('cart-total-floating').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(totalPrice);
+                } else {
+                    floatingCart.classList.add('translate-y-full');
+                }
+            }
+        }
+        
+        function updateModalCartControls() {
+            if (!focusedProduct) return;
+            const cart = getCart();
+            const item = cart.find(i => i.id === focusedProduct.id);
+            const btnTambah = document.getElementById('btn-tambah');
+            const qtyControls = document.getElementById('qty-controls');
+            
+            if (item && item.qty > 0) {
+                btnTambah.classList.add('hidden');
+                qtyControls.classList.remove('hidden');
+                qtyControls.classList.add('flex');
+                document.getElementById('qty-display').textContent = item.qty;
+            } else {
+                btnTambah.classList.remove('hidden');
+                qtyControls.classList.add('hidden');
+                qtyControls.classList.remove('flex');
+            }
+        }
+        
+        window.changeQty = function(productId, delta) {
             let cart = getCart();
-            const idx = cart.findIndex(i => i.id === product.id);
-            if (idx > -1) { cart[idx].qty++; } else { cart.push({ ...product, qty: 1 }); }
+            const idx = cart.findIndex(i => i.id === productId);
+            if (idx > -1) {
+                cart[idx].qty += delta;
+                if (cart[idx].qty <= 0) cart.splice(idx, 1);
+            } else if (delta > 0 && focusedProduct && focusedProduct.id === productId) {
+                cart.push({ ...focusedProduct, qty: 1 });
+            }
             saveCart(cart);
             updateFab();
+            if (focusedProduct && focusedProduct.id === productId) updateModalCartControls();
+            renderCartModal();
+        };
+        
+        function renderCartModal() {
+            const cart = getCart();
+            const container = document.getElementById('cart-items-container');
+            const totalEl = document.getElementById('cart-modal-total');
+            const btnCheckout = document.getElementById('btn-checkout-modal');
+            
+            container.innerHTML = '';
+            let total = 0;
+            
+            if (cart.length === 0) {
+                container.innerHTML = '<div class="text-center py-10 text-gray-400 font-medium">Keranjang masih kosong</div>';
+                btnCheckout.disabled = true;
+                btnCheckout.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                btnCheckout.disabled = false;
+                btnCheckout.classList.remove('opacity-50', 'cursor-not-allowed');
+                
+                cart.forEach(item => {
+                    total += item.price * item.qty;
+                    container.innerHTML += `
+                        <div class="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 flex gap-3 items-center">
+                            <img src="${item.image}" class="w-16 h-16 object-cover rounded-xl bg-gray-50">
+                            <div class="flex-1">
+                                <h4 class="font-bold text-sm text-gray-800 line-clamp-1">${item.name}</h4>
+                                <div class="text-orange-600 font-black text-sm">Rp ${new Intl.NumberFormat('id-ID').format(item.price)}</div>
+                            </div>
+                            <div class="flex items-center bg-gray-50 rounded-xl p-1 border border-gray-100">
+                                <button onclick="changeQty(${item.id}, -1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-lg shadow-sm text-gray-700 font-bold hover:text-orange-600">-</button>
+                                <span class="px-3 text-sm font-black text-gray-800">${item.qty}</span>
+                                <button onclick="changeQty(${item.id}, 1)" class="w-7 h-7 flex items-center justify-center bg-white rounded-lg shadow-sm text-gray-700 font-bold hover:text-orange-600">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            totalEl.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
         }
 
         updateFab();
@@ -224,6 +374,10 @@
             const overlay = document.getElementById('product-focus-overlay');
             const closeButtons = document.querySelectorAll('#product-focus-close, #focus-close-button');
             const arButton = document.getElementById('focus-ar-button');
+
+            document.getElementById('btn-tambah').addEventListener('click', () => { if(focusedProduct) changeQty(focusedProduct.id, 1); });
+            document.getElementById('btn-plus').addEventListener('click', () => { if(focusedProduct) changeQty(focusedProduct.id, 1); });
+            document.getElementById('btn-minus').addEventListener('click', () => { if(focusedProduct) changeQty(focusedProduct.id, -1); });
 
             if (arButton) {
                 arButton.addEventListener('click', function () {
@@ -268,6 +422,7 @@
                 document.getElementById('focus-composition').textContent = composition;
                 document.getElementById('focus-type').textContent = productType;
                 
+                updateModalCartControls();
                 if (arButton) {
                     arButton.setAttribute('data-model-3d', model3d);
                     arButton.disabled = !model3d;
@@ -305,6 +460,63 @@
 
             closeButtons.forEach(btn => btn.addEventListener('click', closeFocus));
             overlay.addEventListener('click', e => { if (e.target === overlay) closeFocus(); });
+            
+            // Cart Modals Handlers
+            const floatingCart = document.getElementById('floating-cart');
+            const cartModal = document.getElementById('cart-modal');
+            const checkoutModal = document.getElementById('checkout-modal');
+            const successModal = document.getElementById('success-modal');
+            
+            floatingCart.addEventListener('click', (e) => {
+                renderCartModal();
+                cartModal.classList.remove('hidden');
+            });
+            
+            document.getElementById('close-cart-modal').addEventListener('click', () => cartModal.classList.add('hidden'));
+            document.getElementById('btn-checkout-modal').addEventListener('click', () => {
+                cartModal.classList.add('hidden');
+                checkoutModal.classList.remove('hidden');
+            });
+            document.getElementById('close-success-modal').addEventListener('click', () => successModal.classList.add('hidden'));
+            document.getElementById('close-checkout-modal').addEventListener('click', () => checkoutModal.classList.add('hidden'));
+            
+            // Submit Checkout ke Server
+            document.getElementById('checkout-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const btnSubmit = document.getElementById('btn-submit-order');
+                btnSubmit.textContent = 'Memproses...';
+                btnSubmit.disabled = true;
+                
+                // Ganti endpoint API ini sesuai controller laravel Anda (contoh route: route('api.checkout'))
+                fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        customer_name: document.getElementById('checkout-name').value,
+                        phone: document.getElementById('checkout-phone').value,
+                        table_number: document.getElementById('checkout-table').value,
+                        notes: document.getElementById('checkout-notes').value,
+                        items: getCart()
+                    })
+                }).then(res => res.json()).then(data => {
+                    checkoutModal.classList.add('hidden'); // Sembunyikan modal checkout
+                    successModal.classList.remove('hidden'); // Tampilkan modal sukses
+
+                    localStorage.removeItem(CART_KEY);
+                    updateFab(); // Perbarui tampilan keranjang
+                    
+                    // Otomatis tutup modal sukses setelah 3 detik
+                    setTimeout(() => { window.location.reload(); }, 3000);
+                }).catch(err => {
+                    alert('Terjadi kesalahan. Pastikan backend controller telah ditambahkan.');
+                    btnSubmit.textContent = 'Konfirmasi & Kirim Pesanan';
+                    btnSubmit.disabled = false;
+                });
+            });
         });
     </script>
 
