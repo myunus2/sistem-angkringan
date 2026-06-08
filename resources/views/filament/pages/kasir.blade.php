@@ -41,7 +41,7 @@
         .product-qty-badge {
             position: absolute;
             top: 0.5rem;
-            left: 0.5rem;
+            left: 0.5rem; /* DIUBAH KE KIRI: Agar tidak menabrak label kategori di kanan */
             z-index: 20;
             min-width: 1.75rem;
             height: 1.75rem;
@@ -170,9 +170,7 @@
         }
 
         /* ====================================================================
-           RANCANGAN GRID RESPONSIVE (2-3 KOLOM + 2xl 4 KOLOM)
-           [DIUBAH] xl: 4 kolom → 3 kolom (kompensasi sidebar 560px lebih lebar)
-           [BARU]   2xl (>=1536px): 4 kolom aktif di layar sangat besar
+           RANCANGAN GRID RESPONSIVE (2-3-4 KOLOM)
            ==================================================================== */
         .pos-grid { 
             display: grid; 
@@ -187,18 +185,9 @@
             } 
         }
         
-        /* [DIUBAH] repeat(4) → repeat(3, minmax(150px, 1fr)) */
         @media (min-width: 1280px) { 
             .pos-grid { 
-                grid-template-columns: repeat(3, minmax(150px, 1fr));
-                gap: 1.25rem; 
-            } 
-        }
-
-        /* [BARU] 4 kolom hanya di layar >=1536px */
-        @media (min-width: 1536px) { 
-            .pos-grid { 
-                grid-template-columns: repeat(4, minmax(150px, 1fr));
+                grid-template-columns: repeat(4, minmax(0, 1fr)); 
                 gap: 1.25rem; 
             } 
         }
@@ -259,115 +248,45 @@
 
     <div class="flex flex-col lg:flex-row gap-6 lg:gap-8 pt-2 lg:pt-0 lg:-mt-6 px-1 md:px-4 lg:px-0 w-full items-start">
         
-        {{--
-            ====================================================================
-            [DIUBAH] LEBAR PANEL DETAIL PESANAN
-            Sebelum : lg:w-[400px]
-            Sesudah  : lg:w-[560px] xl:w-[600px]
-
-            Alasan: 560-600px adalah lebar ideal untuk panel kasir vertikal
-            bergaya tablet POS. Cukup lebar untuk dua kolom input stacked,
-            nama item panjang, dan total tanpa text wrap yang mengganggu.
-            ====================================================================
-        --}}
-        <div class="order-first lg:order-last w-full lg:w-[560px] xl:w-[600px] flex-shrink-0">
-
-            {{--
-                ================================================================
-                [DIUBAH] CART CONTAINER — FULL HEIGHT + FLEX COLUMN
-                Sebelum : cart-container p-4 md:p-6 lg:sticky lg:top-4
-                Sesudah  : + flex flex-col + lg:min-h-[90vh]
-
-                Alasan:
-                - flex flex-col: memungkinkan cart-list tumbuh (flex-1) dan
-                  footer total+tombol selalu pinned di bagian bawah panel
-                - lg:min-h-[90vh]: panel mengisi 90% tinggi viewport di
-                  desktop — menciptakan kesan aplikasi kasir tablet profesional
-                  yang "solid" dan dominan, bukan panel kecil mengambang
-                - p-5 md:p-7: padding lebih lega dari p-4/p-6, terasa premium
-                ================================================================
-            --}}
-            <div class="cart-container p-5 md:p-7 lg:sticky lg:top-4 flex flex-col lg:min-h-[90vh]">
-
-                {{-- Header panel: tidak diubah --}}
-                <div class="flex justify-between items-center mb-5 border-b border-gray-50 pb-4">
+        <div class="order-first lg:order-last w-full lg:w-[400px] flex-shrink-0">
+            <div class="cart-container p-4 md:p-6 lg:sticky lg:top-4">
+                <div class="flex justify-between items-center mb-4 border-b border-gray-50 pb-3">
                     <h2 class="font-black text-base md:text-lg text-gray-900 uppercase tracking-tight">Detail Pesanan</h2>
                     <div class="text-[9px] md:text-[10px] font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-lg uppercase tracking-widest">
                         {{ count($cart) }} Items
                     </div>
                 </div>
 
-                {{--
-                    ============================================================
-                    [DIUBAH] INPUT PELANGGAN & MEJA — 2 KOLOM → STACKED VERTIKAL
-                    Sebelum : <div class="grid grid-cols-2 gap-3 mb-4">
-                    Sesudah  : <div class="flex flex-col gap-3 mb-5">
-
-                    Alasan:
-                    - Layout 2 kolom di panel 400px lama = input sempit & susah
-                      dibaca. Di panel 560px sekalipun, stacked lebih baik karena:
-                      (1) Label lebih mudah dibaca karena full-width
-                      (2) Input field lebih panjang = lebih mudah mengetik
-                      (3) Konsisten dengan desain POS tablet profesional
-                      (4) Memberikan kesan form yang bersih dan terstruktur
-                    ============================================================
-                --}}
-                <div class="flex flex-col gap-3 mb-5">
+                <div class="grid grid-cols-2 gap-3 mb-4">
                     <div>
-                        <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1.5 block">Nama Pelanggan</label>
+                        <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1 block">Nama Pelanggan</label>
                         <x-filament::input.wrapper 
                             class="rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-orange-500 transition-all duration-200"
                             style="border: 2px solid #cbd5e1 !important;"
                         >
                             <x-filament::input 
                                 type="text"
-                                class="w-full text-base font-bold py-4 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
+                                class="w-full text-base font-bold py-3.5 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
                                 wire:model.defer="customerName" 
                             />
                         </x-filament::input.wrapper>
                     </div>
                     <div>
-                        <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1.5 block">Nomor Meja</label>
+                        <label class="text-xs font-black uppercase tracking-wider text-black dark:text-white mb-1 block">Nomor Meja</label>
                         <x-filament::input.wrapper 
                             class="rounded-xl shadow-sm focus-within:ring-2 focus-within:ring-orange-500 transition-all duration-200"
                             style="border: 2px solid #cbd5e1 !important;"
                         >
                             <x-filament::input 
                                 type="text"
-                                class="w-full text-base font-bold py-4 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
+                                class="w-full text-base font-bold py-3.5 text-black dark:text-white placeholder:text-gray-400 placeholder:italic bg-transparent border-none focus:ring-0" 
                                 wire:model.defer="tableNumber" 
                             />
                         </x-filament::input.wrapper>
                     </div>
                 </div>
 
-                {{-- Pemisah section input & daftar pesanan --}}
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="flex-1 h-px bg-gray-100"></div>
-                    <span class="text-[9px] font-black uppercase tracking-widest text-gray-300">Pesanan</span>
-                    <div class="flex-1 h-px bg-gray-100"></div>
-                </div>
-
-                {{--
-                    ============================================================
-                    [DIUBAH] AREA DAFTAR ITEM PESANAN
-                    Sebelum : max-h-[220px] lg:max-h-[350px] overflow-y-auto
-                    Sesudah  : flex-1 overflow-y-auto min-h-[120px]
-
-                    Alasan:
-                    - flex-1: ini adalah perubahan kunci. Karena parent sudah
-                      flex-col dengan min-h-[90vh], area list ini akan MENGISI
-                      semua sisa ruang yang tersedia secara otomatis — persis
-                      seperti aplikasi kasir tablet profesional
-                    - Tidak ada lagi max-h fixed yang membatasi. Makin sedikit
-                      item = area kosong yang tetap ada (memberikan kesan lapang).
-                      Makin banyak item = scrollable secara natural
-                    - min-h-[120px]: jaminan area minimal terlihat meski panel
-                      sangat pendek (mis. di laptop 768px tinggi)
-                    - pr-2 (dari pr-1): scrollbar tidak menabrak border item
-                    ============================================================
-                --}}
-                <div class="space-y-3 flex-1 overflow-y-auto mb-4 pr-2 min-h-[120px]">
+                <div class="space-y-3 max-h-[220px] lg:max-h-[350px] overflow-y-auto mb-4 pr-1">
                     @forelse($cart as $id => $item)
                     <div class="flex justify-between items-center group pb-3 border-b border-gray-50 gap-3">
                         <div class="flex-1 min-w-0">
@@ -396,24 +315,15 @@
                         </div>
                     </div>
                     @empty
-                    {{--
-                        [DIUBAH] Empty state: h-full agar ikon & teks berada
-                        di tengah area list yang sekarang flex-1 (tinggi dinamis)
-                    --}}
-                    <div class="h-full flex flex-col items-center justify-center py-12 big-icon">
+                    <div class="text-center py-8 big-icon flex flex-col items-center">
                         <x-heroicon-o-shopping-bag />
                         <p class="text-gray-400 text-xs italic font-medium">Keranjang masih kosong</p>
                     </div>
                     @endforelse
                 </div>
 
-                {{--
-                    Footer total & tombol: tidak diubah strukturnya.
-                    Karena parent flex-col, section ini otomatis terdorong
-                    ke bawah dan selalu terlihat (pinned bottom behavior).
-                --}}
-                <div class="border-t border-gray-100 pt-5 mt-auto">
-                    <div class="flex flex-col gap-0.5 mb-5 text-right">
+                <div class="border-t border-gray-100 pt-4">
+                    <div class="flex flex-col gap-0.5 mb-4 text-right">
                         <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Total Bayar</span>
                         <span class="text-2xl font-black text-orange-600 tracking-tighter">Rp {{ number_format($this->total, 0, ',', '.') }}</span>
                     </div>
@@ -430,7 +340,6 @@
             </div>
         </div>
 
-        {{-- Panel kiri produk: tidak diubah sama sekali --}}
         <div class="w-full flex-1 lg:order-first mt-4 lg:mt-0">
             <div class="mb-4">
                 <x-filament::input.wrapper 
