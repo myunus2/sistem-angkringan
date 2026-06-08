@@ -6,6 +6,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KasirController;
 use App\Http\Controllers\OrderReceiptController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\MidtransController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +65,6 @@ Route::get('/admin/orders/{order}/receipt', [OrderReceiptController::class, 'sho
     ->name('admin.orders.receipt');
 Route::redirect('/filament-fix', '/admin');
 Route::redirect('/admind', '/admin');
+
+Route::get('/pay/{order}', [MidtransController::class, 'pay'])
+    ->name('midtrans.pay');
