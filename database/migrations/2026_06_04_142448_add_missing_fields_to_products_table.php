@@ -12,11 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('type')->nullable()->after('price');
-            $table->foreignId('category_id')->nullable()->after('type');
-            $table->text('description')->nullable()->after('category_id');
-            $table->text('composition')->nullable()->after('description');
-            $table->string('model_3d')->nullable()->after('images');
+            if (! Schema::hasColumn('products', 'type')) {
+                $table->string('type')->nullable()->after('price');
+            }
+
+            if (! Schema::hasColumn('products', 'category_id')) {
+                $table->foreignId('category_id')->nullable()->after('type');
+            }
+
+            if (! Schema::hasColumn('products', 'description')) {
+                $table->text('description')->nullable()->after('category_id');
+            }
+
+            if (! Schema::hasColumn('products', 'composition')) {
+                $table->text('composition')->nullable()->after('description');
+            }
+
+            if (! Schema::hasColumn('products', 'model_3d')) {
+                $table->string('model_3d')->nullable()->after('images');
+            }
         });
     }
 
