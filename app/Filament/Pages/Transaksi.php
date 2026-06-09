@@ -29,19 +29,15 @@ class Transaksi extends Page
 
     public string $statusFilter = 'all';
 
-    // Tombol panah untuk menampilkan semua transaksi
-    public bool $showAllTransaksi = false;
-
-
     public function mount(): void
     {
-        // Saat pertama membuka halaman, jangan langsung buka detail.
-        $this->selectedOrderId = null;
+        $this->selectedOrderId = Order::query()
+            ->whereIn('status', ['done', 'pending'])
+            ->latest('created_at')
+            ->value('id');
 
-        $this->showAllTransaksi = false;
         $this->syncPaymentState();
     }
-
 
     public function getHeading(): string | Htmlable | null
     {
@@ -81,27 +77,21 @@ class Transaksi extends Page
 
     public function getOrdersProperty(): Collection
     {
-        $query = Order::query()
+        return Order::query()
             ->with(['items.product'])
             ->whereIn('status', ['done', 'pending'])
             ->when(
                 $this->statusFilter === 'unpaid',
-                fn ($q) => $q->where('payment_status', 'unpaid'),
+                fn ($query) => $query->where('payment_status', 'unpaid'),
             )
             ->when(
                 $this->statusFilter === 'paid',
-                fn ($q) => $q->where('payment_status', 'paid'),
+                fn ($query) => $query->where('payment_status', 'paid'),
             )
-            ->latest('created_at');
-
-        // Untuk antrean aktif, tetap batasi.
-        if (! $this->showAllTransaksi) {
-            $query->limit(10);
-        }
-
-        return $query->get();
+            ->latest('created_at')
+            ->limit(80)
+            ->get();
     }
-
 
     public function getSelectedOrderProperty(): ?Order
     {
@@ -134,22 +124,11 @@ class Transaksi extends Page
 
     public function updatedStatusFilter(): void
     {
-        // Saat filter diganti, tetap jangan otomatis membuka detail.
-        $this->selectedOrderId = null;
+        $firstOrder = $this->orders->first();
+        $this->selectedOrderId = $firstOrder?->id;
         $this->syncPaymentState();
         $this->mobileDetailOpen = false;
     }
-
-    public function toggleShowAllTransaksi(): void
-    {
-        $this->showAllTransaksi = ! $this->showAllTransaksi;
-
-        // Saat toggle, jangan buka detail otomatis.
-        $this->selectedOrderId = null;
-        $this->syncPaymentState();
-        $this->mobileDetailOpen = false;
-    }
-
 
     public function closeMobileDetail(): void
     {

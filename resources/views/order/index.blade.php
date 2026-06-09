@@ -382,8 +382,6 @@ function decodeHTML(html) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Tambahkan baris ini di paling atas untuk mengosongkan memori setiap refresh:
-    localStorage.removeItem(CART_KEY); 
     const grid = document.querySelector('.product-grid');
     const overlay = document.getElementById('product-focus-overlay');
     const closeButtons = document.querySelectorAll('#product-focus-close, #focus-close-button');
@@ -541,8 +539,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 const emptyCart = [];
                 // rendering modal cart berdasarkan localStorage
                 saveCart(emptyCart);
-                updateFab();
-
                 renderCartModal();
                 updateFab();
 
