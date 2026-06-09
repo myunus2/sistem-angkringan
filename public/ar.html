@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ff6b35">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>AR Menu Viewer</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    <style>
+        :root {
+            --brand-1: #ff6b35;
+            --brand-2: #f7931e;
+            --ink: #172033;
+            --muted: #5c667a;
+            --panel: rgba(255, 255, 255, 0.94);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #0f1117;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+        }
+
+        body {
+            position: relative;
+        }
+
+        #viewer-shell {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(255, 107, 53, 0.18), transparent 40%),
+                linear-gradient(180deg, #171a22 0%, #0f1117 100%);
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            --progress-bar-color: var(--brand-1);
+            --poster-color: transparent;
+        }
+
+        .topbar,
+        .product-card,
+        .support-card,
+        .debug-chip {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .topbar {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 20;
+        }
+
+        .topbar-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .circle-btn {
+            width: 46px;
+            height: 46px;
+            border: 0;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--ink);
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+        }
+
+        .badge {
+            padding: 11px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .bottom-stack {
+            position: fixed;
+            left: 14px;
+            right: 14px;
+            bottom: max(14px, env(safe-area-inset-bottom));
+            display: grid;
+            gap: 12px;
+            z-index: 20;
+        }
+
+        .product-card,
+        .support-card {
+            background: var(--panel);
+            color: var(--ink);
+            border-radius: 24px;
+            padding: 18px;
+            box-shadow: 0 14px 40px rgba(0, 0, 0, 0.28);
+        }
+
+        .product-name {
+            margin: 0 0 6px;
+            font-size: 20px;
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .product-price {
+            margin: 0 0 10px;
+            color: var(--brand-1);
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .product-copy {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .meta-title {
+            margin: 14px 0 6px;
+            color: var(--ink);
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            border: 0;
+            border-radius: 999px;
+            padding: 13px 18px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .action-primary {
+            background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+            color: #fff;
+        }
+
+        .action-secondary {
+            background: #eef1f6;
+            color: var(--ink);
+        }
+
+        .support-card[hidden],
+        .product-card[hidden],
+        .debug-chip[hidden] {
+            display: none;
+        }
+
+        .support-card h2 {
+            margin: 0 0 8px;
+            font-size: 18px;
+            color: var(--ink);
+        }
+
+        .support-card p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .support-list {
+            margin: 12px 0 0;
+            padding-left: 18px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .debug-chip {
+            position: fixed;
+            bottom: calc(max(14px, env(safe-area-inset-bottom)) + 240px);
+            right: 14px;
+            max-width: min(280px, calc(100vw - 28px));
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.72);
+            color: #d6ffe3;
+            font-size: 11px;
+            line-height: 1.45;
+            z-index: 30;
+            white-space: pre-wrap;
+        }
+
+        .hint {
+            position: fixed;
+            top: 74px;
+            left: 14px;
+            right: 14px;
+            z-index: 18;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.92);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        @media (min-width: 900px) {
+            .bottom-stack {
+                left: auto;
+                width: 420px;
+            }
+
+            .hint {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
+                width: 480px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="viewer-shell">
+        <model-viewer
+            id="ar-viewer"
+            src="/models/coffee.glb"
+            ios-src="/models/coffee.glb"
+            ar
+            ar-modes="scene-viewer webxr quick-look"
+            ar-scale="fixed"
+            camera-controls
+            auto-rotate
+            shadow-intensity="1"
+            exposure="1"
+            environment-image="neutral"
+            touch-action="pan-y">
+        </model-viewer>
+    </div>
+
+    <div class="topbar">
+        <div class="topbar-group">
+            <button class="circle-btn" id="back-btn" type="button" aria-label="Kembali">&#8592;</button>
+            <div class="badge" id="status-badge">Memuat AR...</div>
+        </div>
+        <div class="topbar-group">
+            <button class="circle-btn" id="reset-btn" type="button" aria-label="Reset model">&#8635;</button>
+            <button class="circle-btn" id="toggle-info-btn" type="button" aria-label="Tampilkan info">i</button>
+        </div>
+    </div>
+
+    <div class="hint" id="viewer-hint">Putar model dengan geser. </div>
+
+    <div class="bottom-stack">
+        <section class="product-card" id="product-card">
+            <h1 class="product-name" id="overlay-name">Kopi Hitam</h1>
+            <p class="product-price" id="overlay-price">Rp 5.000</p>
+            <p class="product-copy" id="overlay-description">Deskripsi tidak tersedia.</p>
+            <div class="meta-title">Komposisi</div>
+            <p class="product-copy" id="overlay-composition">Komposisi tidak tersedia.</p>
+            <div class="actions">
+                <button class="action-btn action-primary" id="launch-ar-btn" type="button">Buka AR Kamera</button>
+                <button class="action-btn action-secondary" id="fullscreen-btn" type="button">Mode 3D Penuh</button>
+            </div>
+        </section>
+
+        <section class="support-card" id="support-card" hidden>
+            <h2 id="support-title">AR belum siap</h2>
+            <p id="support-copy">Browser atau koneksi saat ini belum memenuhi syarat AR.</p>
+            <ul class="support-list" id="support-list"></ul>
+        </section>
+    </div>
+
+    <pre class="debug-chip" id="debug-chip" hidden></pre>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const productName = urlParams.get("name") || "Kopi Hitam";
+        const productPrice = urlParams.get("price") || "Rp 5.000";
+        const productDescription = urlParams.get("description") || "Deskripsi tidak tersedia.";
+        const productComposition = urlParams.get("composition") || "Komposisi tidak tersedia.";
+        const productModel = urlParams.get("model") || "/models/coffee.glb";
+        const debugMode = urlParams.get("debug") === "1";
+
+        const modelViewer = document.getElementById("ar-viewer");
+        const statusBadge = document.getElementById("status-badge");
+        const supportCard = document.getElementById("support-card");
+        const supportTitle = document.getElementById("support-title");
+        const supportCopy = document.getElementById("support-copy");
+        const supportList = document.getElementById("support-list");
+        const debugChip = document.getElementById("debug-chip");
+        const productCard = document.getElementById("product-card");
+
+        document.getElementById("overlay-name").textContent = productName;
+        document.getElementById("overlay-price").textContent = productPrice;
+        document.getElementById("overlay-description").textContent = productDescription;
+        document.getElementById("overlay-composition").textContent = productComposition;
+        modelViewer.setAttribute("src", productModel);
+        modelViewer.setAttribute("ios-src", productModel);
+
+        function setStatus(text) {
+            statusBadge.textContent = text;
+            logDebug(text);
+        }
+
+        function logDebug(text) {
+            if (!debugMode) {
+                return;
+            }
+
+            debugChip.hidden = false;
+            const current = debugChip.textContent.trim();
+            const next = current ? text + "\n" + current : text;
+            debugChip.textContent = next.split("\n").slice(0, 10).join("\n");
+        }
+
+        function isSecureArContext() {
+            return window.isSecureContext || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+        }
+
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
+
+        function isChromeLike() {
+            return /Chrome|CriOS|EdgA/i.test(navigator.userAgent);
+        }
+
+        function toggleInfoCard() {
+            productCard.hidden = !productCard.hidden;
+        }
+
+        function resetView() {
+            if (typeof modelViewer.resetTurntableRotation === "function") {
+                modelViewer.resetTurntableRotation();
+            }
+
+            if (typeof modelViewer.jumpCameraToGoal === "function") {
+                modelViewer.jumpCameraToGoal();
+            }
+
+            setStatus("Tampilan model direset");
+        }
+
+        function renderSupportState() {
+            const problems = [];
+
+            if (!urlParams.get("model")) {
+                problems.push("Produk ini belum punya file model 3D di admin.");
+            }
+
+            if (!isSecureArContext()) {
+                problems.push("AR butuh HTTPS, localhost, atau URL tunnel seperti ngrok.");
+            }
+
+            if (!isAndroid()) {
+                problems.push("Mode kamera AR paling stabil di Android + Chrome.");
+            }
+
+            if (!isChromeLike()) {
+                problems.push("Gunakan Chrome versi terbaru di Android 15.");
+            }
+
+            if (problems.length === 0) {
+                supportCard.hidden = true;
+                setStatus("AR siap dicoba");
+                return;
+            }
+
+            supportCard.hidden = false;
+            supportTitle.textContent = "AR perlu sedikit penyesuaian";
+            supportCopy.textContent = "Halaman 3D tetap bisa dipakai, tetapi mode kamera AR membutuhkan syarat berikut:";
+            supportList.innerHTML = problems.map((item) => "<li>" + item + "</li>").join("");
+            setStatus("Mode 3D aktif");
+        }
+
+        async function launchAr() {
+            setStatus("Menyiapkan AR...");
+
+            if (!urlParams.get("model")) {
+                supportCard.hidden = false;
+                supportTitle.textContent = "Model 3D belum tersedia";
+                supportCopy.textContent = "Tambahkan file .glb atau .gltf di data produk melalui admin Filament.";
+                supportList.innerHTML = [
+                    "<li>Buka menu produk di admin.</li>",
+                    "<li>Upload model 3D pada field Model 3D Produk.</li>"
+                ].join("");
+                setStatus("Model 3D belum tersedia");
+                return;
+            }
+
+            if (!isSecureArContext()) {
+                supportCard.hidden = false;
+                supportTitle.textContent = "Perlu HTTPS atau localhost";
+                supportCopy.textContent = "Android 15 tetap memerlukan koneksi aman untuk membuka AR dari browser.";
+                supportList.innerHTML = [
+                    "<li>Buka dari https:// domain Anda.</li>",
+                    "<li>Atau test dengan localhost / ngrok.</li>"
+                ].join("");
+                setStatus("AR butuh koneksi aman");
+                return;
+            }
+
+            try {
+                if (typeof modelViewer.activateAR === "function") {
+                    const opened = await modelViewer.activateAR();
+                    setStatus(opened === false ? "AR tidak tersedia, tetap di mode 3D" : "AR dibuka");
+                    return;
+                }
+
+                setStatus("Browser belum mendukung tombol AR otomatis");
+            } catch (error) {
+                console.error(error);
+                setStatus("Gagal membuka AR");
+                supportCard.hidden = false;
+                supportTitle.textContent = "AR gagal dibuka";
+                supportCopy.textContent = "Biasanya ini terjadi jika Google Play Services for AR belum siap atau browser tidak memenuhi syarat.";
+                supportList.innerHTML = [
+                    "<li>Update Chrome ke versi terbaru.</li>",
+                    "<li>Install / update Google Play Services for AR.</li>",
+                    "<li>Coba lagi dari koneksi HTTPS.</li>"
+                ].join("");
+            }
+        }
+
+        modelViewer.addEventListener("load", () => {
+            setStatus("Model 3D siap");
+        });
+
+        modelViewer.addEventListener("error", () => {
+            setStatus("Model gagal dimuat");
+            supportCard.hidden = false;
+            supportTitle.textContent = "Model 3D tidak bisa dimuat";
+            supportCopy.textContent = "Periksa file model di /public/models/coffee.glb.";
+            supportList.innerHTML = [
+                "<li>Pastikan file coffee.glb ada.</li>",
+                "<li>Pastikan file tidak rusak.</li>"
+            ].join("");
+        });
+
+        modelViewer.addEventListener("ar-status", (event) => {
+            const state = event.detail.status;
+            const labels = {
+                "not-presenting": "AR siap dicoba",
+                "session-started": "AR sedang aktif",
+                "failed": "AR gagal dibuka"
+            };
+
+            setStatus(labels[state] || ("Status AR: " + state));
+        });
+
+        document.getElementById("back-btn").addEventListener("click", () => {
+            window.history.length > 1 ? window.history.back() : window.location.href = "/";
+        });
+
+        document.getElementById("reset-btn").addEventListener("click", resetView);
+        document.getElementById("toggle-info-btn").addEventListener("click", toggleInfoCard);
+        document.getElementById("launch-ar-btn").addEventListener("click", launchAr);
+        document.getElementById("fullscreen-btn").addEventListener("click", () => {
+            productCard.hidden = true;
+            supportCard.hidden = true;
+            setStatus("Mode 3D penuh");
+        });
+
+        renderSupportState();
+        logDebug("User agent: " + navigator.userAgent);
+        logDebug("Secure context: " + isSecureArContext());
+    </script>
+</body>
+</html>

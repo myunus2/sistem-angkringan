@@ -1,0 +1,124 @@
+<?php
+
+namespace App\Filament\Widgets;
+
+use App\Models\Order;
+use Carbon\CarbonPeriod;
+use Filament\Support\RawJs;
+use Filament\Widgets\ChartWidget;
+
+class AdminSalesChart extends ChartWidget
+{
+    protected ?string $heading = 'Grafik Penjualan 7 Hari Terakhir';
+
+    protected ?string $description = 'Ringkasan pendapatan dan jumlah transaksi selesai per hari.';
+
+    protected ?string $maxHeight = '320px';
+
+    protected int | string | array $columnSpan = 'full';
+
+    protected function getData(): array
+    {
+        $startDate = now()->subDays(6)->startOfDay();
+        $endDate = now()->endOfDay();
+
+        $cacheKey = 'admin.sales_chart.' . $startDate->format('Ymd') . '.' . $endDate->format('Ymd');
+        $salesByDate = cache()->remember($cacheKey, 30, function () use ($startDate, $endDate) {
+            return Order::query()
+                ->selectRaw('DATE(created_at) as order_date, COALESCE(SUM(total_price), 0) as total_sales, COUNT(*) as total_orders')
+                ->where('status', 'done')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('order_date')
+                ->get()
+                ->keyBy('order_date');
+        });
+
+        $period = CarbonPeriod::create($startDate->toDateString(), $endDate->toDateString());
+
+        $labels = [];
+        $data = [];
+        $orderCounts = [];
+
+        foreach ($period as $date) {
+            $dateKey = $date->format('Y-m-d');
+
+            $labels[] = $date->translatedFormat('D, d M');
+            $data[] = (float) ($salesByDate[$dateKey]->total_sales ?? 0);
+            $orderCounts[] = (int) ($salesByDate[$dateKey]->total_orders ?? 0);
+        }
+
+        return [
+            'datasets' => [
+                [
+                    'label' => 'Pendapatan',
+                    'data' => $data,
+                    'backgroundColor' => ['#f59e0b', '#dc2626', '#f97316', '#b45309', '#fb923c', '#ea580c', '#facc15'],
+                    'borderColor' => '#b45309',
+                    'borderWidth' => 1,
+                    'borderRadius' => 8,
+                    'barThickness' => 34,
+                ],
+                [
+                    'type' => 'line',
+                    'label' => 'Jumlah Pesanan',
+                    'data' => $orderCounts,
+                    'borderColor' => '#0f172a',
+                    'backgroundColor' => '#0f172a',
+                    'borderWidth' => 3,
+                    'pointBackgroundColor' => '#ffffff',
+                    'pointBorderColor' => '#0f172a',
+                    'pointBorderWidth' => 2,
+                    'pointRadius' => 4,
+                    'tension' => 0.4,
+                    'yAxisID' => 'orders',
+                ],
+            ],
+            'labels' => $labels,
+        ];
+    }
+
+    protected function getType(): string
+    {
+        return 'bar';
+    }
+
+    protected function getOptions(): array | RawJs | null
+    {
+        return [
+            'plugins' => [
+                'legend' => [
+                    'display' => true,
+                    'position' => 'top',
+                    'align' => 'end',
+                ],
+                'tooltip' => [
+                    'backgroundColor' => '#111827',
+                    'titleColor' => '#ffffff',
+                    'bodyColor' => '#ffffff',
+                    'padding' => 12,
+                    'cornerRadius' => 8,
+                ],
+            ],
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                    'grid' => [
+                        'color' => 'rgba(148, 163, 184, 0.18)',
+                    ],
+                ],
+                'orders' => [
+                    'beginAtZero' => true,
+                    'position' => 'right',
+                    'grid' => [
+                        'drawOnChartArea' => false,
+                    ],
+                ],
+                'x' => [
+                    'grid' => [
+                        'display' => false,
+                    ],
+                ],
+            ],
+        ];
+    }
+}
