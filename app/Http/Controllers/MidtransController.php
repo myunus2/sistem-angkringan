@@ -10,10 +10,18 @@ class MidtransController extends Controller
 {
     public function pay(Order $order)
     {
-        Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+        // Pembayaran untuk pesanan pada transaksi
+        $serverKey = env('MIDTRANS_SERVER_KEY');
+
+        if (empty($serverKey)) {
+            abort(500, 'Midtrans configuration error: MIDTRANS_SERVER_KEY is missing/empty in .env');
+        }
+
+        Config::$serverKey = $serverKey;
         Config::$isProduction = false;
         Config::$isSanitized = true;
         Config::$is3ds = true;
+
 
         $snapToken = $order->snap_token;
 
