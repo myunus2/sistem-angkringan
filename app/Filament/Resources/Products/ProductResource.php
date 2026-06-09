@@ -17,8 +17,7 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     // Perbaikan fatal error: tambahkan tipe data lengkap
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
-
+protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $recordTitleAttribute = 'name';
 
     protected static ?string $navigationLabel = 'Menu';
