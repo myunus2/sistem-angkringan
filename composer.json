@@ -7,11 +7,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-         "ext-intl": "*",
-         "ext-zip": "*",
-         "ext-gd": "*", 
-        "filament/filament": "5.3",
-        "laravel/framework": "^12.0",
+        "ext-intl": "*",
+        "ext-zip": "*",
+        "ext-gd": "*", 
+        "filament/filament": "^3.2",
+        "laravel/framework": "^11.0",
         "laravel/tinker": "^2.10.1",
         "midtrans/midtrans-php": "^2.6",
         "simplesoftwareio/simple-qrcode": "^4.2"
@@ -86,6 +86,9 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.3.0"
         }
     },
     "minimum-stability": "stable",
