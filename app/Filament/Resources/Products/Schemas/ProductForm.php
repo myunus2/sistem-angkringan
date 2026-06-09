@@ -63,19 +63,20 @@ class ProductForm
                             ->columnSpanFull(),
 
                         FileUpload::make('model_3d')
-                            ->label('Model 3D Produk (.glb / .gltf)')
-                            ->disk('public')
-                            ->directory('product-models')
-                            ->visibility('public')
-                            ->acceptedFileTypes([
-                                'model/gltf-binary',
-                                'model/gltf+json',
-                                '.glb',
-                                '.gltf',
-                            ])
-                            ->helperText('Upload file 3D untuk fitur AR. Format yang disarankan: .glb')
-                            ->nullable()
-                            ->columnSpanFull(),
+                    ->label('Model 3D Produk (.glb / .gltf)')
+                    ->disk('public')
+                    ->directory('models') // <--- DIUBAH agar sinkron dengan web utama Anda
+                    ->visibility('public')
+                    ->acceptedFileTypes([
+                        'model/gltf-binary',
+                        'model/gltf+json',
+                        'application/octet-stream', // Tambahkan ini (XAMPP Windows sering membaca .glb sebagai octet-stream)
+                        '.glb',
+                        '.gltf',
+                    ])
+                    ->helperText('Upload file 3D untuk fitur AR. Format yang disarankan: .glb')
+                    ->nullable()
+                    ->columnSpanFull(),
                     ])->columns(2),
             ]);
     }

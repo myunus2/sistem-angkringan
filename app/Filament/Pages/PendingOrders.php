@@ -47,6 +47,12 @@ class PendingOrders extends Page implements HasTable
                     ->label('Nama')
                     ->placeholder('-')
                     ->searchable(),
+
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('No HP')
+                    ->placeholder('-')
+                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('items_summary')
                     ->label('Pesanan')
                     ->state(fn (Order $record): string => $record->items
@@ -54,6 +60,12 @@ class PendingOrders extends Page implements HasTable
                         ->join(', '))
                     ->wrap()
                     ->placeholder('-'),
+
+                Tables\Columns\TextColumn::make('notes')
+                    ->label('Notes')
+                    ->placeholder('-')
+                    ->wrap(),
+
                 Tables\Columns\TextColumn::make('table_number')
                     ->label('No Meja')
                     ->placeholder('-'),

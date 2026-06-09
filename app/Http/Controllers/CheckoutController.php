@@ -25,19 +25,27 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
+        // NOTE: frontend `resources/views/order/index.blade.php` mengirim payload:
+        // {
+        //   customer_name, phone, table_number, notes,
+        //   items: [{ id, name, price, qty, image, ... }]
+        // }
+        // Jadi backend harus menyesuaikan skema input.
         $request->validate([
-            'customer_name'  => 'nullable|string|max:100',
-            'table_number'   => 'required|string|max:20',
-            'payment_method' => 'required|in:cash,transfer_bank,e_wallet',
-            'items'          => 'required|array|min:1',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity'   => 'required|integer|min:1',
+            'customer_name' => 'nullable|string|max:100',
+            'phone'          => 'required|string|max:30',
+            'table_number'  => 'required|string|max:20',
+            'notes'          => 'nullable|string|max:500',
+            'items'         => 'required|array|min:1',
+            'items.*.id'    => 'required|exists:products,id',
+            'items.*.qty'   => 'required|integer|min:1',
         ], [
-            'table_number.required'   => 'Nomor meja wajib diisi.',
-            'payment_method.required' => 'Metode pembayaran wajib dipilih.',
-            'items.required'          => 'Keranjang belanja kosong.',
-            'items.min'               => 'Minimal 1 item harus dipesan.',
+            'table_number.required' => 'Nomor meja wajib diisi.',
+            'phone.required'        => 'Nomor HP wajib diisi.',
+            'items.required'        => 'Keranjang belanja kosong.',
+            'items.min'             => 'Minimal 1 item harus dipesan.',
         ]);
+
 
         DB::beginTransaction();
         try {
@@ -45,25 +53,34 @@ class CheckoutController extends Controller
             $orderItems = [];
 
             foreach ($request->items as $item) {
-                $product = Product::findOrFail($item['product_id']);
-                $subtotal = $product->price * $item['quantity'];
+                // payload dari frontend: { id, qty, ... }
+                $productId = $item['id'] ?? null;
+                $qty = $item['qty'] ?? 0;
+
+                $product = Product::findOrFail($productId);
+                $subtotal = $product->price * $qty;
                 $totalPrice += $subtotal;
 
                 $orderItems[] = [
                     'product_id' => $product->id,
-                    'quantity'   => $item['quantity'],
+                    'quantity'   => $qty,
                     'price'      => $product->price,
                 ];
             }
 
+
             $order = Order::create([
                 'customer_name'  => $request->customer_name,
+                'phone'          => $request->phone,
                 'table_number'   => $request->table_number,
-                'payment_method' => $request->payment_method,
+                'notes'          => $request->notes,
+                // Default untuk order online (sesuai kebutuhan pending order)
+                'payment_method' => 'cash',
                 'payment_status' => 'unpaid',
                 'total_price'    => $totalPrice,
                 'status'         => 'pending',
             ]);
+
 
             foreach ($orderItems as $item) {
                 $order->items()->create($item);
@@ -80,10 +97,40 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            // Endpoint /api/checkout mengharapkan JSON.
+            // Frontend mengirim Accept: application/json, tapi beberapa setting Laravel bisa membuat expects/wantsJson tidak terdeteksi.
+            // Jadi pakai deteksi path juga.
+            if (
+                $request->expectsJson() ||
+                $request->wantsJson() ||
+                $request->is('api/checkout')
+            ) {
+                return response()->json([
+                    'status'   => 'success',
+                    'message'  => 'Pesanan berhasil dibuat.',
+                    'order_id' => $order->id,
+                    'total'    => $totalPrice,
+                ], 200);
+            }
+
             return redirect()->route('checkout.success', $order->id);
+
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            if (
+                $request->expectsJson() ||
+                $request->wantsJson() ||
+                $request->is('api/checkout')
+            ) {
+                return response()->json([
+                    'status'  => 'error',
+                    'message' => 'Gagal membuat pesanan: ' . $e->getMessage(),
+                ], 500);
+            }
+
+
             return back()->withErrors(['error' => 'Gagal membuat pesanan. Silakan coba lagi.'])->withInput();
         }
     }

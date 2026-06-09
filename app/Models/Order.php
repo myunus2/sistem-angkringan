@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
-    protected $fillable = [
-        'customer_name',
-        'table_number',
-        'payment_method',
-        'payment_status',
-        'total_price',
-        'status',
-        'completed_at',
-        'proof_of_payment',
-        'cash',
-        'snap_token',
-    ];
+   protected $fillable = [
+    'customer_name',
+    'phone',          // Tambahkan ini agar nomor HP tersimpan
+    'table_number',
+    'notes',          // Tambahkan ini agar catatan opsional tersimpan
+    'payment_method',
+    'payment_status',
+    'total_price',
+    'status',
+    'completed_at',
+    'proof_of_payment',
+    'cash',
+    'snap_token',
+];
 
     protected $casts = [
         'completed_at' => 'datetime',

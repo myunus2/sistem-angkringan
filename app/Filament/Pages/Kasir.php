@@ -21,7 +21,11 @@ class Kasir extends Page
     public $cart = [];
     public $customerName = '';
     public $tableNumber = '';
-    // 1. Tambahkan properti untuk kategori aktif
+    
+    // 🔥 1. Tambahkan Properti Livewire Baru untuk No HP dan Notes Kasir
+    public $phone = '';
+    public $notes = '';
+    
     public $activeCategory = 'Semua';
 
     public function getMaxContentWidth(): Width | string | null
@@ -29,7 +33,6 @@ class Kasir extends Page
         return Width::Full;
     }
 
-    // 2. Fungsi untuk mengubah kategori saat tombol diklik
     public function setCategory($category)
     {
         $this->activeCategory = $category;
@@ -75,31 +78,40 @@ class Kasir extends Page
         }
 
         DB::transaction(function () {
+            // 🔥 2. Simpan Data ke Tabel Orders (Termasuk phone, notes, dan order_type => 'manual')
             $order = Order::create([
-                'customer_name' => $this->customerName,
-                'table_number' => $this->tableNumber,
-                'total_price' => $this->total,
-                'status' => 'pending',
+                'customer_name'  => $this->customerName,
+                'table_number'   => $this->tableNumber,
+                'phone'          => $this->phone ? trim($this->phone) : null, // Masukkan No HP
+                'notes'          => $this->notes ? trim($this->notes) : null, // Masukkan Catatan Kasir
+                'total_price'    => $this->total,
+                'status'         => 'pending',
+                'order_type'     => 'manual', // Menandakan pesanan langsung diinput manual oleh Kasir
                 'payment_status' => 'unpaid',
                 'payment_method' => 'cash',
             ]);
 
             foreach ($this->cart as $item) {
+                // 🔥 3. Sinkronisasi kolom 'qty' agar sesuai dengan migrasi order_items Anda
                 $order->items()->create([
                     'product_id' => $item['id'],
-                    'quantity' => $item['qty'],
-                    'price' => $item['price'],
+                    'name'       => $item['name'], // Pastikan nama produk ikut tersimpan ke item pesanan
+                    'qty'        => $item['qty'],  // Diubah dari 'quantity' menjadi 'qty' sesuai struktur tabel
+                    'price'      => $item['price'],
                 ]);
             }
         });
 
+        // 🔥 4. Reset Seluruh State Inputan Form Menjadi Kosong Kembali
         $this->cart = [];
         $this->customerName = '';
         $this->tableNumber = '';
+        $this->phone = '';
+        $this->notes = '';
+        
         Notification::make()->title('Transaksi Berhasil Disimpan!')->success()->send();
     }
 
-    // 3. Perbarui pengambilan data agar mendukung filter kategori
     protected function getViewData(): array
     {
         $query = Product::query();
@@ -109,7 +121,6 @@ class Kasir extends Page
         }
 
         if ($this->activeCategory !== 'Semua') {
-            // Pastikan kolom di database kamu namanya 'category'
             $query->where('type', $this->activeCategory);
         }
 
@@ -118,28 +129,25 @@ class Kasir extends Page
                 ->select(['id', 'name', 'price', 'type', 'description', 'images', 'model_3d'])
                 ->simplePaginate(36)
                 ->withQueryString(),
-            // Daftar kategori yang akan muncul sebagai tombol
             'categories' => ['Semua', 'makanan', 'minuman', 'snack'],
         ];
     }
-    // Fungsi untuk menambah jumlah qty
-public function incrementQty($productId)
-{
-    if (isset($this->cart[$productId])) {
-        $this->cart[$productId]['qty']++;
-    }
-}
 
-// Fungsi untuk mengurangi jumlah qty
-public function decrementQty($productId)
-{
-    if (isset($this->cart[$productId])) {
-        if ($this->cart[$productId]['qty'] > 1) {
-            $this->cart[$productId]['qty']--;
-        } else {
-            // Jika qty tinggal 1 dan dikurangi, maka hapus dari keranjang
-            $this->removeItem($productId);
+    public function incrementQty($productId)
+    {
+        if (isset($this->cart[$productId])) {
+            $this->cart[$productId]['qty']++;
         }
     }
-}
+
+    public function decrementQty($productId)
+    {
+        if (isset($this->cart[$productId])) {
+            if ($this->cart[$productId]['qty'] > 1) {
+                $this->cart[$productId]['qty']--;
+            } else {
+                $this->removeItem($productId);
+            }
+        }
+    }
 }

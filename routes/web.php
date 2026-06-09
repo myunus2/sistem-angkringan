@@ -32,9 +32,12 @@ Route::get('/', [KasirController::class, 'index'])->name('index');
 */
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+
+// 🔥 TAMBAHKAN BARIS INI: Menghubungkan fetch JavaScript frontend ke CheckoutController
+Route::post('/api/checkout', [CheckoutController::class, 'store'])->name('api.checkout');
+
 // Mengubah {order} menjadi {id} agar tidak mencari model Order yang sudah dihapus
 Route::get('/checkout/success/{id}', [CheckoutController::class, 'success'])->name('checkout.success');
-
 /*
 |--------------------------------------------------------------------------
 | API PAYMENT
