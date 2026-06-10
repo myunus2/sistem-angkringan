@@ -17,8 +17,8 @@ return [
     |            "redis", "dynamodb", "array"
     |
     */
-
-    'driver' => env('SESSION_DRIVER', 'database'),
+// Cari baris ini (sekitar baris 154)
+'secure' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -199,7 +199,7 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'lax'),
+    'same_site' => 'lax',
 
     /*
     |--------------------------------------------------------------------------
