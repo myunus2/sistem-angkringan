@@ -97,7 +97,6 @@
 
                         </div>
 
-<<<<<<< HEAD
                         @if(!$isActive)
                             <div wire:click="selectOrder({{ $order->id }})" style="cursor: pointer; margin-top: 10px; text-align: left;">
                                 <p style="margin: 0; font-size: 12px; font-weight: 500; color: #94a3b8; display: flex; align-items: center; gap: 4px;">
@@ -106,8 +105,6 @@
                             </div>
                         @endif
 
-=======
->>>>>>> 2292e59c6dfba701eae5cbd6fab8c6367bd7b54f
                         @if($isActive)
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 16px;">
                                 
