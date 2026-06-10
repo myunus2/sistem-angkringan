@@ -404,7 +404,10 @@ class AdminPanelProvider extends PanelProvider
                 Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\Filament\Admin\Widgets')
-            ->widgets([])
+           ->widgets([
+    \App\Filament\Widgets\AdminSalesChart::class,
+    \App\Filament\Widgets\AdminOrderChart::class,
+])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

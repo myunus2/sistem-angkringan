@@ -48,24 +48,19 @@
             
             <div class="bg-panel-main" style="border-radius: 12px; padding: 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
                 <div>
-                    <h2 class="text-title-main" style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em;">{{ $showAllTransaksi ? 'Semua Transaksi' : 'Antrean Pesanan' }}</h2>
-                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #94a3b8;">
-                        {{ $showAllTransaksi ? $orders->count() . ' transaksi' : $orders->count() . ' pesanan aktif' }}
-                    </p>
+                    <h2 class="text-title-main" style="margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.01em;">Antrean Pesanan</h2>
+                    <p style="margin: 4px 0 0 0; font-size: 13px; color: #94a3b8;">{{ $orders->count() }} pesanan aktif</p>
                 </div>
-
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end;">
-                    <div class="bg-filter-base" style="display: flex; gap: 4px; padding: 4px; border-radius: 8px;">
-                        <button type="button" wire:click="$set('statusFilter', 'all')" style="border: none; padding: 8px 16px; font-size: 13.5px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: {{ $statusFilter === 'all' ? '#ffffff' : 'transparent' }}; color: {{ $statusFilter === 'all' ? '#0f172a' : '#64748b' }}; box-shadow: {{ $statusFilter === 'all' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none' }};">Semua</button>
-                        <button type="button" wire:click="$set('statusFilter', 'unpaid')" style="border: none; padding: 8px 16px; font-size: 13.5px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: {{ $statusFilter === 'unpaid' ? '#ffffff' : 'transparent' }}; color: {{ $statusFilter === 'unpaid' ? '#0f172a' : '#64748b' }}; box-shadow: {{ $statusFilter === 'unpaid' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none' }};">Belum Bayar</button>
-                        <button type="button" wire:click="$set('statusFilter', 'paid')" style="border: none; padding: 8px 16px; font-size: 13.5px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: {{ $statusFilter === 'paid' ? '#ffffff' : 'transparent' }}; color: {{ $statusFilter === 'paid' ? '#0f172a' : '#64748b' }}; box-shadow: {{ $statusFilter === 'paid' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none' }};">Lunas</button>
-                    </div>
+                
+                <div class="bg-filter-base" style="display: flex; gap: 4px; padding: 4px; border-radius: 8px;">
+                    <button type="button" wire:click="$set('statusFilter', 'all')" style="border: none; padding: 8px 16px; font-size: 13.5px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: {{ $statusFilter === 'all' ? '#ffffff' : 'transparent' }}; color: {{ $statusFilter === 'all' ? '#0f172a' : '#64748b' }}; box-shadow: {{ $statusFilter === 'all' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none' }};">Semua</button>
+                    <button type="button" wire:click="$set('statusFilter', 'unpaid')" style="border: none; padding: 8px 16px; font-size: 13.5px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: {{ $statusFilter === 'unpaid' ? '#ffffff' : 'transparent' }}; color: {{ $statusFilter === 'unpaid' ? '#0f172a' : '#64748b' }}; box-shadow: {{ $statusFilter === 'unpaid' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none' }};">Belum Bayar</button>
+                    <button type="button" wire:click="$set('statusFilter', 'paid')" style="border: none; padding: 8px 16px; font-size: 13.5px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: all 0.15s; background: {{ $statusFilter === 'paid' ? '#ffffff' : 'transparent' }}; color: {{ $statusFilter === 'paid' ? '#0f172a' : '#64748b' }}; box-shadow: {{ $statusFilter === 'paid' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none' }};">Lunas</button>
                 </div>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 @forelse($orders as $order)
-
                     @php $isActive = $selectedOrder?->id === $order->id; @endphp
                     
                     <div class="card-base {{ $isActive ? 'card-active' : '' }}" style="border-radius: 12px; padding: 18px; box-shadow: {{ $isActive ? '0 4px 12px rgba(249, 115, 22, 0.06)' : '0 1px 2px rgba(0,0,0,0.01)' }}; transition: all 0.2s;">
@@ -102,6 +97,7 @@
 
                         </div>
 
+<<<<<<< HEAD
                         @if(!$isActive)
                             <div wire:click="selectOrder({{ $order->id }})" style="cursor: pointer; margin-top: 10px; text-align: left;">
                                 <p style="margin: 0; font-size: 12px; font-weight: 500; color: #94a3b8; display: flex; align-items: center; gap: 4px;">
@@ -110,9 +106,11 @@
                             </div>
                         @endif
 
+=======
+>>>>>>> 2292e59c6dfba701eae5cbd6fab8c6367bd7b54f
                         @if($isActive)
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 16px;">
-
+                                
                                 <div style="display: flex; flex-direction: column; gap: 10px;">
                                     <div style="display: flex; justify-content: space-between; align-items: center;">
                                         <h4 style="margin: 0; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Rincian Menu</h4>
@@ -140,9 +138,8 @@
                                             <label style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8;">Metode Pembayaran</label>
                                             <select wire:model.live="paymentMethod" class="input-field" style="width: 100%; border-radius: 6px; padding: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
                                                 <option value="cash">Tunai</option>
-                                                <option value="midtrans_qris">QRIS </option>
-                                                <option value="midtrans_ewallet">E-Wallet </option>
-                                                <option value="midtrans_bank">Transfer Bank </option>
+                                                <option value="transfer_bank">Transfer Bank</option>
+                                                <option value="e_wallet">E-Wallet</option>
                                             </select>
                                         </div>
 
@@ -208,43 +205,10 @@
                 @empty
                     <div class="bg-panel-main" style="border-radius: 12px; padding: 48px; text-align: center; border-style: dashed !important;">
                         <h3 class="text-title-main" style="margin: 0; font-size: 14px; font-weight: 700;">Tidak ada pesanan</h3>
-                        <p style="margin: 6px 0 0 0; font-size: 12.5px; color: #94a3b8;">Tidak ada transaksi untuk ditampilkan.</p>
                         <p style="margin: 4px 0 0 0; font-size: 13px; color: #94a3b8;">Pesanan aktif dari kasir akan muncul di sini.</p>
                     </div>
                 @endforelse
             </div>
-
-            @if($orders->count() > 0)
-                <div style="text-align: center; margin-top: 24px;">
-                    <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #94a3b8;">
-                        klik untuk melihat semua transaksi
-                    </p>
-                    
-                    @if($showAllTransaksi)
-                        <button type="button"
-                            wire:click="toggleShowAllTransaksi"
-                            style="border: 1px solid #e2e8f0; background: #ffffff; width: 44px; height: 44px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s;"
-                            onmouseover="this.style.transform='translateY(-1px)'"
-                            onmouseout="this.style.transform='translateY(0px)'"
-                            aria-label="toggle all transaksi">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 15l6-6 6 6" />
-                            </svg>
-                        </button>
-                    @else
-                        <button type="button"
-                            wire:click="toggleShowAllTransaksi"
-                            style="border: 1px solid #e2e8f0; background: #ffffff; width: 44px; height: 44px; border-radius: 10px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); transition: all 0.15s;"
-                            onmouseover="this.style.transform='translateY(-1px)'"
-                            onmouseout="this.style.transform='translateY(0px)'"
-                            aria-label="toggle all transaksi">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M6 9l6 6 6-6" />
-                            </svg>
-                        </button>
-                    @endif
-                </div>
-            @endif
 
         </div>
     </div>
