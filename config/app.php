@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => 'https://sistem-angkringan-production.up.railway.app',
 
     /*
     |--------------------------------------------------------------------------
