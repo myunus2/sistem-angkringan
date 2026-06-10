@@ -28,7 +28,7 @@ class Dashboard extends \Filament\Pages\Dashboard
     {
         return [
             'default' => 1,
-            'xl' => 3,
+            'xl' => 2,
         ];
     }
 }

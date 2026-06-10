@@ -15,7 +15,7 @@ class AdminOrderCountChart extends ChartWidget
 
     protected ?string $maxHeight = '320px';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = ['default' => 'full', 'xl' => 1];
 
     protected function getData(): array
     {
@@ -48,18 +48,14 @@ class AdminOrderCountChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'type' => 'line',
+                    // DIUBAH: Menggunakan style bar chart warna oranye yang serasi
                     'label' => 'Jumlah Pesanan',
                     'data' => $data,
-                    'borderColor' => '#0f172a',
-                    'backgroundColor' => '#0f172a',
-                    'borderWidth' => 3,
-                    'pointBackgroundColor' => '#ffffff',
-                    'pointBorderColor' => '#0f172a',
-                    'pointBorderWidth' => 2,
-                    'pointRadius' => 4,
-                    'tension' => 0.4,
-                    'yAxisID' => 'orders',
+                    'backgroundColor' => '#f97316',
+                    'borderColor' => '#f97316',
+                    'borderWidth' => 1,
+                    'borderRadius' => 8,
+                    'barThickness' => 34,
                 ],
             ],
             'labels' => $labels,
@@ -68,7 +64,8 @@ class AdminOrderCountChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'line';
+        // DIUBAH: Dari 'line' menjadi 'bar'
+        return 'bar';
     }
 
     protected function getOptions(): array | RawJs | null
@@ -92,23 +89,18 @@ class AdminOrderCountChart extends ChartWidget
                 'y' => [
                     'beginAtZero' => true,
                     'grid' => [
-                        'color' => 'rgba(148, 163, 184, 0.18)',
+                        'display' => false, // Menghilangkan garis horizontal
                     ],
-                ],
-                'orders' => [
-                    'beginAtZero' => true,
-                    'position' => 'right',
-                    'grid' => [
-                        'drawOnChartArea' => false,
+                    'ticks' => [
+                        'precision' => 0, // Memastikan skala angka di kiri bulat (1, 2, 3...) bukan desimal
                     ],
                 ],
                 'x' => [
                     'grid' => [
-                        'display' => false,
+                        'display' => false, // Menghilangkan garis vertikal
                     ],
                 ],
             ],
         ];
     }
 }
-

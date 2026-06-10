@@ -18,8 +18,6 @@ class AdminStatsOverview extends StatsOverviewWidget
 
     protected static bool $isLazy = false;
 
-    protected ?string $heading = 'Ringkasan Angkringan';
-
     protected int | string | array $columnSpan = 'full';
 
     protected int | array | null $columns = [

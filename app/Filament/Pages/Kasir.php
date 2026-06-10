@@ -126,7 +126,7 @@ class Kasir extends Page
 
         return [
             'products' => $query
-                ->select(['id', 'name', 'price', 'type', 'description', 'images', 'model_3d'])
+                ->select(['id', 'name', 'price', 'type', 'description', 'image', 'model_3d'])
                 ->simplePaginate(36)
                 ->withQueryString(),
             'categories' => ['Semua', 'makanan', 'minuman', 'snack'],

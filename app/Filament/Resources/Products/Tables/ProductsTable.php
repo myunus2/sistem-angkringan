@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Products\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+// PERBAIKAN FATAL: Di Filament v5+, Action diimport dari Filament\Actions
 use Filament\Actions\EditAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\BulkActionGroup;
@@ -16,14 +17,14 @@ class ProductsTable
     public static function configure(Table $table): Table
     {
         return $table
-        
             ->columns([
                 
                 // 0. Menampilkan Gambar Produk
                 ImageColumn::make('images')
                     ->label('Gambar')
                     ->disk('public')
-                    ->url(fn ($state) => $state ? asset('storage/' . $state) : null)
+                    // Jika ingin gambar bisa diklik dan memperbesar/buka di tab baru:
+                    ->openUrlInNewTab()
                     ->width(80)
                     ->height(80),
 
@@ -44,34 +45,34 @@ class ProductsTable
                     ->formatStateUsing(fn (?string $state): string => $state ? 'Tersedia' : 'Belum ada')
                     ->badge()
                     ->color(fn (?string $state): string => $state ? 'success' : 'gray'),
-                    // 4. Komposisi
-                    TextColumn::make('komposisi')
-                        ->label('Komposisi')
-                        ->limit(20)
-                        ->tooltip(fn ($record) => $record->komposisi),
+                
+                // 4. Komposisi
+                TextColumn::make('composition')
+                    ->label('Komposisi')
+                    ->limit(20)
+                    ->tooltip(fn ($record) => $record->composition),
 
-                    // 5. Deskripsi
-                    TextColumn::make('deskripsi')
-                        ->label('Deskripsi')
-                        ->limit(30)
-                        ->tooltip(fn ($record) => $record->deskripsi),
+                // 5. Deskripsi
+                TextColumn::make('description')
+                    ->label('Deskripsi')
+                    ->limit(30)
+                    ->tooltip(fn ($record) => $record->description),
                         
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('type')
+                SelectFilter::make('type')
                     ->label('Filter Tipe')
-            ->options([
-            'makanan' => 'Makanan',
-            'minuman' => 'Minuman',
-            'snack' => 'Snack',
-        ])
-
+                    ->options([
+                        'makanan' => 'Makanan',
+                        'minuman' => 'Minuman',
+                        'snack' => 'Snack',
+                    ])
             ])
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([ // Gunakan bulkActions, bukan toolbarActions untuk Delete
+            ->bulkActions([ 
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

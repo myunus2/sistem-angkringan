@@ -77,7 +77,7 @@ class RevenueReport extends Page implements HasTable
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'ready' => 'info',
-                        'done' => 'success',
+                        'done' => 'info',
                         'cancelled' => 'danger',
                         default => 'gray',
                     }),

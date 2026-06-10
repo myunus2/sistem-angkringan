@@ -10,7 +10,9 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'name',
         'quantity',
+        'qty', // Tambahkan alias qty agar sinkron dengan input legacy
         'price',
     ];
 

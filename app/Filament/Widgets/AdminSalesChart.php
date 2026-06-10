@@ -15,7 +15,7 @@ class AdminSalesChart extends ChartWidget
 
     protected ?string $maxHeight = '320px';
 
-    protected int | string | array $columnSpan = 'full';
+    protected int | string | array $columnSpan = ['default' => 'full', 'xl' => 1];
 
     protected function getData(): array
     {
@@ -50,8 +50,8 @@ class AdminSalesChart extends ChartWidget
                 [
                     'label' => 'Pendapatan',
                     'data' => $data,
-                    'backgroundColor' => ['#f59e0b', '#dc2626', '#f97316', '#b45309', '#fb923c', '#ea580c', '#facc15'],
-                    'borderColor' => '#b45309',
+                    'backgroundColor' => '#f97316',
+                    'borderColor' => '#f97316',
                     'borderWidth' => 1,
                     'borderRadius' => 8,
                     'barThickness' => 34,
@@ -87,7 +87,7 @@ class AdminSalesChart extends ChartWidget
                 'y' => [
                     'beginAtZero' => true,
                     'grid' => [
-                        'color' => 'rgba(148, 163, 184, 0.18)',
+                        'display' => false,
                     ],
                 ],
                 'x' => [
@@ -99,4 +99,3 @@ class AdminSalesChart extends ChartWidget
         ];
     }
 }
-

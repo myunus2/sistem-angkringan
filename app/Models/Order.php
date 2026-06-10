@@ -16,6 +16,7 @@ class Order extends Model
     'payment_status',
     'total_price',
     'status',
+    'order_type',
     'completed_at',
     'proof_of_payment',
     'cash',

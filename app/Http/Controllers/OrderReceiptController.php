@@ -57,7 +57,7 @@ class OrderReceiptController extends Controller
                     'product_id' => $item['id'],
                     'name'       => $item['name'],
                     'price'      => $item['price'],
-                    'qty'        => $item['qty'],
+                    'quantity'   => $item['qty'], // Perbaikan: Menggunakan 'quantity' sesuai nama kolom di database
                 ]);
             }
 
