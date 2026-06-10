@@ -174,14 +174,57 @@
                         <p id="focus-type" class="mb-2 text-xs uppercase tracking-[0.3em] text-orange-600"></p>
                         <h3 id="focus-name" class="mb-2 sm:mb-4 text-xl sm:text-2xl font-bold text-slate-900"></h3>
                         <p id="focus-price" class="mb-3 sm:mb-4 text-base sm:text-lg font-semibold text-orange-600"></p>
-                        <p id="focus-description" class="mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed text-slate-600 min-h-[2rem] whitespace-pre-wrap"></p>
+                        <div class="mb-3 sm:mb-4 max-h-24 sm:max-h-28 overflow-y-auto pr-1" id="focus-description-wrap">
+                            <p id="focus-description" class="leading-relaxed text-xs sm:text-sm text-slate-600 min-h-[2rem] whitespace-pre-wrap"></p>
+                        </div>
                         <div class="rounded-2xl sm:rounded-3xl bg-orange-50 p-3 sm:p-4 text-xs sm:text-sm text-slate-700">
                             <div class="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-orange-700">Komposisi</div>
-                            <p id="focus-composition" class="leading-relaxed min-h-[1rem] whitespace-pre-wrap"></p>
+                            <div class="max-h-20 sm:max-h-24 overflow-y-auto pr-1" id="focus-composition-wrap">
+                                <p id="focus-composition" class="leading-relaxed min-h-[1rem] whitespace-pre-wrap"></p>
+                            </div>
+                        </div>
                         </div>
                     </div>
-                    <div class="mt-4 sm:mt-6 modal-buttons flex flex-col sm:flex-row gap-3 justify-between items-center">
-                        <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <div class="mt-4 sm:mt-6 modal-buttons flex flex-col sm:flex-row gap-3 justify-between items-center">
+                        	<script>
+                        	// Pastikan scroll text description/komposisi selalu turun otomatis jika konten panjang
+                        	// (menggunakan element wrapper agar tetap tidak mempengaruhi ukuran gambar)
+                        	document.addEventListener('DOMContentLoaded', () => {
+                        		const descWrap = document.getElementById('focus-description-wrap');
+                        		const compWrap = document.getElementById('focus-composition-wrap');
+                        		if (descWrap) {
+                        			// agar scroll mengikuti teks saat konten panjang
+                        			descWrap.scrollTop = descWrap.scrollHeight;
+                        			descWrap.style.scrollBehavior = 'smooth';
+                        		}
+                        		if (compWrap) {
+                        			compWrap.scrollTop = compWrap.scrollHeight;
+                        			compWrap.style.scrollBehavior = 'smooth';
+                        		}
+                        		// fallback: pastikan jika user scroll/textarea berubah, tetap mengarah ke bawah
+                        		if (descWrap) {
+                        			let last = -1;
+                        			setInterval(() => {
+                        				if (!descWrap) return;
+                        				if (descWrap.scrollHeight !== last) {
+                        					last = descWrap.scrollHeight;
+                        					descWrap.scrollTop = descWrap.scrollHeight;
+                        				}
+                        			}, 200);
+                        		}
+                        		if (compWrap) {
+                        			let last2 = -1;
+                        			setInterval(() => {
+                        				if (!compWrap) return;
+                        				if (compWrap.scrollHeight !== last2) {
+                        					last2 = compWrap.scrollHeight;
+                        					compWrap.scrollTop = compWrap.scrollHeight;
+                        				}
+                        			}, 200);
+                        		}
+                        	});
+                        	</script>
+                        	<div class="flex items-center gap-2 w-full sm:w-auto">
                             <button id="btn-tambah" class="w-full sm:w-auto rounded-2xl sm:rounded-3xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600 shadow-lg">Pesan</button>
                             <div id="qty-controls" class="hidden items-center bg-gray-100 rounded-3xl p-1 w-full sm:w-auto justify-between sm:justify-start">
                                 <button id="btn-minus" class="w-10 h-10 flex items-center justify-center bg-white rounded-2xl shadow-sm text-gray-700 font-bold hover:text-orange-600 transition text-lg">-</button>

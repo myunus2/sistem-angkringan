@@ -96,7 +96,7 @@ class Kasir extends Page
                 $order->items()->create([
                     'product_id' => $item['id'],
                     'name'       => $item['name'], // Pastikan nama produk ikut tersimpan ke item pesanan
-                    'qty'        => $item['qty'],  // Diubah dari 'quantity' menjadi 'qty' sesuai struktur tabel
+                    'quantity'   => $item['qty'],  // Kolom di tabel order_items adalah `quantity` (sesuai migrasi)
                     'price'      => $item['price'],
                 ]);
             }

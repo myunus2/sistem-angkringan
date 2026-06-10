@@ -1,7 +1,12 @@
-# TODO - Transaksi (tombol panah untuk semua transaksi)
+# TODO - Sistem Angkringan
 
-- [ ] Update `app/Filament/Pages/Transaksi.php`: tambahkan state `showAllTransaksi`, method toggle, dan ubah query `getOrdersProperty()`.
-- [x] Update `resources/views/filament/pages/transaksi.blade.php`: tambahkan tombol panah + label instruksi, serta label instruksi untuk detail transaksi.
+## Fix error utama checkout/kasir
+- [ ] Perbaiki insert `order_items`: field `quantity` tidak punya default value (karena tabel `order_items` memakai kolom `quantity`, sementara Kasir memakai `qty`).
+- [ ] Pastikan `OrderItem` dan migrasi konsisten (quantity vs qty).
 
-- [ ] Quick review: pastikan detail transaksi hanya muncul setelah klik order dan toggle panah tidak membuka detail otomatis.
+## Perbaikan error lain (jika masih muncul)
+- [ ] Kembalikan/instal dependensi Filament QueryBuilder (Class `Filament\\QueryBuilder\\QueryBuilderServiceProvider` not found).
+- [ ] Perbaiki tipe property `navigationIcon` dan `view` di halaman Filament (sesuai Filament version).
+- [ ] Rapikan kompatibilitas `getHeading`, `getMaxContentWidth` di Page.
+- [ ] Perbaiki Midtrans: `Midtrans\\Config` tidak ditemukan dan ServerKey/ClientKey kosong (butuh config .env & instalasi package midtrans-php).
 

@@ -119,9 +119,6 @@
                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!$isActive): ?>
                             <div wire:click="selectOrder(<?php echo e($order->id); ?>)" style="cursor: pointer; margin-top: 10px; text-align: left;">
                                 <p style="margin: 0; font-size: 12px; font-weight: 500; color: #94a3b8; display: flex; align-items: center; gap: 4px;">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M12 5v14M5 12h14"/>
-                                    </svg>
                                     klik untuk melihat transaksi
                                 </p>
                             </div>
@@ -140,11 +137,11 @@
                                     <div class="inner-box" style="border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
                                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::openLoop(); ?><?php endif; ?><?php $__currentLoopData = $order->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::startLoop($loop->index); ?><?php endif; ?>
                                             <div class="line-divider" style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; margin-bottom: 2px; last:border-bottom: none;">
-                                                <div>
-                                                    <p class="text-title-main" style="margin: 0; font-size: 14px; font-weight: 600;"><?php echo e($item->product?->name ?? 'Produk dihapus'); ?></p>
+                                                <div style="min-width:0;">
+                                                    <p class="text-title-main" style="margin: 0; font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo e($item->product?->name ?? 'Produk dihapus'); ?></p>
                                                     <p style="margin: 2px 0 0 0; font-size: 12px; color: #94a3b8;">Rp <?php echo e(number_format((float) $item->price, 0, ',', '.')); ?> / item</p>
                                                 </div>
-                                                <span class="input-field" style="font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 6px;"><?php echo e($item->quantity); ?>x</span>
+                                                <span class="input-field" style="flex-shrink:0; font-size: 13px; font-weight: 700; padding: 3px 10px; border-radius: 6px;"><?php echo e($item->quantity); ?>x</span>
                                             </div>
                                         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::endLoop(); ?><?php endif; ?><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php \Livewire\Features\SupportCompiledWireKeys\SupportCompiledWireKeys::closeLoop(); ?><?php endif; ?>
                                     </div>

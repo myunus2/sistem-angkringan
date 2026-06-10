@@ -9,9 +9,9 @@ use Filament\Widgets\ChartWidget;
 
 class AdminSalesChart extends ChartWidget
 {
-    protected ?string $heading = 'Grafik Penjualan 7 Hari Terakhir';
+    protected ?string $heading = 'Grafik Pendapatan 7 Hari Terakhir';
 
-    protected ?string $description = 'Ringkasan pendapatan dan jumlah transaksi selesai per hari.';
+    protected ?string $description = 'Ringkasan pendapatan (status done) per hari.';
 
     protected ?string $maxHeight = '320px';
 
@@ -22,10 +22,10 @@ class AdminSalesChart extends ChartWidget
         $startDate = now()->subDays(6)->startOfDay();
         $endDate = now()->endOfDay();
 
-        $cacheKey = 'admin.sales_chart.' . $startDate->format('Ymd') . '.' . $endDate->format('Ymd');
+        $cacheKey = 'admin.sales_chart.revenue.' . $startDate->format('Ymd') . '.' . $endDate->format('Ymd');
         $salesByDate = cache()->remember($cacheKey, 30, function () use ($startDate, $endDate) {
             return Order::query()
-                ->selectRaw('DATE(created_at) as order_date, COALESCE(SUM(total_price), 0) as total_sales, COUNT(*) as total_orders')
+                ->selectRaw('DATE(created_at) as order_date, COALESCE(SUM(total_price), 0) as total_sales')
                 ->where('status', 'done')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->groupBy('order_date')
@@ -37,14 +37,12 @@ class AdminSalesChart extends ChartWidget
 
         $labels = [];
         $data = [];
-        $orderCounts = [];
 
         foreach ($period as $date) {
             $dateKey = $date->format('Y-m-d');
 
             $labels[] = $date->translatedFormat('D, d M');
             $data[] = (float) ($salesByDate[$dateKey]->total_sales ?? 0);
-            $orderCounts[] = (int) ($salesByDate[$dateKey]->total_orders ?? 0);
         }
 
         return [
@@ -57,20 +55,6 @@ class AdminSalesChart extends ChartWidget
                     'borderWidth' => 1,
                     'borderRadius' => 8,
                     'barThickness' => 34,
-                ],
-                [
-                    'type' => 'line',
-                    'label' => 'Jumlah Pesanan',
-                    'data' => $orderCounts,
-                    'borderColor' => '#0f172a',
-                    'backgroundColor' => '#0f172a',
-                    'borderWidth' => 3,
-                    'pointBackgroundColor' => '#ffffff',
-                    'pointBorderColor' => '#0f172a',
-                    'pointBorderWidth' => 2,
-                    'pointRadius' => 4,
-                    'tension' => 0.4,
-                    'yAxisID' => 'orders',
                 ],
             ],
             'labels' => $labels,
@@ -106,13 +90,6 @@ class AdminSalesChart extends ChartWidget
                         'color' => 'rgba(148, 163, 184, 0.18)',
                     ],
                 ],
-                'orders' => [
-                    'beginAtZero' => true,
-                    'position' => 'right',
-                    'grid' => [
-                        'drawOnChartArea' => false,
-                    ],
-                ],
                 'x' => [
                     'grid' => [
                         'display' => false,
@@ -122,3 +99,4 @@ class AdminSalesChart extends ChartWidget
         ];
     }
 }
+
