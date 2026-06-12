@@ -81,15 +81,15 @@
         </div>
     </div>
 
-    <div class="px-3 sm:px-6 lg:px-8 my-6 sm:my-10">
-        <div class="snap-x-container flex gap-3 sm:gap-4 pb-2 no-scrollbar overflow-x-auto justify-start sm:justify-center">
+    <div class="px-2 sm:px-6 lg:px-8 my-6 sm:my-10">
+        <div class="snap-x-container flex gap-2 sm:gap-4 pb-4 no-scrollbar overflow-x-auto justify-start sm:justify-center items-center w-full">
             @php $currentCat = request('category', 'semua'); @endphp
             @foreach(['semua', 'makanan', 'minuman', 'snack'] as $cat)
             <div class="snap-item">
                 <a href="{{ route('index', ['category' => $cat]) }}"
                    data-category="{{ $cat }}"
-                   class="category-btn ajax-filter inline-block whitespace-nowrap px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-2xl text-sm sm:text-base font-bold transition-all
-                   {{ $currentCat == $cat ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20 scale-105' : 'bg-white text-gray-500 hover:bg-orange-50' }}">
+                   class="category-btn ajax-filter inline-block whitespace-nowrap px-4 sm:px-10 py-2 sm:py-3.5 rounded-xl sm:rounded-2xl text-[11px] sm:text-base font-black uppercase tracking-wider transition-all
+                   {{ $currentCat == $cat ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30 scale-105' : 'bg-white text-gray-500 hover:bg-orange-50 border border-gray-100 sm:border-transparent' }}">
                    {{ ucfirst($cat) }}
                 </a>
             </div>
@@ -453,11 +453,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Update UI Active State
             document.querySelectorAll('.ajax-filter').forEach(b => {
-                b.classList.remove('bg-orange-500', 'text-white', 'shadow-lg');
-                b.classList.add('bg-gray-100', 'text-gray-500');
+                b.className = 'category-btn ajax-filter inline-block whitespace-nowrap px-4 sm:px-10 py-2 sm:py-3.5 rounded-xl sm:rounded-2xl text-[11px] sm:text-base font-black uppercase tracking-wider transition-all bg-white text-gray-500 hover:bg-orange-50 border border-gray-100 sm:border-transparent';
             });
-            this.classList.remove('bg-gray-100', 'text-gray-500');
-            this.classList.add('bg-orange-500', 'text-white', 'shadow-lg');
+            
+            this.className = 'category-btn ajax-filter inline-block whitespace-nowrap px-4 sm:px-10 py-2 sm:py-3.5 rounded-xl sm:rounded-2xl text-[11px] sm:text-base font-black uppercase tracking-wider transition-all bg-orange-500 text-white shadow-lg shadow-orange-500/30 scale-105';
+
+            // Smooth scroll on mobile to keep selected category visible
+            this.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
             fetchProducts(url);
         });
