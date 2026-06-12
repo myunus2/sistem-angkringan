@@ -639,6 +639,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Parse JSON dulu agar kita bisa lihat pesan error dari backend
                 return res.json().then(body => {
                     if (!res.ok) {
+                        // Tangani error validasi (422) secara spesifik
+                        if (res.status === 422 && body.errors) {
+                            const errorMessages = Object.values(body.errors).flat();
+                            throw new Error(errorMessages[0] || 'Data yang dikirim tidak valid');
+                        }
                         const msg = body?.message || 'Gagal melakukan checkout ke server';
                         throw new Error(msg);
                     }

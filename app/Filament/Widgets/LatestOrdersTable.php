@@ -9,6 +9,7 @@ use Filament\Tables\Table;
 use Filament\Actions\Action;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 
 class LatestOrdersTable extends TableWidget
 {
@@ -16,11 +17,20 @@ class LatestOrdersTable extends TableWidget
 
     protected int | string | array $columnSpan = ['default' => 'full', 'xl' => 1];
 
+    #[On('echo:orders,OrderCreated')]
+    public function refresh(): void
+    {
+        // This will trigger a re-render of the table
+    }
+
     public function table(Table $table): Table
     {
         return $table
             ->query($this->getLatestOrdersQuery())
             ->defaultPaginationPageOption(5)
+            ->recordClasses(fn (Order $record) => 
+                $record->created_at->gt(now()->subMinutes(1)) ? 'animate-pulse-orange' : null
+            )
             ->columns([
                 Tables\Columns\TextColumn::make('customer_name')
                     ->label('Nama')

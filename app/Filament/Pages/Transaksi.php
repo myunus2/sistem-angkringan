@@ -8,6 +8,7 @@ use Filament\Pages\Page;
 use Filament\Support\Enums\Width;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Collection;
+use Livewire\Attributes\Url;
 
 class Transaksi extends Page
 {
@@ -27,6 +28,7 @@ class Transaksi extends Page
 
     public bool $mobileDetailOpen = false;
 
+    #[Url]
     public string $statusFilter = 'all';
 
     public function mount(): void
@@ -76,7 +78,7 @@ class Transaksi extends Page
     {
         return Order::query()
             ->with(['items.product'])
-            ->whereIn('status', ['done', 'pending'])
+            ->where('status', 'done')
             ->when(
                 $this->statusFilter === 'unpaid',
                 fn ($query) => $query->where('payment_status', 'unpaid'),

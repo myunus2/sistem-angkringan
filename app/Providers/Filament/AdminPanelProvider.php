@@ -35,6 +35,10 @@ class AdminPanelProvider extends PanelProvider
             // TAMBAHKAN HOOK CSS DI SINI UNTUK MENGUBAH WARNA SIDEBAR KIRI
             // ====================================================================
             ->renderHook(
+                'panels::user-menu.before',
+                fn (): string => Blade::render('@livewire(\'admin-notifications\')'),
+            )
+            ->renderHook(
                 'panels::styles.after',
                 fn (): string => Blade::render('
                     <style>
@@ -392,6 +396,18 @@ class AdminPanelProvider extends PanelProvider
                         .dark .favorite-menu-empty {
                             border-color: #334155;
                             color: #94a3b8;
+                        }
+
+                        /* Pulse Animation for New Orders */
+                        @keyframes pulse-orange {
+                            0%, 100% { background-color: transparent; }
+                            50% { background-color: rgba(230, 81, 0, 0.1); }
+                        }
+                        .animate-pulse-orange {
+                            animation: pulse-orange 2s ease-in-out infinite;
+                        }
+                        .dark .animate-pulse-orange {
+                            animation: pulse-orange 2s ease-in-out infinite;
                         }
                     </style>
                 '),

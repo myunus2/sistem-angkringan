@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreated;
+use App\Jobs\SendWhatsAppNotification;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
@@ -76,6 +78,14 @@ class KasirController extends Controller
         $order->update([
             'total_price' => $total
         ]);
+
+        // 🔥 Dispatch Event untuk Real-time & Job untuk WhatsApp (Wrapped in try-catch)
+        try {
+            event(new OrderCreated($order));
+            dispatch(new SendWhatsAppNotification($order));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Real-time or WhatsApp notification failed: ' . $e->getMessage());
+        }
 
         return response()->json([
             'success' => true,

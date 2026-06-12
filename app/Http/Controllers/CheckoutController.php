@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderCreated;
+use App\Jobs\SendWhatsAppNotification;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\PaymentMethod;
@@ -96,6 +98,14 @@ class CheckoutController extends Controller
             }
 
             DB::commit();
+
+            // 🔥 Dispatch Event untuk Real-time & Job untuk WhatsApp (Wrapped in try-catch)
+            try {
+                event(new OrderCreated($order));
+                dispatch(new SendWhatsAppNotification($order));
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\Log::error('Real-time or WhatsApp notification failed: ' . $e->getMessage());
+            }
 
             // Endpoint /api/checkout mengharapkan JSON.
             // Frontend mengirim Accept: application/json, tapi beberapa setting Laravel bisa membuat expects/wantsJson tidak terdeteksi.
