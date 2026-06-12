@@ -63,31 +63,33 @@
         </div>
     </div>
 
-    <div class="px-3 sm:px-4 mt-4 sm:mt-6">
-        <form id="search-form" action="{{ route('index') }}" method="GET" class="relative">
-            @if(request('category'))
-                <input type="hidden" name="category" id="search-category" value="{{ request('category') }}">
-            @endif
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-            </div>
-            <input type="text" name="search" id="search-input" value="{{ request('search') }}"
-                   class="block w-full pl-10 pr-3 py-2 sm:py-3 border-none bg-gray-100 rounded-2xl leading-5 focus:outline-none focus:ring-2 focus:ring-orange-500 text-xs sm:text-sm transition-all"
-                   placeholder="Cari menu...">
-        </form>
+    <div class="px-3 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+        <div class="max-w-2xl mx-auto">
+            <form id="search-form" action="{{ route('index') }}" method="GET" class="relative group">
+                @if(request('category'))
+                    <input type="hidden" name="category" id="search-category" value="{{ request('category') }}">
+                @endif
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <input type="text" name="search" id="search-input" value="{{ request('search') }}"
+                       class="block w-full pl-12 pr-4 py-3 sm:py-4 border-2 border-transparent bg-white shadow-sm rounded-2xl leading-5 focus:outline-none focus:ring-0 focus:border-orange-500 text-sm sm:text-base transition-all placeholder-gray-400"
+                       placeholder="Cari menu favorit Anda...">
+            </form>
+        </div>
     </div>
 
-    <div class="px-3 sm:px-4 my-4 sm:my-6">
-        <div class="snap-x-container flex gap-2 sm:gap-3 pb-2 no-scrollbar overflow-x-auto justify-start md:justify-center">
+    <div class="px-3 sm:px-6 lg:px-8 my-6 sm:my-10">
+        <div class="snap-x-container flex gap-3 sm:gap-4 pb-2 no-scrollbar overflow-x-auto justify-start sm:justify-center">
             @php $currentCat = request('category', 'semua'); @endphp
             @foreach(['semua', 'makanan', 'minuman', 'snack'] as $cat)
             <div class="snap-item">
                 <a href="{{ route('index', ['category' => $cat]) }}"
                    data-category="{{ $cat }}"
-                   class="category-btn ajax-filter inline-block whitespace-nowrap px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all
-                   {{ $currentCat == $cat ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
+                   class="category-btn ajax-filter inline-block whitespace-nowrap px-6 sm:px-10 py-2.5 sm:py-3.5 rounded-2xl text-sm sm:text-base font-bold transition-all
+                   {{ $currentCat == $cat ? 'bg-orange-500 text-white shadow-xl shadow-orange-500/20 scale-105' : 'bg-white text-gray-500 hover:bg-orange-50' }}">
                    {{ ucfirst($cat) }}
                 </a>
             </div>
@@ -95,7 +97,7 @@
         </div>
     </div>
 
-    <div id="main-product-container" class="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+    <div id="main-product-container" class="w-full max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-8">
         @include('order.partials.product-list')
     </div>
 
