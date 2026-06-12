@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Menu Angkringan Modern</title>
+    <title>Menu Angkringan Cakra Digital</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -53,13 +53,13 @@
         }
     </style>
 </head>
-<body class="bg-gray-200 pb-32">
+<body class="bg-orange-50 pb-32">
 
     <div class="relative w-full h-48 sm:h-64 md:h-80 bg-orange-500 overflow-hidden shadow-md hero-banner">
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-10"></div>
         <div class="absolute bottom-4 sm:bottom-6 md:bottom-8 left-4 sm:left-6 md:left-8 z-20 text-white">
-            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Modern</h1>
-            <p class="text-xs sm:text-sm md:text-base font-medium opacity-90 mt-1"><span>Cubadak</span></p>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight drop-shadow-xl">Angkringan Cakra Digital</h1>
+            <p class="text-xs sm:text-sm md:text-base font-medium opacity-90 mt-1"><span>Angkringan Cakra berlokasi di GGJP+XR4, Cubadak, Kec. Pariangan, Kabupaten Tanah Datar, Sumatera Barat 27264 (sekitar kawasan kampus UIN Mahmud Yunus Batusangkar).</span></p>
         </div>
     </div>
 
@@ -111,7 +111,7 @@
                  data-type="{{ htmlspecialchars($product->type ?? '', ENT_QUOTES, 'UTF-8') }}"
                  data-image="{{ $product->images ? asset('storage/' . $product->images) : asset('images/air.jpg') }}"
                  data-model-3d="{{ trim($product->model_3d) ? asset('storage/' . trim($product->model_3d)) : '' }}">
-                    <div class="relative aspect-square rounded-xl sm:rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50 mb-1 sm:mb-2 cursor-pointer product-image-container">
+                    <div class="relative h-56 overflow-hidden
                     @if($product->images)
                         <img src="{{ asset('storage/' . $product->images) }}"
                              alt="{{ $product->name }}"
@@ -138,7 +138,7 @@
                         </span>
                     </div>
                     <h3 class="font-bold text-gray-800 text-xs sm:text-sm leading-tight mb-0.5 truncate">{{ $product->name }}</h3>
-                    <p class="text-xs sm:text-sm font-bold text-orange-600">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                    <p class="text-lg font-black text-orange-500">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
                 </div>
             </div>
             @empty

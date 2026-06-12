@@ -112,7 +112,7 @@
 <body>
 
     <div class="navbar">
-        Angkringan Modern
+        Angkringan Cakra Digital
     </div>
 
     <div class="container">
