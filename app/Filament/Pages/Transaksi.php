@@ -31,10 +31,7 @@ class Transaksi extends Page
 
     public function mount(): void
     {
-        $this->selectedOrderId = Order::query()
-            ->whereIn('status', ['done', 'pending'])
-            ->latest('created_at')
-            ->value('id');
+        $this->selectedOrderId = null;
 
         $this->syncPaymentState();
     }
@@ -124,8 +121,7 @@ class Transaksi extends Page
 
     public function updatedStatusFilter(): void
     {
-        $firstOrder = $this->orders->first();
-        $this->selectedOrderId = $firstOrder?->id;
+        $this->selectedOrderId = null;
         $this->syncPaymentState();
         $this->mobileDetailOpen = false;
     }

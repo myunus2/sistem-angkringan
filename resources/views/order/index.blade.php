@@ -64,16 +64,16 @@
     </div>
 
     <div class="px-3 sm:px-4 mt-4 sm:mt-6">
-        <form action="{{ route('index') }}" method="GET" class="relative">
+        <form id="search-form" action="{{ route('index') }}" method="GET" class="relative">
             @if(request('category'))
-                <input type="hidden" name="category" value="{{ request('category') }}">
+                <input type="hidden" name="category" id="search-category" value="{{ request('category') }}">
             @endif
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
             </div>
-            <input type="text" name="search" value="{{ request('search') }}"
+            <input type="text" name="search" id="search-input" value="{{ request('search') }}"
                    class="block w-full pl-10 pr-3 py-2 sm:py-3 border-none bg-gray-100 rounded-2xl leading-5 focus:outline-none focus:ring-2 focus:ring-orange-500 text-xs sm:text-sm transition-all"
                    placeholder="Cari menu...">
         </form>
@@ -85,7 +85,8 @@
             @foreach(['semua', 'makanan', 'minuman', 'snack'] as $cat)
             <div class="snap-item">
                 <a href="{{ route('index', ['category' => $cat]) }}"
-                   class="category-btn inline-block whitespace-nowrap px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all
+                   data-category="{{ $cat }}"
+                   class="category-btn ajax-filter inline-block whitespace-nowrap px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold transition-all
                    {{ $currentCat == $cat ? 'bg-orange-500 text-white shadow-lg' : 'bg-gray-100 text-gray-500' }}">
                    {{ ucfirst($cat) }}
                 </a>
@@ -94,66 +95,8 @@
         </div>
     </div>
 
-    <div class="w-full px-3 sm:px-4 py-3 sm:py-4">
-        <h2 class="text-lg sm:text-xl font-extrabold text-gray-800 mb-4 sm:mb-6 px-1 flex items-center gap-2">
-            <span class="w-2 h-6 bg-orange-500 rounded-full"></span>
-            <span class="truncate">Daftar Menu {{ $currentCat !== 'semua' ? ucfirst($currentCat) : '' }}</span>
-        </h2>
-
-        <div class="grid product-grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
-            @forelse($products as $product)
-            <div class="product-card flex flex-col group bg-white rounded-2xl sm:rounded-3xl p-2 sm:p-3 shadow-lg shadow-gray-300/70 border border-gray-100 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-gray-400/60"
-                 data-product-id="{{ $product->id }}"
-                 data-name="{{ htmlspecialchars($product->name, ENT_QUOTES, 'UTF-8') }}"
-                 data-price="Rp {{ number_format($product->price, 0, ',', '.') }}"
-                 data-description="{{ htmlspecialchars($product->description ?? '', ENT_QUOTES, 'UTF-8') }}"
-                 data-composition="{{ htmlspecialchars($product->composition ?? '', ENT_QUOTES, 'UTF-8') }}"
-                 data-type="{{ htmlspecialchars($product->type ?? '', ENT_QUOTES, 'UTF-8') }}"
-                 data-image="{{ $product->images ? asset('storage/' . $product->images) : asset('images/air.jpg') }}"
-                 data-model-3d="{{ trim($product->model_3d) ? asset('storage/' . trim($product->model_3d)) : '' }}">
-                    <div class="relative h-56 overflow-hidden
-                    @if($product->images)
-                        <img src="{{ asset('storage/' . $product->images) }}"
-                             alt="{{ $product->name }}"
-                             loading="lazy"
-                             decoding="async"
-                             class="w-full h-full object-cover transition-transform group-hover:scale-110">
-                    @else
-                        <img src="{{ asset('images/air.jpg') }}" alt="{{ $product->name }}" loading="lazy" decoding="async" class="w-full h-full object-cover">
-                    @endif
-                    <div class="absolute inset-0 bg-black/0 hover:bg-black/10 transition"></div>
-                </div>
-                <div class="px-0.5">
-                    <div class="mb-0.5 sm:mb-1">
-                        @php
-                            $badgeColor = match($product->type) {
-                                'makanan' => 'bg-orange-100 text-orange-600',
-                                'minuman' => 'bg-blue-100 text-blue-600',
-                                'snack'   => 'bg-green-100 text-green-600',
-                                default   => 'bg-gray-100 text-gray-600'
-                            };
-                        @endphp
-                        <span class="text-[7px] sm:text-[9px] font-extrabold uppercase tracking-widest px-1.5 sm:px-2 py-0.5 rounded-md {{ $badgeColor }}">
-                            {{ $product->type ?? 'Menu' }}
-                        </span>
-                    </div>
-                    <h3 class="font-bold text-gray-800 text-xs sm:text-sm leading-tight mb-0.5 truncate">{{ $product->name }}</h3>
-                    <p class="text-lg font-black text-orange-500">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
-                </div>
-            </div>
-            @empty
-            <div class="col-span-full text-center py-20">
-                <p class="text-gray-400 font-medium">Menu tidak ditemukan...</p>
-                <a href="{{ route('index') }}" class="text-orange-500 font-bold text-sm mt-2 block">Lihat Semua Menu</a>
-            </div>
-            @endforelse
-        </div>
-
-        @if($products->hasPages())
-            <div class="mt-8 flex justify-center">
-                {{ $products->links() }}
-            </div>
-        @endif
+    <div id="main-product-container" class="w-full px-3 sm:px-4 py-3 sm:py-4">
+        @include('order.partials.product-list')
     </div>
 
     {{-- Modal Detail Produk --}}
@@ -301,6 +244,50 @@
         </div>
     </div>
 
+    {{-- Success Modal --}}
+    <div id="success-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl transform transition-all duration-300 scale-90 opacity-0" id="success-modal-content">
+            <div class="flex flex-col items-center text-center">
+                <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-6 success-checkmark">
+                    <svg class="w-12 h-12 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" class="checkmark-path"></path>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-black text-gray-800 mb-3">Berhasil!</h2>
+                <p class="text-gray-600 font-medium leading-relaxed">Pesanan Anda berhasil dikirim ke dapur! Silakan tunggu.</p>
+                <div class="mt-8 w-full">
+                    <button id="btn-success-close" class="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-2xl font-bold text-sm shadow-lg shadow-orange-500/30 transition-all active:scale-95">OKE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .checkmark-path {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: dash 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards 0.3s;
+        }
+        @keyframes dash {
+            from { stroke-dashoffset: 100; }
+            to { stroke-dashoffset: 0; }
+        }
+        .success-checkmark {
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        #success-modal.show {
+            opacity: 1;
+        }
+        #success-modal.show #success-modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+    </style>
+
     <script>
        const CART_KEY = 'angkringan_cart';
 
@@ -425,13 +412,108 @@ function decodeHTML(html) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const grid = document.querySelector('.product-grid');
+    const mainContainer = document.getElementById('main-product-container');
     const overlay = document.getElementById('product-focus-overlay');
     const closeButtons = document.querySelectorAll('#product-focus-close, #focus-close-button');
     const arButton = document.getElementById('focus-ar-button');
 
     // Inisialisasi Tampilan Awal Keranjang saat halaman dimuat
     updateFab();
+
+    // Event Delegation untuk Product Card & Pagination
+    if (mainContainer) {
+        mainContainer.addEventListener('click', function(e) {
+            const card = e.target.closest('.product-card');
+            if (card) {
+                e.preventDefault();
+                e.stopPropagation();
+                openProductDetail(card);
+            }
+
+            const paginationLink = e.target.closest('.ajax-pagination a');
+            if (paginationLink) {
+                e.preventDefault();
+                fetchProducts(paginationLink.href);
+            }
+        });
+    }
+
+    // Handle Category Filter AJAX
+    document.querySelectorAll('.ajax-filter').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const url = this.href;
+            const category = this.dataset.category;
+            
+            // Sync hidden search input
+            const searchCat = document.getElementById('search-category');
+            if (searchCat) searchCat.value = category;
+
+            // Update UI Active State
+            document.querySelectorAll('.ajax-filter').forEach(b => {
+                b.classList.remove('bg-orange-500', 'text-white', 'shadow-lg');
+                b.classList.add('bg-gray-100', 'text-gray-500');
+            });
+            this.classList.remove('bg-gray-100', 'text-gray-500');
+            this.classList.add('bg-orange-500', 'text-white', 'shadow-lg');
+
+            fetchProducts(url);
+        });
+    });
+
+    // Handle Search Form AJAX
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    if (searchForm && searchInput) {
+        let timeout = null;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                const formData = new FormData(searchForm);
+                const params = new URLSearchParams(formData);
+                const url = searchForm.action + '?' + params.toString();
+                fetchProducts(url);
+            }, 500);
+        });
+
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(searchForm);
+            const params = new URLSearchParams(formData);
+            const url = searchForm.action + '?' + params.toString();
+            fetchProducts(url);
+        });
+    }
+
+    function fetchProducts(url) {
+        if (!mainContainer) return;
+        mainContainer.classList.add('opacity-50', 'pointer-events-none');
+        
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.text())
+        .then(html => {
+            mainContainer.innerHTML = html;
+            mainContainer.classList.remove('opacity-50', 'pointer-events-none');
+            window.history.pushState({}, '', url);
+            
+            // Scroll to top of product list for better UX on mobile
+            const rect = mainContainer.getBoundingClientRect();
+            if (rect.top < 0) {
+                window.scrollTo({
+                    top: window.pageYOffset + rect.top - 100,
+                    behavior: 'smooth'
+                });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            mainContainer.classList.remove('opacity-50', 'pointer-events-none');
+        });
+    }
 
     document.getElementById('btn-tambah').addEventListener('click', () => { 
         if(focusedProduct) window.changeQty(focusedProduct.id, 1); 
@@ -457,6 +539,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function openProductDetail(card) {
+        const grid = document.querySelector('.product-grid');
         if (!card || !grid) return;
 
         const priceRaw = card.dataset.price || '0';
@@ -497,17 +580,8 @@ document.addEventListener('DOMContentLoaded', function () {
         overlay.classList.remove('hidden');
     }
 
-    // Daftarkan event klik pada setiap produk card
-    document.querySelectorAll('.product-card').forEach(function (card) {
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            openProductDetail(this);
-        });
-    });
-
     function closeFocus() {
+        const grid = document.querySelector('.product-grid');
         if (!grid) return;
         grid.classList.remove('blur');
         document.querySelectorAll('.product-card.focused').forEach(c => c.classList.remove('focused'));
@@ -587,15 +661,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 
                 // 3. Kembalikan tombol ke mode normal (biar tidak stuck "Memproses...")
-
                 btnSubmit.textContent = 'Konfirmasi & Kirim Pesanan';
                 btnSubmit.disabled = false;
 
-                // 5. Berikan notifikasi sukses kepada pelanggan
-                alert('Pesanan Anda berhasil dikirim ke dapur! Silakan tunggu.');
+                // 5. Tampilkan Animasi Sukses
+                const successModal = document.getElementById('success-modal');
+                if (successModal) {
+                    successModal.classList.remove('hidden');
+                    // Force reflow
+                    successModal.offsetHeight;
+                    successModal.classList.add('show');
 
-                // 6. Muat ulang halaman agar seluruh state aplikasi kembali bersih dan segar
-                window.location.reload();
+                    document.getElementById('btn-success-close').addEventListener('click', () => {
+                        window.location.reload();
+                    });
+                } else {
+                    alert('Pesanan Anda berhasil dikirim ke dapur! Silakan tunggu.');
+                    window.location.reload();
+                }
             })
             .catch(err => {
                 console.error(err);

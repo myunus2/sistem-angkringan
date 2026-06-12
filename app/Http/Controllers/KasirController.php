@@ -26,6 +26,10 @@ class KasirController extends Controller
             ->paginate(24)
             ->withQueryString();
 
+        if ($request->ajax()) {
+            return view('order.partials.product-list', compact('products'))->render();
+        }
+
         return view('order.index', compact('products'));
     }
 
