@@ -1,1 +1,1 @@
-web: php artisan queue:work --daemon > /dev/null 2>&1 & php artisan reverb:start --host=0.0.0.0 --port=8080 > /dev/null 2>&1 & node /vhost.js
+web: php artisan queue:work --daemon > /dev/null 2>&1 & php artisan reverb:start --host=0.0.0.0 --port=8080
